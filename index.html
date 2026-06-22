@@ -33,22 +33,23 @@ let todosCanais = new Set();
 // ============================
 // CARREGAR CSV
 // ============================
+
 fetch('pacotes.csv')
 .then(r => r.text())
 .then(texto => {
 
-  const linhas = texto.split('\n');
+  const linhas = texto.replace(/\r/g, '').split('\n');
 
   linhas.forEach((linha, index) => {
 
     if (index === 0) return;
 
-    const col = linha.split(';');
+    const col = linha.split(';').map(c => c.trim()); // ✅ IMPORTANTE
 
-    const pais = col[0]?.trim();
-    const cliente = col[1]?.trim();
-    const pacote = col[2]?.trim();
-    const canal = col[4]?.trim(); // ✅ CORRETO
+    const pais = col[0];
+    const cliente = col[1];
+    const pacote = col[2];
+    const canal = col[4];
 
     if (pais && cliente && pacote && canal) {
       dados.push({ pais, cliente, pacote, canal });
@@ -58,6 +59,7 @@ fetch('pacotes.csv')
 
   carregarPais();
 });
+
 
 // ============================
 // PAÍS
