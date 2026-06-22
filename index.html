@@ -31,7 +31,6 @@ h1 {
   margin-bottom: 47px;
   font-size: 52px;
   font-weight: 700;
-  color: #272727;
 }
 
 .linha {
@@ -74,10 +73,14 @@ h2 {
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
+
+  column-gap: 40px; /* espaço lateral */
+  row-gap: 6px;     /* ✅ espaço vertical igual bandeiras */
+
   margin-top: 40px;
 }
 
+/* PACOTE */
 .pacote {
   text-align: center;
 }
@@ -94,7 +97,7 @@ select {
   height: 70px;
   padding: 0 20px;
 
-  margin-bottom: 6px; /* ✅ igual bandeiras */
+  margin-bottom: 6px;
 
   border-radius: 16px;
   border: none;
@@ -112,12 +115,12 @@ select {
   background-position: right 18px center;
 }
 
-/* Placeholder cinza */
+/* placeholder */
 select:invalid {
   color: #b5b5b8;
 }
 
-/* Selecionado */
+/* selecionado */
 select:valid {
   color: #272727;
 }
@@ -288,7 +291,6 @@ function carregarBandeiras(){
     };
 
     div.appendChild(img);
-
     div.onclick = () => selecionarPais(p, div);
 
     container.appendChild(div);
