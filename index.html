@@ -22,18 +22,23 @@ body { font-family: Arial; }
 }
 
 .secao { display: none; padding: 20px; }
-
 .ativa { display: block; }
 
-table { margin-top: 20px; border-collapse: collapse; }
-td, th { padding: 5px 10px; border: 1px solid black; }
+table {
+  margin-top: 20px;
+  border-collapse: collapse;
+}
+
+td, th {
+  padding: 5px 10px;
+  border: 1px solid black;
+}
 
 .si { color: green; }
 .no { color: red; }
-
 </style>
-</head>
 
+</head>
 <body>
 
 <!-- MENU -->
@@ -79,8 +84,16 @@ País:
 Cliente:
 <select id="cliente2"></select>
 
-Planos (até 3):
-<select id="pacotes2" multiple size="4"></select>
+<br><br>
+
+Plano 1:
+<select id="pacote1"></select>
+
+Plano 2:
+<select id="pacote2"></select>
+
+Plano 3:
+<select id="pacote3"></select>
 
 <br><br>
 <button onclick="comparar()">Comparar</button>
@@ -113,7 +126,7 @@ fetch('pacotes.csv')
     const pais = col[0];
     const cliente = col[1];
     const pacote = col[2];
-    const canal = col[4];
+    const canal = col[4]; // coluna correta
 
     if (pais && cliente && pacote && canal) {
       dados.push({ pais, cliente, pacote, canal });
@@ -121,8 +134,8 @@ fetch('pacotes.csv')
     }
   });
 
-  carregarSelect('pais');
-  carregarSelect('pais2');
+  carregarPaises('pais');
+  carregarPaises('pais2');
 
 });
 
@@ -132,11 +145,10 @@ function mostrar(id) {
   document.getElementById(id).classList.add('ativa');
 }
 
-// ================= CARREGAR PAÍS =================
-function carregarSelect(selectId) {
+// ================= CARREGAR PAIS =================
+function carregarPaises(selectId) {
 
   const select = document.getElementById(selectId);
-
   const paises = [...new Set(dados.map(d => d.pais))].sort();
 
   select.innerHTML = '<option value="">Selecione</option>';
@@ -147,7 +159,7 @@ function carregarSelect(selectId) {
 
 }
 
-// ================= EVENTOS VALIDAR =================
+// ================= VALIDAR =================
 
 document.getElementById('pais').onchange = function() {
 
@@ -190,7 +202,7 @@ document.getElementById('pacotes').onchange = function() {
   const tabela = document.getElementById('tabela-validar');
   tabela.innerHTML = '';
 
-  [...todosCanais].forEach(c => {
+  [...todosCanais].sort().forEach(c => {
     tabela.innerHTML += `
       <tr>
         <td>${c}</td>
@@ -201,7 +213,7 @@ document.getElementById('pacotes').onchange = function() {
   });
 };
 
-// ================= EVENTOS COMPARAR =================
+// ================= COMPARAR =================
 
 document.getElementById('pais2').onchange = function() {
 
@@ -215,7 +227,6 @@ document.getElementById('pais2').onchange = function() {
   clientes.forEach(c => select.innerHTML += `<option>${c}</option>`);
 };
 
-
 document.getElementById('cliente2').onchange = function() {
 
   const pais = document.getElementById('pais2').value;
@@ -224,46 +235,65 @@ document.getElementById('cliente2').onchange = function() {
     dados.filter(d => d.pais === pais && d.cliente === this.value).map(d => d.pacote)
   )];
 
-  const select = document.getElementById('pacotes2');
-  select.innerHTML = '';
+  ['pacote1','pacote2','pacote3'].forEach(id => {
 
-  pacotes.forEach(p => select.innerHTML += `<option>${p}</option>`);
+    const select = document.getElementById(id);
+    select.innerHTML = '<option value="">Selecione</option>';
+
+    pacotes.forEach(p => {
+      select.innerHTML += `<option value="${p}">${p}</option>`;
+    });
+
+  });
 };
 
-// ================= COMPARAÇÃO =================
+// ================= FUNÇÃO COMPARAR =================
+
 function comparar() {
 
   const pais = document.getElementById('pais2').value;
   const cliente = document.getElementById('cliente2').value;
 
-  const selecionados = [...document.getElementById('pacotes2').selectedOptions]
-    .map(o => o.value)
-    .slice(0,3); // máximo 3
+  const selecionados = [
+    document.getElementById('pacote1').value,
+    document.getElementById('pacote2').value,
+    document.getElementById('pacote3').value
+  ].filter(p => p);
 
-  // cabeçalho
+  if (selecionados.length === 0) {
+    alert("Selecione pelo menos um plano");
+    return;
+  }
+
   let thead = '<tr><th>Canal</th>';
-  selecionados.forEach(p => thead += `<th>${p}</th>`);
-  thead += '</tr>';
 
+  selecionados.forEach(p => {
+    thead += `<th>${p}</th>`;
+  });
+
+  thead += '</tr>';
   document.getElementById('thead-comparar').innerHTML = thead;
 
-  // tabela
   let html = '';
 
-  [...todosCanais].forEach(canal => {
+  [...todosCanais].sort().forEach(canal => {
 
     html += `<tr><td>${canal}</td>`;
 
     selecionados.forEach(pacote => {
 
-      const existe = dados.some(d =>
+      const pertence = dados.some(d =>
         d.pais === pais &&
         d.cliente === cliente &&
         d.pacote === pacote &&
         d.canal === canal
       );
 
-      html += `<td class="${existe ? 'si' : 'no'}">${existe ? 'SI' : 'NO'}</td>`;
+      html += `
+        <td class="${pertence ? 'si' : 'no'}">
+          ${pertence ? 'SI' : 'NO'}
+        </td>
+      `;
     });
 
     html += '</tr>';
