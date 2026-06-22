@@ -27,15 +27,17 @@ body { font-family: Arial; }
 table {
   margin-top: 20px;
   border-collapse: collapse;
+  width: 80%;
 }
 
 td, th {
-  padding: 5px 10px;
+  padding: 6px 10px;
   border: 1px solid black;
+  text-align: left;
 }
 
-.si { color: green; }
-.no { color: red; }
+.si { color: green; font-weight: bold; }
+.no { color: red; font-weight: bold; }
 </style>
 </head>
 
@@ -128,7 +130,7 @@ fetch('pacotes.csv')
     const cliente = col[1];
     const pacote = col[2];
     const vc = col[3];
-    const canal = col[4];
+    const canal = col[4]?.toUpperCase(); // ✅ MAIÚSCULO
     const resolucao = col[7];
 
     if (pais && cliente && pacote && canal) {
@@ -137,13 +139,12 @@ fetch('pacotes.csv')
     }
   });
 
-  // remove duplicados
+  // remover duplicados
   todosCanais = Object.values(
     Object.fromEntries(todosCanais.map(c => [c.canal, c]))
   );
 
   init();
-
 });
 
 // ================= INIT =================
@@ -152,7 +153,7 @@ function init() {
   carregarPaises('pais2');
 }
 
-// ================= TROCA =================
+// ================= TROCA TELA =================
 function mostrar(id) {
   document.querySelectorAll('.secao').forEach(s => s.classList.remove('ativa'));
   document.getElementById(id).classList.add('ativa');
@@ -160,6 +161,7 @@ function mostrar(id) {
 
 // ================= CARREGAR PAIS =================
 function carregarPaises(id) {
+
   const select = document.getElementById(id);
 
   const lista = [...new Set(dados.map(d => d.pais))].sort();
@@ -169,6 +171,7 @@ function carregarPaises(id) {
   lista.forEach(p => {
     select.innerHTML += `<option value="${p}">${p}</option>`;
   });
+
 }
 
 // ================= VALIDAR =================
@@ -220,20 +223,22 @@ document.getElementById('pacotes').addEventListener('change', function() {
   const tabela = document.getElementById('tabela-validar');
   tabela.innerHTML = '';
 
-  todosCanais.forEach(c => {
+  todosCanais
+    .sort((a, b) => Number(a.vc) - Number(b.vc)) // ✅ ORDEM NUMÉRICA
+    .forEach(c => {
 
-    const pertence = canaisSet.has(c.canal);
+      const pertence = canaisSet.has(c.canal);
 
-    tabela.innerHTML += `
-      <tr>
-        <td>${c.vc}</td>
-        <td>${c.canal}</td>
-        <td>${c.resolucao}</td>
-        <td class="${pertence ? 'si' : 'no'}">
-          ${pertence ? 'SI' : 'NO'}
-        </td>
-      </tr>`;
-  });
+      tabela.innerHTML += `
+        <tr>
+          <td>${c.vc}</td>
+          <td>${c.canal}</td>
+          <td>${c.resolucao}</td>
+          <td class="${pertence ? 'si' : 'no'}">
+            ${pertence ? 'SI' : 'NO'}
+          </td>
+        </tr>`;
+    });
 
 });
 
@@ -275,7 +280,7 @@ document.getElementById('cliente2').addEventListener('change', function() {
 
 });
 
-// ================= COMPARAR FINAL =================
+// ================= FUNÇÃO COMPARAR =================
 function comparar() {
 
   const pais = document.getElementById('pais2').value;
@@ -287,6 +292,11 @@ function comparar() {
     document.getElementById('pacote3').value
   ].filter(p => p);
 
+  if (planos.length === 0) {
+    alert("Selecione pelo menos um plano");
+    return;
+  }
+
   let thead = '<tr><th>Channel</th><th>Canal</th><th>Resolução</th>';
 
   planos.forEach(p => thead += `<th>${p}</th>`);
@@ -297,30 +307,31 @@ function comparar() {
 
   let html = '';
 
-  todosCanais.forEach(c => {
+  todosCanais
+    .sort((a, b) => Number(a.vc) - Number(b.vc)) // ✅ ORDEM NUMÉRICA
+    .forEach(c => {
 
-    html += `<tr>
-      <td>${c.vc}</td>
-      <td>${c.canal}</td>
-      <td>${c.resolucao}</td>`;
+      html += `<tr>
+        <td>${c.vc}</td>
+        <td>${c.canal}</td>
+        <td>${c.resolucao}</td>`;
 
-    planos.forEach(p => {
+      planos.forEach(p => {
 
-      const pertence = dados.some(d =>
-        d.pais === pais &&
-        d.cliente === cliente &&
-        d.pacote === p &&
-        d.canal === c.canal
-      );
+        const pertence = dados.some(d =>
+          d.pais === pais &&
+          d.cliente === cliente &&
+          d.pacote === p &&
+          d.canal === c.canal
+        );
 
-      html += `<td class="${pertence ? 'si' : 'no'}">
-        ${pertence ? 'SI' : 'NO'}
-      </td>`;
+        html += `<td class="${pertence ? 'si' : 'no'}">
+          ${pertence ? 'SI' : 'NO'}
+        </td>`;
+      });
+
+      html += '</tr>';
     });
-
-    html += '</tr>';
-
-  });
 
   document.getElementById('tabela-comparar').innerHTML = html;
 }
