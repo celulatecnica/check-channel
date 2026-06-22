@@ -19,13 +19,13 @@
 /* ===== BODY ===== */
 body {
   margin: 0;
-  background: #ffffff;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  background: white;
 }
 
 /* ===== CONTAINER ===== */
 .container {
-  width: 1076px; /* ✅ NOVA LARGURA */
+  width: 1076px;
   margin: auto;
   text-align: center;
 }
@@ -34,8 +34,8 @@ body {
 h1 {
   margin-top: 47px;
   margin-bottom: 47px;
-  font-size: 52px; /* ✅ REDUZIDO */
-  font-weight: 700; /* ✅ BOLD */
+  font-size: 52px;
+  font-weight: 700;
   color: #272727;
 }
 
@@ -43,14 +43,40 @@ h1 {
 .linha {
   width: 100%;
   border-bottom: 1px solid #dadade;
-  margin: 0;
 }
 
 /* ===== SUBTÍTULO ===== */
 h2 {
-  font-weight: 400;
   margin-top: 30px;
-  color: #444;
+  font-weight: normal;
+}
+
+/* ===== BANDEIRAS ===== */
+.bandeiras {
+  margin-top: 20px;
+}
+
+.bandeira {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 50px;
+  margin: 5px;
+  border-radius: 10px;
+  background: #dadade;
+  font-weight: bold;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.bandeira:hover {
+  border-color: #007aff;
+}
+
+.bandeira.active {
+  border-color: #007aff;
+  background: #e5f1ff;
 }
 
 /* ===== GRID ===== */
@@ -75,7 +101,6 @@ select {
   margin-top: 10px;
   border-radius: 8px;
   border: 1px solid #cfcfd3;
-  font-size: 14px;
 }
 
 /* ===== BOTÃO ===== */
@@ -83,17 +108,16 @@ button {
   margin-top: 25px;
   padding: 12px 35px;
   background: #ff9900;
-  border: none;
   color: white;
-  font-size: 16px;
+  border: none;
   border-radius: 6px;
   cursor: pointer;
 }
 
 /* ===== TABLE ===== */
 table {
+  width: 100%;
   margin-top: 40px;
-  width: 100%; /* ✅ agora respeita 1076px */
   border-collapse: collapse;
 }
 
@@ -106,6 +130,7 @@ th, td {
 .no { color: red; font-weight: bold; }
 
 </style>
+
 </head>
 
 <body>
@@ -120,8 +145,10 @@ th, td {
 <div class="linha"></div>
 
 <h2>Selecciona el país</h2>
-<select id="pais"></select>
 
+<div class="bandeiras" id="bandeiras"></div>
+
+<!-- GRID -->
 <div class="grid">
 
   <div class="card">
@@ -146,6 +173,7 @@ th, td {
 
 <button onclick="comparar()">Comparar</button>
 
+<!-- TABELA -->
 <table>
 <thead id="thead"></thead>
 <tbody id="tbody"></tbody>
@@ -157,7 +185,9 @@ th, td {
 
 let dados = [];
 let todosCanais = [];
+let paisSelecionado = "";
 
+// ===== CARREGAR CSV =====
 fetch('pacotes.csv')
 .then(r => r.text())
 .then(texto => {
@@ -187,50 +217,68 @@ fetch('pacotes.csv')
     Object.fromEntries(todosCanais.map(c=>[c.canal,c]))
   );
 
-  carregarPais();
+  carregarBandeiras();
+
 });
 
-function carregarPais(){
-  const select = document.getElementById('pais');
+// ===== BANDEIRAS =====
+function carregarBandeiras(){
 
-  const lista = [...new Set(dados.map(d=>d.pais))].sort();
+  const container = document.getElementById('bandeiras');
+  const paises = [...new Set(dados.map(d=>d.pais))];
 
-  select.innerHTML = '<option value="">Seleccionar</option>';
+  container.innerHTML = '';
 
-  lista.forEach(p=>{
-    select.innerHTML += `<option value="${p}">${p}</option>`;
+  paises.forEach(p => {
+
+    const div = document.createElement('div');
+    div.className = 'bandeira';
+    div.innerText = p.substring(0,2).toUpperCase();
+
+    div.onclick = () => selecionarPais(p, div);
+
+    container.appendChild(div);
   });
+
 }
 
-document.getElementById('pais').addEventListener('change', function(){
+// ===== SELECIONAR PAIS =====
+function selecionarPais(pais, elemento){
 
-  const pais = this.value;
+  paisSelecionado = pais;
+
+  document.querySelectorAll('.bandeira')
+    .forEach(b => b.classList.remove('active'));
+
+  elemento.classList.add('active');
 
   const clientes = [...new Set(
     dados.filter(d=>d.pais===pais).map(d=>d.cliente)
   )];
 
   ['cliente1','cliente2','cliente3'].forEach(id=>{
+
     const select = document.getElementById(id);
     select.innerHTML = '<option value="">Seleccionar cliente</option>';
 
     clientes.forEach(c=>{
       select.innerHTML += `<option value="${c}">${c}</option>`;
     });
+
   });
 
-});
+}
 
+// ===== CLIENTE → PACOTE =====
 ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
 
   document.getElementById(id).addEventListener('change', function(){
 
-    const pais = document.getElementById('pais').value;
     const cliente = this.value;
 
     const pacotes = [...new Set(
       dados
-      .filter(d=>d.pais===pais && d.cliente===cliente)
+      .filter(d=>d.pais===paisSelecionado && d.cliente===cliente)
       .map(d=>d.pacote)
     )];
 
@@ -245,9 +293,8 @@ document.getElementById('pais').addEventListener('change', function(){
 
 });
 
+// ===== COMPARAR =====
 function comparar(){
-
-  const pais = document.getElementById('pais').value;
 
   const config = [
     {c:'cliente1', p:'pacote1'},
@@ -284,7 +331,7 @@ function comparar(){
 
       ativos.forEach(p=>{
         const tem = dados.some(d =>
-          d.pais===pais &&
+          d.pais===paisSelecionado &&
           d.cliente===p.cliente &&
           d.pacote===p.pacote &&
           d.canal===c.canal
