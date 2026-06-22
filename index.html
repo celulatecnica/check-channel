@@ -89,7 +89,7 @@ h2 {
   color: #444;
 }
 
-/* SELECT MODERNO */
+/* SELECT */
 select {
   width: 100%;
   padding: 14px;
@@ -97,6 +97,7 @@ select {
 
   border-radius: 12px;
   border: 1px solid #d1d1d6;
+
   background: #f5f5f7;
 
   font-size: 14px;
@@ -203,7 +204,7 @@ let dados = [];
 let todosCanais = [];
 let paisSelecionado = "";
 
-// CSV
+// ===== CSV =====
 fetch('pacotes.csv')
 .then(r => r.text())
 .then(texto => {
@@ -235,7 +236,7 @@ fetch('pacotes.csv')
   carregarBandeiras();
 });
 
-// BANDEIRAS
+// ===== BANDEIRAS (CORRIGIDO) =====
 function carregarBandeiras(){
 
   const container = document.getElementById('bandeiras');
@@ -248,8 +249,20 @@ function carregarBandeiras(){
     const div = document.createElement('div');
     div.className = 'bandeira';
 
+    // ✅ CORREÇÃO COMPLETA NOME
+    const nomeArquivo = p
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/\s+/g,'')
+      .replace(/[^a-z]/g,'');
+
     const img = document.createElement('img');
-    img.src = `flags/${p.toLowerCase()}.png`;
+    img.src = `flags/${nomeArquivo}.png`;
+
+    // ✅ fallback elegante
+    img.onerror = () => {
+      div.innerHTML = `<span>${p.substring(0,2).toUpperCase()}</span>`;
+    };
 
     div.appendChild(img);
 
@@ -260,7 +273,7 @@ function carregarBandeiras(){
 
 }
 
-// SELECIONAR PAÍS
+// ===== SELECIONAR =====
 function selecionarPais(pais, elemento){
 
   paisSelecionado = pais;
@@ -277,6 +290,7 @@ function selecionarPais(pais, elemento){
   ['cliente1','cliente2','cliente3'].forEach(id=>{
 
     const select = document.getElementById(id);
+
     select.innerHTML =
       '<option value="">Selecciona el tipo de cliente</option>';
 
@@ -286,7 +300,7 @@ function selecionarPais(pais, elemento){
   });
 }
 
-// CLIENTE → PACOTE
+// ===== CLIENTE → PACOTE =====
 ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
 
   document.getElementById(id).addEventListener('change', function(){
@@ -312,7 +326,7 @@ function selecionarPais(pais, elemento){
 
 });
 
-// COMPARAR
+// ===== COMPARAR =====
 function comparar(){
 
   const config = [
