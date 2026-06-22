@@ -32,7 +32,7 @@ body {
 
 /* ===== TÍTULO ===== */
 h1 {
-  margin-top: 40px;
+  margin-top: 47px; /* ✅ AJUSTE EXATO */
   font-size: 42px;
 }
 
@@ -180,7 +180,6 @@ fetch('pacotes.csv')
     }
   });
 
-  // remove duplicados
   todosCanais = Object.values(
     Object.fromEntries(todosCanais.map(c=>[c.canal,c]))
   );
@@ -201,7 +200,7 @@ function carregarPais(){
   });
 }
 
-// ===== AO MUDAR PAIS =====
+// ===== PAIS CHANGE =====
 document.getElementById('pais').addEventListener('change', function(){
 
   const pais = this.value;
@@ -211,7 +210,6 @@ document.getElementById('pais').addEventListener('change', function(){
   )];
 
   ['cliente1','cliente2','cliente3'].forEach(id=>{
-
     const select = document.getElementById(id);
     select.innerHTML = '<option value="">Seleccionar cliente</option>';
 
@@ -222,7 +220,7 @@ document.getElementById('pais').addEventListener('change', function(){
 
 });
 
-// ===== CLIENTE → PACOTES =====
+// ===== CLIENTE → PACOTE =====
 ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
 
   document.getElementById(id).addEventListener('change', function(){
@@ -237,7 +235,6 @@ document.getElementById('pais').addEventListener('change', function(){
     )];
 
     const selectPacote = document.getElementById(`pacote${index+1}`);
-
     selectPacote.innerHTML = '<option value="">Seleccionar paquete</option>';
 
     pacotes.forEach(p=>{
@@ -287,7 +284,6 @@ function comparar(){
         <td>${c.resolucao}</td>`;
 
       ativos.forEach(p=>{
-
         const tem = dados.some(d =>
           d.pais===pais &&
           d.cliente===p.cliente &&
@@ -295,9 +291,7 @@ function comparar(){
           d.canal===c.canal
         );
 
-        html += `<td class="${tem?'si':'no'}">
-          ${tem?'SI':'NO'}
-        </td>`;
+        html += `<td class="${tem?'si':'no'}">${tem?'SI':'NO'}</td>`;
       });
 
       html += '</tr>';
