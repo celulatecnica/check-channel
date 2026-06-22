@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Pacotes</title>
+<meta charset="UTF-8">
+<title>Filtro de Pacotes</title>
 </head>
 <body>
 
-<h2>Selecione um pacote:</h2>
+<h2>Selecione o País:</h2>
+<select id="pais"></select>
 
+<h2>Selecione o Cliente:</h2>
+<select id="cliente"></select>
+
+<h2>Selecione o Pacote:</h2>
 <select id="pacotes"></select>
 
 <h3>Canais:</h3>
-
 <table border="1">
   <thead>
     <tr>
@@ -19,70 +23,116 @@
       <th>No Pacote</th>
     </tr>
   </thead>
-  <tbody id="tabela-canais">
-  </tbody>
+  <tbody id="tabela-canais"></tbody>
 </table>
 
 <script>
 let dados = [];
 let todosCanais = new Set();
 
-// carregar CSV
+// ============================
+// CARREGA CSV
+// ============================
 fetch('pacotes.csv')
-  .then(response => response.text())
-  .then(data => {
+.then(r => r.text())
+.then(texto => {
 
-    const linhas = data.split('\n');
-    const pacotesUnicos = new Set();
+  const linhas = texto.split('\n');
 
-    linhas.forEach((linha, index) => {
-      const colunas = linha.split(';');
+  linhas.forEach((linha, index) => {
 
-      if (index === 0) return; // ignora cabeçalho
+    if (index === 0) return;
 
-      const pacote = colunas[0]?.trim();
-      const canal = colunas[2]?.trim();
+    const col = linha.split(';');
 
-      if (pacote && canal) {
-        dados.push({ pacote, canal });
-        pacotesUnicos.add(pacote);
-        todosCanais.add(canal);
-      }
-    });
+    const pais = col[0]?.trim();
+    const cliente = col[1]?.trim();
+    const pacote = col[2]?.trim();
+    const canal = col[3]?.trim();
 
-    // preencher select
-    const select = document.getElementById('pacotes');
-
-    [...pacotesUnicos].sort().forEach(pacote => {
-      const option = document.createElement('option');
-      option.value = pacote;
-      option.textContent = pacote;
-      select.appendChild(option);
-    });
-
-    // mostrar primeira vez
-    mostrarTabela(select.value);
+    if (pais && cliente && pacote && canal) {
+      dados.push({ pais, cliente, pacote, canal });
+      todosCanais.add(canal);
+    }
   });
 
-// evento de mudança
-document.getElementById('pacotes').addEventListener('change', function() {
-  mostrarTabela(this.value);
+  carregarPais();
 });
 
-// função principal
-function mostrarTabela(pacoteSelecionado) {
+// ============================
+// PAIS
+// ============================
+function carregarPais() {
+  const select = document.getElementById('pais');
+
+  const paises = [...new Set(dados.map(d => d.pais))].sort();
+
+  select.innerHTML = '<option value="">Selecione</option>';
+
+  paises.forEach(p => {
+    select.innerHTML += `<option value="${p}">${p}</option>`;
+  });
+}
+
+// quando muda país
+document.getElementById('pais').addEventListener('change', function() {
+
+  const pais = this.value;
+
+  const clientes = [...new Set(
+    dados.filter(d => d.pais === pais).map(d => d.cliente)
+  )].sort();
+
+  const selectCliente = document.getElementById('cliente');
+  selectCliente.innerHTML = '<option value="">Selecione</option>';
+
+  clientes.forEach(c => {
+    selectCliente.innerHTML += `<option value="${c}">${c}</option>`;
+  });
+
+});
+
+// ============================
+// CLIENTE
+// ============================
+document.getElementById('cliente').addEventListener('change', function() {
+
+  const pais = document.getElementById('pais').value;
+  const cliente = this.value;
+
+  const pacotes = [...new Set(
+    dados
+      .filter(d => d.pais === pais && d.cliente === cliente)
+      .map(d => d.pacote)
+  )].sort();
+
+  const selectPacote = document.getElementById('pacotes');
+  selectPacote.innerHTML = '<option value="">Selecione</option>';
+
+  pacotes.forEach(p => {
+    selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
+  });
+
+});
+
+// ============================
+// PACOTE → TABELA
+// ============================
+document.getElementById('pacotes').addEventListener('change', function() {
+
+  const pais = document.getElementById('pais').value;
+  const cliente = document.getElementById('cliente').value;
+  const pacote = this.value;
 
   const tabela = document.getElementById('tabela-canais');
   tabela.innerHTML = '';
 
-  // canais do pacote selecionado
   const canaisDoPacote = dados
-    .filter(item => item.pacote === pacoteSelecionado)
-    .map(item => item.canal);
+    .filter(d => d.pais === pais && d.cliente === cliente && d.pacote === pacote)
+    .map(d => d.canal);
 
   const canaisSet = new Set(canaisDoPacote);
 
-  // percorre TODOS os canais
   [...todosCanais].sort().forEach(canal => {
 
     const tr = document.createElement('tr');
@@ -91,14 +141,18 @@ function mostrarTabela(pacoteSelecionado) {
     tdCanal.textContent = canal;
 
     const tdStatus = document.createElement('td');
-    tdStatus.textContent = canaisSet.has(canal) ? 'SI' : 'NO';
+    const pertence = canaisSet.has(canal);
+
+    tdStatus.textContent = pertence ? 'SI' : 'NO';
+    tdStatus.style.color = pertence ? 'green' : 'red';
 
     tr.appendChild(tdCanal);
     tr.appendChild(tdStatus);
 
     tabela.appendChild(tr);
   });
-}
+
+});
 </script>
 
 </body>
