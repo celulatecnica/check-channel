@@ -31,7 +31,7 @@ let dados = [];
 let todosCanais = new Set();
 
 // ============================
-// CARREGA CSV
+// CARREGAR CSV
 // ============================
 fetch('pacotes.csv')
 .then(r => r.text())
@@ -48,7 +48,7 @@ fetch('pacotes.csv')
     const pais = col[0]?.trim();
     const cliente = col[1]?.trim();
     const pacote = col[2]?.trim();
-    const canal = col[3]?.trim();
+    const canal = col[4]?.trim(); // ✅ CORRETO
 
     if (pais && cliente && pacote && canal) {
       dados.push({ pais, cliente, pacote, canal });
@@ -60,11 +60,11 @@ fetch('pacotes.csv')
 });
 
 // ============================
-// PAIS
+// PAÍS
 // ============================
 function carregarPais() {
-  const select = document.getElementById('pais');
 
+  const select = document.getElementById('pais');
   const paises = [...new Set(dados.map(d => d.pais))].sort();
 
   select.innerHTML = '<option value="">Selecione</option>';
@@ -74,13 +74,17 @@ function carregarPais() {
   });
 }
 
-// quando muda país
+// ============================
+// QUANDO MUDA PAÍS
+// ============================
 document.getElementById('pais').addEventListener('change', function() {
 
   const pais = this.value;
 
   const clientes = [...new Set(
-    dados.filter(d => d.pais === pais).map(d => d.cliente)
+    dados
+      .filter(d => d.pais === pais)
+      .map(d => d.cliente)
   )].sort();
 
   const selectCliente = document.getElementById('cliente');
@@ -93,7 +97,7 @@ document.getElementById('pais').addEventListener('change', function() {
 });
 
 // ============================
-// CLIENTE
+// QUANDO MUDA CLIENTE
 // ============================
 document.getElementById('cliente').addEventListener('change', function() {
 
@@ -116,7 +120,7 @@ document.getElementById('cliente').addEventListener('change', function() {
 });
 
 // ============================
-// PACOTE → TABELA
+// QUANDO MUDA PACOTE
 // ============================
 document.getElementById('pacotes').addEventListener('change', function() {
 
