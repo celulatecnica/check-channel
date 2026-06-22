@@ -32,7 +32,8 @@ body {
 
 /* ===== TÍTULO ===== */
 h1 {
-  margin-top: 47px; /* ✅ AJUSTE EXATO */
+  margin-top: 47px;   /* espaço superior */
+  margin-bottom: 47px; /* ✅ espaço inferior EXATO */
   font-size: 42px;
 }
 
@@ -40,7 +41,7 @@ h1 {
 .linha {
   width: 100%;
   border-bottom: 1px solid #dadade;
-  margin: 20px 0;
+  margin: 0; /* ✅ REMOVIDO espaçamento automático */
 }
 
 /* ===== SUBTÍTULO ===== */
@@ -111,6 +112,7 @@ th, td {
 <div class="container">
 
 <h1>Compare los planes de programación</h1>
+
 <div class="linha"></div>
 
 <h2>Selecciona el país</h2>
@@ -141,7 +143,6 @@ th, td {
 
 <button onclick="comparar()">Comparar</button>
 
-<!-- TABELA -->
 <table>
 <thead id="thead"></thead>
 <tbody id="tbody"></tbody>
@@ -154,7 +155,6 @@ th, td {
 let dados = [];
 let todosCanais = [];
 
-// ===== CARREGAR CSV =====
 fetch('pacotes.csv')
 .then(r => r.text())
 .then(texto => {
@@ -187,7 +187,6 @@ fetch('pacotes.csv')
   carregarPais();
 });
 
-// ===== CARREGAR PAIS =====
 function carregarPais(){
   const select = document.getElementById('pais');
 
@@ -200,7 +199,6 @@ function carregarPais(){
   });
 }
 
-// ===== PAIS CHANGE =====
 document.getElementById('pais').addEventListener('change', function(){
 
   const pais = this.value;
@@ -210,6 +208,7 @@ document.getElementById('pais').addEventListener('change', function(){
   )];
 
   ['cliente1','cliente2','cliente3'].forEach(id=>{
+
     const select = document.getElementById(id);
     select.innerHTML = '<option value="">Seleccionar cliente</option>';
 
@@ -220,7 +219,6 @@ document.getElementById('pais').addEventListener('change', function(){
 
 });
 
-// ===== CLIENTE → PACOTE =====
 ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
 
   document.getElementById(id).addEventListener('change', function(){
@@ -245,7 +243,6 @@ document.getElementById('pais').addEventListener('change', function(){
 
 });
 
-// ===== COMPARAR =====
 function comparar(){
 
   const pais = document.getElementById('pais').value;
