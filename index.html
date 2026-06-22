@@ -129,12 +129,32 @@ select:valid {
 /* BOTÃO */
 button {
   margin-top: 30px;
-  padding: 12px 40px;
-  background: #ff9900;
+
+  height: 39px; /* ✅ altura exata */
+  padding: 0 32px;
+
+  background: #0071e3; /* ✅ azul */
   color: white;
+
+  font-size: 16px; /* ✅ maior */
+  font-weight: 600;
+
   border: none;
-  border-radius: 6px;
+  border-radius: 16px; /* ✅ raio */
+
   cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+/* ✅ hover suave */
+button:hover {
+  background: #0a84ff;
+}
+
+/* ✅ clique */
+button:active {
+  transform: scale(0.97);
 }
 
 /* TABELA */
