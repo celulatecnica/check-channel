@@ -6,11 +6,27 @@
 
 <style>
 
-/* ===== GERAL ===== */
+/* ===== HEADER ===== */
+.top-bar {
+  height: 44px;
+  background: #fbfbfd;
+}
+.sub-bar {
+  height: 44px;
+  background: #f5f5f7;
+}
+
+/* ===== BODY ===== */
 body {
   margin: 0;
   font-family: Arial;
-  background-color: #f2f2f2;
+  background: #ffffff;
+}
+
+/* ===== CONTAINER CENTRAL ===== */
+.container {
+  width: 1100px;
+  margin: auto;
   text-align: center;
 }
 
@@ -18,91 +34,67 @@ body {
 h1 {
   margin-top: 40px;
   font-size: 42px;
-  color: #333;
 }
 
-/* ===== LINHA DIVISÓRIA ===== */
+/* ===== LINHA ===== */
 .linha {
-  width: 60%;
-  margin: 20px auto;
+  width: 100%;
   border-bottom: 1px solid #ccc;
+  margin: 20px 0;
 }
 
 /* ===== SUBTÍTULO ===== */
 h2 {
-  color: #444;
   font-weight: normal;
+  margin-top: 30px;
 }
 
-/* ===== BANDEIRAS ===== */
-.bandeiras {
-  margin: 20px 0;
-}
-
-.bandeira {
-  display: inline-block;
-  width: 70px;
-  height: 45px;
-  margin: 5px;
-  border-radius: 8px;
-  cursor: pointer;
-  background-size: cover;
-  border: 2px solid transparent;
-}
-
-.bandeira:hover {
-  border: 2px solid blue;
-}
-
-/* ===== GRID PLANOS ===== */
-.container-planos {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
+/* ===== GRID ===== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
   margin-top: 30px;
 }
 
 /* ===== CARD ===== */
 .card {
-  background: #eaeaea;
+  background: #f5f5f7;
   padding: 20px;
   border-radius: 12px;
-  width: 260px;
 }
 
-/* ===== INPUTS ===== */
+/* ===== SELECT ===== */
 select {
   width: 100%;
   padding: 12px;
   margin-top: 10px;
-  border-radius: 10px;
+  border-radius: 8px;
   border: 1px solid #ccc;
-  font-size: 14px;
 }
 
-/* ===== BOTÃO ===== */
+/* ===== BUTTON ===== */
 button {
   margin-top: 25px;
-  padding: 12px 30px;
-  background: orange;
+  padding: 12px 35px;
+  background: #ff9900;
   border: none;
   color: white;
   font-size: 16px;
-  cursor: pointer;
   border-radius: 6px;
+  cursor: pointer;
 }
 
-/* ===== TABELA ===== */
+/* ===== TABLE ===== */
 table {
-  margin: 40px auto;
+  margin-top: 40px;
+  width: 100%;
   border-collapse: collapse;
-  width: 90%;
-  background: white;
 }
 
 th, td {
   padding: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
 }
 
 .si { color: green; font-weight: bold; }
@@ -113,32 +105,35 @@ th, td {
 
 <body>
 
+<div class="top-bar"></div>
+<div class="sub-bar"></div>
+
+<div class="container">
+
 <h1>Compare los planes de programación</h1>
 <div class="linha"></div>
 
 <h2>Selecciona el país</h2>
-
-<!-- PAIS -->
 <select id="pais"></select>
 
-<h2>Selecciona el cliente</h2>
-<select id="cliente"></select>
-
-<!-- PLANOS -->
-<div class="container-planos">
+<!-- GRID PLANOS -->
+<div class="grid">
 
   <div class="card">
     <h3>Paquete 1</h3>
+    <select id="cliente1"></select>
     <select id="pacote1"></select>
   </div>
 
   <div class="card">
     <h3>Paquete 2</h3>
+    <select id="cliente2"></select>
     <select id="pacote2"></select>
   </div>
 
   <div class="card">
     <h3>Paquete 3</h3>
+    <select id="cliente3"></select>
     <select id="pacote3"></select>
   </div>
 
@@ -152,23 +147,25 @@ th, td {
 <tbody id="tbody"></tbody>
 </table>
 
+</div>
+
 <script>
 
 let dados = [];
 let todosCanais = [];
 
-// ================= CARREGAR CSV =================
+// ================= CSV =================
 fetch('pacotes.csv')
 .then(r => r.text())
 .then(texto => {
 
   const linhas = texto.replace(/\r/g,'').split('\n');
 
-  linhas.forEach((linha, i) => {
+  linhas.forEach((linha,i)=>{
 
-    if (i === 0) return;
+    if(i===0)return;
 
-    const col = linha.split(';').map(c => c.trim());
+    const col = linha.split(';').map(c=>c.trim());
 
     const pais = col[0];
     const cliente = col[1];
@@ -177,67 +174,74 @@ fetch('pacotes.csv')
     const canal = col[4]?.toUpperCase();
     const resolucao = col[7];
 
-    if (pais && cliente && pacote && canal) {
-      dados.push({ pais, cliente, pacote, canal, vc, resolucao });
-      todosCanais.push({ canal, vc, resolucao });
+    if(pais && cliente && pacote){
+      dados.push({pais,cliente,pacote,canal,vc,resolucao});
+      todosCanais.push({canal,vc,resolucao});
     }
   });
 
   todosCanais = Object.values(
-    Object.fromEntries(todosCanais.map(c => [c.canal, c]))
+    Object.fromEntries(todosCanais.map(c=>[c.canal,c]))
   );
 
   carregarPais();
-
 });
 
-// ================= CARREGAR PAIS =================
-function carregarPais() {
+// ================= PAIS =================
+function carregarPais(){
 
   const select = document.getElementById('pais');
 
-  const paises = [...new Set(dados.map(d => d.pais))].sort();
+  const lista = [...new Set(dados.map(d=>d.pais))].sort();
 
   select.innerHTML = '<option value="">Seleccionar</option>';
 
-  paises.forEach(p => {
+  lista.forEach(p=>{
     select.innerHTML += `<option value="${p}">${p}</option>`;
   });
-
 }
 
-// ================= PAIS CHANGE =================
-document.getElementById('pais').addEventListener('change', function() {
+// ================= AO MUDAR PAIS =================
+document.getElementById('pais').addEventListener('change', function(){
+
+  const pais = this.value;
 
   const clientes = [...new Set(
-    dados.filter(d => d.pais === this.value).map(d => d.cliente)
+    dados.filter(d=>d.pais===pais).map(d=>d.cliente)
   )];
 
-  const select = document.getElementById('cliente');
-  select.innerHTML = '<option value="">Seleccionar</option>';
+  ['cliente1','cliente2','cliente3'].forEach(id=>{
+    const select = document.getElementById(id);
 
-  clientes.forEach(c => {
-    select.innerHTML += `<option value="${c}">${c}</option>`;
+    select.innerHTML = '<option value="">Seleccionar cliente</option>';
+
+    clientes.forEach(c=>{
+      select.innerHTML += `<option value="${c}">${c}</option>`;
+    });
   });
 
 });
 
-// ================= CLIENTE CHANGE =================
-document.getElementById('cliente').addEventListener('change', function() {
+// ================= CLIENTE → PACOTE =================
+['cliente1','cliente2','cliente3'].forEach((id,index)=>{
 
-  const pais = document.getElementById('pais').value;
+  document.getElementById(id).addEventListener('change', function(){
 
-  const pacotes = [...new Set(
-    dados.filter(d => d.pais === pais && d.cliente === this.value).map(d => d.pacote)
-  )];
+    const pais = document.getElementById('pais').value;
+    const cliente = this.value;
 
-  ['pacote1','pacote2','pacote3'].forEach(id => {
+    const pacotes = [...new Set(
+      dados
+      .filter(d=>d.pais===pais && d.cliente===cliente)
+      .map(d=>d.pacote)
+    )];
 
-    const select = document.getElementById(id);
-    select.innerHTML = '<option value="">Seleccionar</option>';
+    const selectPacote = document.getElementById(`pacote${index+1}`);
 
-    pacotes.forEach(p => {
-      select.innerHTML += `<option value="${p}">${p}</option>`;
+    selectPacote.innerHTML = '<option>Seleccionar paquete</option>';
+
+    pacotes.forEach(p=>{
+      selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
     });
 
   });
@@ -245,56 +249,53 @@ document.getElementById('cliente').addEventListener('change', function() {
 });
 
 // ================= COMPARAR =================
-function comparar() {
+function comparar(){
 
   const pais = document.getElementById('pais').value;
-  const cliente = document.getElementById('cliente').value;
 
-  const planos = [
-    document.getElementById('pacote1').value,
-    document.getElementById('pacote2').value,
-    document.getElementById('pacote3').value
-  ].filter(p => p);
+  const selects = [
+    {cliente:'cliente1', pacote:'pacote1'},
+    {cliente:'cliente2', pacote:'pacote2'},
+    {cliente:'cliente3', pacote:'pacote3'}
+  ];
 
-  if (planos.length === 0) {
-    alert("Selecione pelo menos um plano");
-    return;
-  }
+  let header = '<tr><th>Channel</th><th>Canal</th><th>Resolución</th>';
+  let ativos = [];
 
-  let thead = `<tr>
-    <th>Channel</th>
-    <th>Canal</th>
-    <th>Resolución</th>`;
+  selects.forEach(s=>{
+    const pacote = document.getElementById(s.pacote).value;
+    const cliente = document.getElementById(s.cliente).value;
 
-  planos.forEach(p => thead += `<th>${p}</th>`);
+    if(pacote && cliente){
+      header += `<th>${pacote}</th>`;
+      ativos.push({pacote,cliente});
+    }
+  });
 
-  thead += '</tr>';
-
-  document.getElementById('thead').innerHTML = thead;
+  header += '</tr>';
+  document.getElementById('thead').innerHTML = header;
 
   let html = '';
 
   todosCanais
-    .sort((a,b) => Number(a.vc) - Number(b.vc))
-    .forEach(c => {
+    .sort((a,b)=>Number(a.vc)-Number(b.vc))
+    .forEach(c=>{
 
       html += `<tr>
         <td>${c.vc}</td>
         <td>${c.canal}</td>
         <td>${c.resolucao}</td>`;
 
-      planos.forEach(p => {
+      ativos.forEach(p=>{
 
-        const pertence = dados.some(d =>
-          d.pais === pais &&
-          d.cliente === cliente &&
-          d.pacote === p &&
-          d.canal === c.canal
+        const tem = dados.some(d =>
+          d.pais===pais &&
+          d.cliente===p.cliente &&
+          d.pacote===p.pacote &&
+          d.canal===c.canal
         );
 
-        html += `<td class="${pertence ? 'si' : 'no'}">
-          ${pertence ? 'SI' : 'NO'}
-        </td>`;
+        html += `<td class="${tem?'si':'no'}">${tem?'SI':'NO'}</td>`;
       });
 
       html += '</tr>';
