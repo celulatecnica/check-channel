@@ -11,10 +11,21 @@
 <select id="pacotes"></select>
 
 <h3>Canais:</h3>
-<ul id="lista-canais"></ul>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>Canal</th>
+      <th>No Pacote</th>
+    </tr>
+  </thead>
+  <tbody id="tabela-canais">
+  </tbody>
+</table>
 
 <script>
 let dados = [];
+let todosCanais = new Set();
 
 // carregar CSV
 fetch('pacotes.csv')
@@ -35,9 +46,11 @@ fetch('pacotes.csv')
       if (pacote && canal) {
         dados.push({ pacote, canal });
         pacotesUnicos.add(pacote);
+        todosCanais.add(canal);
       }
     });
 
+    // preencher select
     const select = document.getElementById('pacotes');
 
     [...pacotesUnicos].sort().forEach(pacote => {
@@ -47,36 +60,46 @@ fetch('pacotes.csv')
       select.appendChild(option);
     });
 
-    // dispara evento inicial
-    mostrarCanais(select.value);
+    // mostrar primeira vez
+    mostrarTabela(select.value);
   });
 
-// quando mudar o pacote
+// evento de mudança
 document.getElementById('pacotes').addEventListener('change', function() {
-  mostrarCanais(this.value);
+  mostrarTabela(this.value);
 });
 
-// função para mostrar canais
-function mostrarCanais(pacoteSelecionado) {
+// função principal
+function mostrarTabela(pacoteSelecionado) {
 
-  const lista = document.getElementById('lista-canais');
-  lista.innerHTML = '';
+  const tabela = document.getElementById('tabela-canais');
+  tabela.innerHTML = '';
 
-  const canais = dados
+  // canais do pacote selecionado
+  const canaisDoPacote = dados
     .filter(item => item.pacote === pacoteSelecionado)
     .map(item => item.canal);
 
-  // remove duplicados
-  const canaisUnicos = [...new Set(canais)].sort();
+  const canaisSet = new Set(canaisDoPacote);
 
-  canaisUnicos.forEach(canal => {
-    const li = document.createElement('li');
-    li.textContent = canal;
-    lista.appendChild(li);
+  // percorre TODOS os canais
+  [...todosCanais].sort().forEach(canal => {
+
+    const tr = document.createElement('tr');
+
+    const tdCanal = document.createElement('td');
+    tdCanal.textContent = canal;
+
+    const tdStatus = document.createElement('td');
+    tdStatus.textContent = canaisSet.has(canal) ? 'SI' : 'NO';
+
+    tr.appendChild(tdCanal);
+    tr.appendChild(tdStatus);
+
+    tabela.appendChild(tr);
   });
 }
 </script>
 
 </body>
 </html>
-``
