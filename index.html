@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Lista de Pacotes</title>
+</head>
+<body>
+
+  <h2>Selecione um pacote:</h2>
+
+  <select id="pacotes">
+    <option>Carregando...</option>
+  </select>
+
+  <script>
+    fetch('pacotes.csv')
+      .then(response => response.text())
+      .then(data => {
+        const linhas = data.split('\n');
+        const select = document.getElementById('pacotes');
+
+        select.innerHTML = '';
+
+        linhas.forEach(linha => {
+          const valor = linha.trim();
+          if (valor !== '') {
+            const option = document.createElement('option');
+            option.value = valor;
+            option.textContent = valor;
+            select.appendChild(option);
+          }
+        });
+      });
+  </script>
+
+</body>
+</html>
