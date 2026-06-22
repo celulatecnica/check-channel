@@ -7,19 +7,13 @@
 <style>
 
 /* ===== HEADER ===== */
-.top-bar {
-  height: 44px;
-  background: #fbfbfd;
-}
-.sub-bar {
-  height: 44px;
-  background: #f5f5f7;
-}
+.top-bar { height: 44px; background: #fbfbfd; }
+.sub-bar { height: 44px; background: #f5f5f7; }
 
 /* ===== BODY ===== */
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
   background: white;
 }
 
@@ -39,10 +33,8 @@ h1 {
   color: #272727;
 }
 
-/* ===== LINHA ===== */
 .linha {
   border-bottom: 1px solid #dadade;
-  margin: 0;
 }
 
 /* ===== SUBTÍTULO ===== */
@@ -52,93 +44,74 @@ h2 {
 }
 
 /* ===== BANDEIRAS ===== */
-.bandeiras {
-  margin-top: 20px;
-}
-
-/* container */
 .bandeira {
   display: inline-block;
   width: 72px;
   height: 48px;
   margin: 6px;
-
   border-radius: 12px;
   overflow: hidden;
-
   cursor: pointer;
-
   border: 2px solid transparent;
-  background: transparent;
-
   transition: all 0.2s ease;
 }
 
-/* imagem */
 .bandeira img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
 }
 
-/* hover */
 .bandeira:hover {
   border-color: #007aff;
   transform: scale(1.05);
 }
 
-/* selecionado */
 .bandeira.active {
   border-color: #007aff;
-}
-
-/* fallback */
-.bandeira span {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  background: #dadade;
-  font-weight: bold;
-  border-radius: 12px;
 }
 
 /* ===== GRID ===== */
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 25px;
-  margin-top: 30px;
+  gap: 40px; /* mais espaçado */
+  margin-top: 40px;
 }
 
-/* ===== CARD ===== */
-.card {
-  background: #dadade;
-  padding: 20px;
-  border-radius: 12px;
+/* ===== BLOCO DE PACOTE ===== */
+.pacote {
+  text-align: left;
 }
 
-/* ===== SELECT ===== */
+/* título menor */
+.pacote h3 {
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #444;
+}
+
+/* inputs */
 select {
   width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border-radius: 8px;
-  border: 1px solid #cfcfd3;
+  padding: 14px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  border: 1px solid #d1d1d6;
+  background: #f5f5f7;
+  appearance: none;
+  font-size: 14px;
 }
 
 /* ===== BOTÃO ===== */
 button {
-  margin-top: 25px;
-  padding: 12px 35px;
+  margin-top: 30px;
+  padding: 12px 40px;
   background: #ff9900;
   color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 16px;
 }
 
 /* ===== TABELA ===== */
@@ -173,23 +146,24 @@ th, td {
 
 <h2>Selecciona el país</h2>
 
-<div class="bandeiras" id="bandeiras"></div>
+<div id="bandeiras"></div>
 
+<!-- NOVO LAYOUT -->
 <div class="grid">
 
-  <div class="card">
+  <div class="pacote">
     <h3>Paquete 1</h3>
     <select id="cliente1"></select>
     <select id="pacote1"></select>
   </div>
 
-  <div class="card">
+  <div class="pacote">
     <h3>Paquete 2</h3>
     <select id="cliente2"></select>
     <select id="pacote2"></select>
   </div>
 
-  <div class="card">
+  <div class="pacote">
     <h3>Paquete 3</h3>
     <select id="cliente3"></select>
     <select id="pacote3"></select>
@@ -212,7 +186,6 @@ let dados = [];
 let todosCanais = [];
 let paisSelecionado = "";
 
-/* ===== CARREGAR CSV ===== */
 fetch('pacotes.csv')
 .then(r => r.text())
 .then(texto => {
@@ -220,7 +193,6 @@ fetch('pacotes.csv')
   const linhas = texto.replace(/\r/g,'').split('\n');
 
   linhas.forEach((linha,i)=>{
-
     if(i===0)return;
 
     const col = linha.split(';').map(c=>c.trim());
@@ -232,7 +204,7 @@ fetch('pacotes.csv')
     const canal = col[4]?.toUpperCase();
     const resolucao = col[7];
 
-    if(pais && cliente && pacote){
+    if(pais){
       dados.push({pais,cliente,pacote,canal,vc,resolucao});
       todosCanais.push({canal,vc,resolucao});
     }
@@ -243,10 +215,8 @@ fetch('pacotes.csv')
   );
 
   carregarBandeiras();
-
 });
 
-/* ===== BANDEIRAS ===== */
 function carregarBandeiras(){
 
   const container = document.getElementById('bandeiras');
@@ -254,22 +224,13 @@ function carregarBandeiras(){
   const paises = [...new Set(dados.map(d=>d.pais))]
     .sort((a,b)=>a.localeCompare(b));
 
-  container.innerHTML = '';
-
   paises.forEach(p => {
-
-    const fileName = p.toLowerCase().replace(/\s+/g,'');
-    const path = `flags/${fileName}.png`;
 
     const div = document.createElement('div');
     div.className = 'bandeira';
 
     const img = document.createElement('img');
-    img.src = path;
-
-    img.onerror = () => {
-      div.innerHTML = `<span>${p.substring(0,2).toUpperCase()}</span>`;
-    };
+    img.src = `flags/${p.toLowerCase()}.png`;
 
     div.appendChild(img);
 
@@ -280,7 +241,6 @@ function carregarBandeiras(){
 
 }
 
-/* ===== SELECIONAR PAIS ===== */
 function selecionarPais(pais, elemento){
 
   paisSelecionado = pais;
@@ -295,8 +255,9 @@ function selecionarPais(pais, elemento){
   )];
 
   ['cliente1','cliente2','cliente3'].forEach(id=>{
+
     const select = document.getElementById(id);
-    select.innerHTML = '<option value="">Seleccionar cliente</option>';
+    select.innerHTML = '<option value="">Selecciona el tipo de cliente</option>';
 
     clientes.forEach(c=>{
       select.innerHTML += `<option value="${c}">${c}</option>`;
@@ -305,7 +266,6 @@ function selecionarPais(pais, elemento){
 
 }
 
-/* ===== CLIENTE → PACOTE ===== */
 ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
 
   document.getElementById(id).addEventListener('change', function(){
@@ -319,7 +279,7 @@ function selecionarPais(pais, elemento){
     )];
 
     const selectPacote = document.getElementById(`pacote${index+1}`);
-    selectPacote.innerHTML = '<option value="">Seleccionar paquete</option>';
+    selectPacote.innerHTML = '<option value="">Selecciona el paquete</option>';
 
     pacotes.forEach(p=>{
       selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
@@ -329,7 +289,6 @@ function selecionarPais(pais, elemento){
 
 });
 
-/* ===== COMPARAR ===== */
 function comparar(){
 
   const config = [
@@ -373,7 +332,9 @@ function comparar(){
           d.canal===c.canal
         );
 
-        html += `<td class="${tem?'si':'no'}">${tem?'SI':'NO'}</td>`;
+        html += `<td class="${tem?'si':'no'}">
+          ${tem?'SI':'NO'}
+        </td>`;
       });
 
       html += '</tr>';
