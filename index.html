@@ -19,8 +19,8 @@
 /* ===== BODY ===== */
 body {
   margin: 0;
-  font-family: Arial;
   background: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
 /* ===== CONTAINER ===== */
@@ -32,22 +32,25 @@ body {
 
 /* ===== TÍTULO ===== */
 h1 {
-  margin-top: 47px;   /* espaço superior */
-  margin-bottom: 47px; /* ✅ espaço inferior EXATO */
-  font-size: 42px;
+  margin-top: 47px;
+  margin-bottom: 47px;
+  font-size: 64px; /* ✅ 48pt convertido */
+  color: #272727; /* ✅ cor correta */
+  font-weight: 600;
 }
 
 /* ===== LINHA ===== */
 .linha {
   width: 100%;
   border-bottom: 1px solid #dadade;
-  margin: 0; /* ✅ REMOVIDO espaçamento automático */
+  margin: 0;
 }
 
 /* ===== SUBTÍTULO ===== */
 h2 {
-  font-weight: normal;
+  font-weight: 400;
   margin-top: 30px;
+  color: #444;
 }
 
 /* ===== GRID ===== */
@@ -72,6 +75,7 @@ select {
   margin-top: 10px;
   border-radius: 8px;
   border: 1px solid #cfcfd3;
+  font-size: 14px;
 }
 
 /* ===== BOTÃO ===== */
@@ -118,7 +122,6 @@ th, td {
 <h2>Selecciona el país</h2>
 <select id="pais"></select>
 
-<!-- PLANOS -->
 <div class="grid">
 
   <div class="card">
@@ -208,7 +211,6 @@ document.getElementById('pais').addEventListener('change', function(){
   )];
 
   ['cliente1','cliente2','cliente3'].forEach(id=>{
-
     const select = document.getElementById(id);
     select.innerHTML = '<option value="">Seleccionar cliente</option>';
 
