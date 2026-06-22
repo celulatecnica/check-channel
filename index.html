@@ -6,25 +6,25 @@
 
 <style>
 
-/* ===== HEADER ===== */
+/* HEADER */
 .top-bar { height: 44px; background: #fbfbfd; }
 .sub-bar { height: 44px; background: #f5f5f7; }
 
-/* ===== BODY ===== */
+/* BODY */
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
   background: white;
 }
 
-/* ===== CONTAINER ===== */
+/* CONTAINER */
 .container {
   width: 1076px;
   margin: auto;
   text-align: center;
 }
 
-/* ===== TÍTULO ===== */
+/* TÍTULO */
 h1 {
   margin-top: 47px;
   margin-bottom: 47px;
@@ -37,13 +37,12 @@ h1 {
   border-bottom: 1px solid #dadade;
 }
 
-/* ===== SUBTÍTULO ===== */
+/* SUBTÍTULO */
 h2 {
   margin-top: 30px;
-  font-weight: normal;
 }
 
-/* ===== BANDEIRAS ===== */
+/* BANDEIRAS */
 .bandeira {
   display: inline-block;
   width: 72px;
@@ -71,39 +70,46 @@ h2 {
   border-color: #007aff;
 }
 
-/* ===== GRID ===== */
+/* GRID */
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 40px; /* mais espaçado */
+  gap: 40px;
   margin-top: 40px;
 }
 
-/* ===== BLOCO DE PACOTE ===== */
+/* PACOTE */
 .pacote {
-  text-align: left;
+  text-align: center;
 }
 
-/* título menor */
 .pacote h3 {
   font-size: 14px;
   margin-bottom: 10px;
   color: #444;
 }
 
-/* inputs */
+/* SELECT MODERNO */
 select {
   width: 100%;
   padding: 14px;
   margin-bottom: 12px;
+
   border-radius: 12px;
   border: 1px solid #d1d1d6;
   background: #f5f5f7;
-  appearance: none;
+
   font-size: 14px;
+
+  appearance: none;
+  -webkit-appearance: none;
+
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23666' height='20' viewBox='0 0 20 20' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M5 7l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
 }
 
-/* ===== BOTÃO ===== */
+/* BOTÃO */
 button {
   margin-top: 30px;
   padding: 12px 40px;
@@ -114,7 +120,7 @@ button {
   cursor: pointer;
 }
 
-/* ===== TABELA ===== */
+/* TABELA */
 table {
   width: 100%;
   margin-top: 40px;
@@ -148,25 +154,36 @@ th, td {
 
 <div id="bandeiras"></div>
 
-<!-- NOVO LAYOUT -->
 <div class="grid">
 
   <div class="pacote">
     <h3>Paquete 1</h3>
-    <select id="cliente1"></select>
-    <select id="pacote1"></select>
+    <select id="cliente1">
+      <option value="">Selecciona el tipo de cliente</option>
+    </select>
+    <select id="pacote1">
+      <option value="">Selecciona el paquete</option>
+    </select>
   </div>
 
   <div class="pacote">
     <h3>Paquete 2</h3>
-    <select id="cliente2"></select>
-    <select id="pacote2"></select>
+    <select id="cliente2">
+      <option value="">Selecciona el tipo de cliente</option>
+    </select>
+    <select id="pacote2">
+      <option value="">Selecciona el paquete</option>
+    </select>
   </div>
 
   <div class="pacote">
     <h3>Paquete 3</h3>
-    <select id="cliente3"></select>
-    <select id="pacote3"></select>
+    <select id="cliente3">
+      <option value="">Selecciona el tipo de cliente</option>
+    </select>
+    <select id="pacote3">
+      <option value="">Selecciona el paquete</option>
+    </select>
   </div>
 
 </div>
@@ -186,6 +203,7 @@ let dados = [];
 let todosCanais = [];
 let paisSelecionado = "";
 
+// CSV
 fetch('pacotes.csv')
 .then(r => r.text())
 .then(texto => {
@@ -217,6 +235,7 @@ fetch('pacotes.csv')
   carregarBandeiras();
 });
 
+// BANDEIRAS
 function carregarBandeiras(){
 
   const container = document.getElementById('bandeiras');
@@ -241,6 +260,7 @@ function carregarBandeiras(){
 
 }
 
+// SELECIONAR PAÍS
 function selecionarPais(pais, elemento){
 
   paisSelecionado = pais;
@@ -257,15 +277,16 @@ function selecionarPais(pais, elemento){
   ['cliente1','cliente2','cliente3'].forEach(id=>{
 
     const select = document.getElementById(id);
-    select.innerHTML = '<option value="">Selecciona el tipo de cliente</option>';
+    select.innerHTML =
+      '<option value="">Selecciona el tipo de cliente</option>';
 
     clientes.forEach(c=>{
       select.innerHTML += `<option value="${c}">${c}</option>`;
     });
   });
-
 }
 
+// CLIENTE → PACOTE
 ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
 
   document.getElementById(id).addEventListener('change', function(){
@@ -279,7 +300,9 @@ function selecionarPais(pais, elemento){
     )];
 
     const selectPacote = document.getElementById(`pacote${index+1}`);
-    selectPacote.innerHTML = '<option value="">Selecciona el paquete</option>';
+
+    selectPacote.innerHTML =
+      '<option value="">Selecciona el paquete</option>';
 
     pacotes.forEach(p=>{
       selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
@@ -289,6 +312,7 @@ function selecionarPais(pais, elemento){
 
 });
 
+// COMPARAR
 function comparar(){
 
   const config = [
@@ -332,9 +356,7 @@ function comparar(){
           d.canal===c.canal
         );
 
-        html += `<td class="${tem?'si':'no'}">
-          ${tem?'SI':'NO'}
-        </td>`;
+        html += `<td class="${tem?'si':'no'}">${tem?'SI':'NO'}</td>`;
       });
 
       html += '</tr>';
