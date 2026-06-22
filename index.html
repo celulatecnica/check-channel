@@ -24,7 +24,7 @@ fetch('pacotes.csv')
     const pacotesUnicos = new Set();
 
     linhas.forEach(linha => {
-      const colunas = linha.split(',');
+      const colunas = linha.split(';');
       const pacote = colunas[0]?.trim();
 
       if (pacote && pacote !== "Pacote") {
