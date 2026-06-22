@@ -23,7 +23,7 @@ body {
   background: #ffffff;
 }
 
-/* ===== CONTAINER CENTRAL ===== */
+/* ===== CONTAINER ===== */
 .container {
   width: 1100px;
   margin: auto;
@@ -39,7 +39,7 @@ h1 {
 /* ===== LINHA ===== */
 .linha {
   width: 100%;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #dadade;
   margin: 20px 0;
 }
 
@@ -59,7 +59,7 @@ h2 {
 
 /* ===== CARD ===== */
 .card {
-  background: #f5f5f7;
+  background: #dadade;
   padding: 20px;
   border-radius: 12px;
 }
@@ -70,10 +70,10 @@ select {
   padding: 12px;
   margin-top: 10px;
   border-radius: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid #cfcfd3;
 }
 
-/* ===== BUTTON ===== */
+/* ===== BOTÃO ===== */
 button {
   margin-top: 25px;
   padding: 12px 35px;
@@ -116,7 +116,7 @@ th, td {
 <h2>Selecciona el país</h2>
 <select id="pais"></select>
 
-<!-- GRID PLANOS -->
+<!-- PLANOS -->
 <div class="grid">
 
   <div class="card">
@@ -154,7 +154,7 @@ th, td {
 let dados = [];
 let todosCanais = [];
 
-// ================= CSV =================
+// ===== CARREGAR CSV =====
 fetch('pacotes.csv')
 .then(r => r.text())
 .then(texto => {
@@ -180,6 +180,7 @@ fetch('pacotes.csv')
     }
   });
 
+  // remove duplicados
   todosCanais = Object.values(
     Object.fromEntries(todosCanais.map(c=>[c.canal,c]))
   );
@@ -187,9 +188,8 @@ fetch('pacotes.csv')
   carregarPais();
 });
 
-// ================= PAIS =================
+// ===== CARREGAR PAIS =====
 function carregarPais(){
-
   const select = document.getElementById('pais');
 
   const lista = [...new Set(dados.map(d=>d.pais))].sort();
@@ -201,7 +201,7 @@ function carregarPais(){
   });
 }
 
-// ================= AO MUDAR PAIS =================
+// ===== AO MUDAR PAIS =====
 document.getElementById('pais').addEventListener('change', function(){
 
   const pais = this.value;
@@ -211,8 +211,8 @@ document.getElementById('pais').addEventListener('change', function(){
   )];
 
   ['cliente1','cliente2','cliente3'].forEach(id=>{
-    const select = document.getElementById(id);
 
+    const select = document.getElementById(id);
     select.innerHTML = '<option value="">Seleccionar cliente</option>';
 
     clientes.forEach(c=>{
@@ -222,7 +222,7 @@ document.getElementById('pais').addEventListener('change', function(){
 
 });
 
-// ================= CLIENTE → PACOTE =================
+// ===== CLIENTE → PACOTES =====
 ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
 
   document.getElementById(id).addEventListener('change', function(){
@@ -238,7 +238,7 @@ document.getElementById('pais').addEventListener('change', function(){
 
     const selectPacote = document.getElementById(`pacote${index+1}`);
 
-    selectPacote.innerHTML = '<option>Seleccionar paquete</option>';
+    selectPacote.innerHTML = '<option value="">Seleccionar paquete</option>';
 
     pacotes.forEach(p=>{
       selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
@@ -248,27 +248,27 @@ document.getElementById('pais').addEventListener('change', function(){
 
 });
 
-// ================= COMPARAR =================
+// ===== COMPARAR =====
 function comparar(){
 
   const pais = document.getElementById('pais').value;
 
-  const selects = [
-    {cliente:'cliente1', pacote:'pacote1'},
-    {cliente:'cliente2', pacote:'pacote2'},
-    {cliente:'cliente3', pacote:'pacote3'}
+  const config = [
+    {c:'cliente1', p:'pacote1'},
+    {c:'cliente2', p:'pacote2'},
+    {c:'cliente3', p:'pacote3'}
   ];
 
   let header = '<tr><th>Channel</th><th>Canal</th><th>Resolución</th>';
   let ativos = [];
 
-  selects.forEach(s=>{
-    const pacote = document.getElementById(s.pacote).value;
-    const cliente = document.getElementById(s.cliente).value;
+  config.forEach(x=>{
+    const cliente = document.getElementById(x.c).value;
+    const pacote = document.getElementById(x.p).value;
 
-    if(pacote && cliente){
+    if(cliente && pacote){
       header += `<th>${pacote}</th>`;
-      ativos.push({pacote,cliente});
+      ativos.push({cliente,pacote});
     }
   });
 
@@ -295,7 +295,9 @@ function comparar(){
           d.canal===c.canal
         );
 
-        html += `<td class="${tem?'si':'no'}">${tem?'SI':'NO'}</td>`;
+        html += `<td class="${tem?'si':'no'}">
+          ${tem?'SI':'NO'}
+        </td>`;
       });
 
       html += '</tr>';
