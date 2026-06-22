@@ -6,21 +6,32 @@
 
 <style>
 
-.top-bar { height: 44px; background: #fbfbfd; }
-.sub-bar { height: 44px; background: #f5f5f7; }
+/* ===== HEADER ===== */
+.top-bar {
+  height: 44px;
+  background: #fbfbfd;
+}
 
+.sub-bar {
+  height: 44px;
+  background: #f5f5f7;
+}
+
+/* ===== BODY ===== */
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
   background: white;
 }
 
+/* ===== CONTAINER ===== */
 .container {
   width: 1076px;
   margin: auto;
   text-align: center;
 }
 
+/* ===== TÍTULO ===== */
 h1 {
   margin-top: 47px;
   margin-bottom: 47px;
@@ -29,10 +40,14 @@ h1 {
   color: #272727;
 }
 
+/* ===== LINHA ===== */
 .linha {
+  width: 100%;
   border-bottom: 1px solid #dadade;
+  margin: 0;
 }
 
+/* ===== SUBTÍTULO ===== */
 h2 {
   margin-top: 30px;
   font-weight: normal;
@@ -45,35 +60,42 @@ h2 {
 
 .bandeira {
   display: inline-block;
-  width: 70px;
-  height: 50px;
+  width: 72px;
+  height: 48px;
   margin: 6px;
-  border-radius: 8px;
+  border-radius: 12px;
+  overflow: hidden;
   cursor: pointer;
-  background-size: cover;
-  background-position: center;
   border: 2px solid transparent;
+  background: #dadade;
+  transition: all 0.2s ease;
 }
 
 .bandeira:hover {
-  border: 2px solid #007aff;
+  border-color: #007aff;
+  transform: scale(1.05);
 }
 
 .bandeira.active {
-  border: 2px solid #007aff;
+  border-color: #007aff;
 }
 
-/* fallback texto */
+.bandeira img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* fallback */
 .bandeira span {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
   font-weight: bold;
-  background: #dadade;
 }
 
-/* GRID */
+/* ===== GRID ===== */
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -81,12 +103,14 @@ h2 {
   margin-top: 30px;
 }
 
+/* ===== CARD ===== */
 .card {
   background: #dadade;
   padding: 20px;
   border-radius: 12px;
 }
 
+/* ===== SELECT ===== */
 select {
   width: 100%;
   padding: 12px;
@@ -95,6 +119,7 @@ select {
   border: 1px solid #cfcfd3;
 }
 
+/* ===== BOTÃO ===== */
 button {
   margin-top: 25px;
   padding: 12px 35px;
@@ -103,8 +128,10 @@ button {
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  font-size: 16px;
 }
 
+/* ===== TABELA ===== */
 table {
   width: 100%;
   margin-top: 40px;
@@ -120,6 +147,7 @@ th, td {
 .no { color: red; font-weight: bold; }
 
 </style>
+
 </head>
 
 <body>
@@ -174,7 +202,7 @@ let dados = [];
 let todosCanais = [];
 let paisSelecionado = "";
 
-// ===== CARREGAR CSV =====
+/* ===== CARREGAR CSV ===== */
 fetch('pacotes.csv')
 .then(r => r.text())
 .then(texto => {
@@ -182,6 +210,7 @@ fetch('pacotes.csv')
   const linhas = texto.replace(/\r/g,'').split('\n');
 
   linhas.forEach((linha,i)=>{
+
     if(i===0)return;
 
     const col = linha.split(';').map(c=>c.trim());
@@ -207,13 +236,13 @@ fetch('pacotes.csv')
 
 });
 
-// ===== BANDEIRAS =====
+/* ===== BANDEIRAS ===== */
 function carregarBandeiras(){
 
   const container = document.getElementById('bandeiras');
 
   const paises = [...new Set(dados.map(d=>d.pais))]
-    .sort((a,b)=>a.localeCompare(b)); // ✅ ORDEM ALFABÉTICA
+    .sort((a,b)=>a.localeCompare(b));
 
   container.innerHTML = '';
 
@@ -225,11 +254,14 @@ function carregarBandeiras(){
     const div = document.createElement('div');
     div.className = 'bandeira';
 
-    // tenta usar imagem
-    div.style.backgroundImage = `url(${path})`;
+    const img = document.createElement('img');
+    img.src = path;
 
-    // fallback texto se imagem não carregar
-    div.innerHTML = `<span>${p.substring(0,2).toUpperCase()}</span>`;
+    img.onerror = () => {
+      div.innerHTML = `<span>${p.substring(0,2).toUpperCase()}</span>`;
+    };
+
+    div.appendChild(img);
 
     div.onclick = () => selecionarPais(p, div);
 
@@ -238,7 +270,7 @@ function carregarBandeiras(){
 
 }
 
-// ===== SELECIONAR PAIS =====
+/* ===== SELECIONAR PAIS ===== */
 function selecionarPais(pais, elemento){
 
   paisSelecionado = pais;
@@ -260,11 +292,12 @@ function selecionarPais(pais, elemento){
     clientes.forEach(c=>{
       select.innerHTML += `<option value="${c}">${c}</option>`;
     });
+
   });
 
 }
 
-// ===== CLIENTE → PACOTE =====
+/* ===== CLIENTE → PACOTE ===== */
 ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
 
   document.getElementById(id).addEventListener('change', function(){
@@ -288,7 +321,7 @@ function selecionarPais(pais, elemento){
 
 });
 
-// ===== COMPARAR =====
+/* ===== COMPARAR ===== */
 function comparar(){
 
   const config = [
