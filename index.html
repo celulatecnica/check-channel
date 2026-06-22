@@ -8,41 +8,75 @@
 
 <h2>Selecione um pacote:</h2>
 
-<select id="pacotes">
-  <option>Carregando...</option>
-</select>
+<select id="pacotes"></select>
+
+<h3>Canais:</h3>
+<ul id="lista-canais"></ul>
 
 <script>
+let dados = [];
+
+// carregar CSV
 fetch('pacotes.csv')
   .then(response => response.text())
   .then(data => {
 
     const linhas = data.split('\n');
-    const select = document.getElementById('pacotes');
-
-    // remover duplicados
     const pacotesUnicos = new Set();
 
-    linhas.forEach(linha => {
+    linhas.forEach((linha, index) => {
       const colunas = linha.split(';');
-      const pacote = colunas[0]?.trim();
 
-      if (pacote && pacote !== "Pacote") {
+      if (index === 0) return; // ignora cabeçalho
+
+      const pacote = colunas[0]?.trim();
+      const canal = colunas[2]?.trim();
+
+      if (pacote && canal) {
+        dados.push({ pacote, canal });
         pacotesUnicos.add(pacote);
       }
     });
 
-    select.innerHTML = '';
+    const select = document.getElementById('pacotes');
 
-    pacotesUnicos.forEach(pacote => {
+    [...pacotesUnicos].sort().forEach(pacote => {
       const option = document.createElement('option');
       option.value = pacote;
       option.textContent = pacote;
       select.appendChild(option);
     });
 
+    // dispara evento inicial
+    mostrarCanais(select.value);
   });
+
+// quando mudar o pacote
+document.getElementById('pacotes').addEventListener('change', function() {
+  mostrarCanais(this.value);
+});
+
+// função para mostrar canais
+function mostrarCanais(pacoteSelecionado) {
+
+  const lista = document.getElementById('lista-canais');
+  lista.innerHTML = '';
+
+  const canais = dados
+    .filter(item => item.pacote === pacoteSelecionado)
+    .map(item => item.canal);
+
+  // remove duplicados
+  const canaisUnicos = [...new Set(canais)].sort();
+
+  canaisUnicos.forEach(canal => {
+    const li = document.createElement('li');
+    li.textContent = canal;
+    lista.appendChild(li);
+  });
+}
 </script>
 
 </body>
 </html>
+``
