@@ -74,7 +74,6 @@ h2 {
   border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
-  border: 2px solid transparent;
 }
 
 .bandeira img {
@@ -84,7 +83,7 @@ h2 {
 }
 
 .bandeira.active {
-  border-color: #007aff;
+  border: 2px solid #007aff;
 }
 
 /* GRID */
@@ -201,57 +200,55 @@ select:invalid {
 
 <div class="sticky-bloco">
 
-  <h2>Selecciona el país</h2>
+<h2>Selecciona el país</h2>
+<div id="bandeiras"></div>
 
-  <div id="bandeiras"></div>
+<div class="grid">
 
-  <div class="grid">
+<div class="pacote">
+<h3>Paquete 1</h3>
+<div class="grupo-selects">
+<select id="cliente1">
+<option value="" disabled selected>Selecciona el tipo de cliente</option>
+</select>
+<select id="pacote1">
+<option value="" disabled selected>Selecciona el paquete</option>
+</select>
+</div>
+</div>
 
-    <!-- ✅ AGORA COM PLACEHOLDER INICIAL -->
-    <div class="pacote">
-      <h3>Paquete 1</h3>
-      <div class="grupo-selects">
-        <select id="cliente1">
-          <option value="" disabled selected>Selecciona el tipo de cliente</option>
-        </select>
-        <select id="pacote1">
-          <option value="" disabled selected>Selecciona el paquete</option>
-        </select>
-      </div>
-    </div>
+<div class="pacote">
+<h3>Paquete 2</h3>
+<div class="grupo-selects">
+<select id="cliente2">
+<option value="" disabled selected>Selecciona el tipo de cliente</option>
+</select>
+<select id="pacote2">
+<option value="" disabled selected>Selecciona el paquete</option>
+</select>
+</div>
+</div>
 
-    <div class="pacote">
-      <h3>Paquete 2</h3>
-      <div class="grupo-selects">
-        <select id="cliente2">
-          <option value="" disabled selected>Selecciona el tipo de cliente</option>
-        </select>
-        <select id="pacote2">
-          <option value="" disabled selected>Selecciona el paquete</option>
-        </select>
-      </div>
-    </div>
+<div class="pacote">
+<h3>Paquete 3</h3>
+<div class="grupo-selects">
+<select id="cliente3">
+<option value="" disabled selected>Selecciona el tipo de cliente</option>
+</select>
+<select id="pacote3">
+<option value="" disabled selected>Selecciona el paquete</option>
+</select>
+</div>
+</div>
 
-    <div class="pacote">
-      <h3>Paquete 3</h3>
-      <div class="grupo-selects">
-        <select id="cliente3">
-          <option value="" disabled selected>Selecciona el tipo de cliente</option>
-        </select>
-        <select id="pacote3">
-          <option value="" disabled selected>Selecciona el paquete</option>
-        </select>
-      </div>
-    </div>
-
-  </div>
+</div>
 
 </div>
 
 <div class="resultados">
-  <div class="coluna" id="coluna1"></div>
-  <div class="coluna" id="coluna2"></div>
-  <div class="coluna" id="coluna3"></div>
+<div class="coluna" id="coluna1"></div>
+<div class="coluna" id="coluna2"></div>
+<div class="coluna" id="coluna3"></div>
 </div>
 
 </div>
@@ -281,13 +278,15 @@ fetch('pacotes.csv')
         pacote: col[2],
         vc: col[3],
         canal: col[4],
-        resolucao: col[7]
+        categoria: col[5],   // ✅ CORRIGIDO
+        resolucao: col[6]    // ✅ CORRIGIDO
       });
 
       todosCanais.push({
         canal: col[4],
         vc: col[3],
-        resolucao: col[7]
+        categoria: col[5],
+        resolucao: col[6]
       });
     }
   });
@@ -302,10 +301,10 @@ fetch('pacotes.csv')
 /* BANDEIRAS */
 function carregarBandeiras(){
 
-  const container = document.getElementById('bandeiras');
-
   const paises = [...new Set(dados.map(d=>d.pais))]
     .sort((a, b) => a.localeCompare(b));
+
+  const container = document.getElementById('bandeiras');
 
   paises.forEach(p => {
 
@@ -316,25 +315,21 @@ function carregarBandeiras(){
     img.src = `flags/${p.toLowerCase().replace(/\s+/g,'')}.png`;
 
     div.appendChild(img);
+
     div.onclick = () => selecionarPais(p, div);
 
     container.appendChild(div);
   });
 }
 
-/* PAÍS */
 function selecionarPais(pais, elemento){
 
   paisSelecionado = pais;
 
-  document.querySelectorAll('.bandeira')
-    .forEach(b => b.classList.remove('active'));
-
+  document.querySelectorAll('.bandeira').forEach(b => b.classList.remove('active'));
   elemento.classList.add('active');
 
-  const clientes = [...new Set(
-    dados.filter(d=>d.pais===pais).map(d=>d.cliente)
-  )];
+  const clientes = [...new Set(dados.filter(d=>d.pais===pais).map(d=>d.cliente))];
 
   ['cliente1','cliente2','cliente3'].forEach(id=>{
     const select = document.getElementById(id);
@@ -347,7 +342,6 @@ function selecionarPais(pais, elemento){
   });
 }
 
-/* CLIENTE -> PACOTE */
 ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
 
   document.getElementById(id).addEventListener('change', function(){
@@ -371,12 +365,10 @@ function selecionarPais(pais, elemento){
 
 });
 
-/* AUTO */
 ['pacote1','pacote2','pacote3'].forEach(id=>{
   document.getElementById(id).addEventListener('change', ()=>comparar());
 });
 
-/* RENDER */
 function comparar(){
 
   const config = [
@@ -406,14 +398,12 @@ function comparar(){
         d.canal===c.canal
       );
 
-      const tipo = c.canal.includes("INT") ? "Internacional" : "Nacional";
-
       if (existe) {
         coluna.innerHTML += `
           <div class="canal-bloco">
             <div class="canal-numero">${c.vc} [${c.resolucao}]</div>
             <div class="canal-nome">${c.canal}</div>
-            <div class="canal-tipo">${tipo}</div>
+            <div class="canal-tipo">${c.categoria}</div>
           </div>
         `;
       } else {
