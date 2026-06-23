@@ -296,8 +296,62 @@ function selecionarPais(pais, elemento){
 
 /* COMPARAR */
 function comparar(){
-  alert("Tudo funcionando 👍");
+
+  const config = [
+    {c:'cliente1', p:'pacote1'},
+    {c:'cliente2', p:'pacote2'},
+    {c:'cliente3', p:'pacote3'}
+  ];
+
+  let header = '<tr><th>Channel</th><th>Canal</th><th>Resolución</th>';
+  let ativos = [];
+
+  config.forEach(x=>{
+    const cliente = document.getElementById(x.c).value;
+    const pacote = document.getElementById(x.p).value;
+
+    if(cliente && pacote){
+      header += `<th>${pacote}</th>`;
+      ativos.push({cliente,pacote});
+    }
+  });
+
+  if (ativos.length === 0) {
+    alert("Selecciona al menos un cliente y paquete");
+    return;
+  }
+
+  header += '</tr>';
+  document.getElementById('thead').innerHTML = header;
+
+  let html = '';
+
+  todosCanais
+    .sort((a,b)=>Number(a.vc)-Number(b.vc))
+    .forEach(c=>{
+
+      html += `<tr>
+        <td>${c.vc}</td>
+        <td>${c.canal}</td>
+        <td>${c.resolucao}</td>`;
+
+      ativos.forEach(p=>{
+        const tem = dados.some(d =>
+          d.pais === paisSelecionado &&
+          d.cliente === p.cliente &&
+          d.pacote === p.pacote &&
+          d.canal === c.canal
+        );
+
+        html += `<td class="${tem?'si':'no'}">${tem?'SI':'NO'}</td>`;
+      });
+
+      html += '</tr>';
+    });
+
+  document.getElementById('tbody').innerHTML = html;
 }
+``
 
 </script>
 
