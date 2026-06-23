@@ -41,13 +41,17 @@ h2 {
   margin-top: 30px;
 }
 
-/* STICKY */
+/* ✅ STICKY CORRETO (SEM TRAVAR SCROLL) */
 .sticky-bloco {
   position: sticky;
   top: 0;
-  background: white;
+
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(6px);
+
   z-index: 10;
-  padding-bottom: 20px;
+
+  padding-bottom: 12px;
 }
 
 /* BANDEIRAS */
@@ -77,7 +81,7 @@ h2 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   column-gap: 17px;
-  margin-top: 40px;
+  margin-top: 24px;
 }
 
 .pacote h3 {
@@ -106,7 +110,6 @@ select {
   color: #272727;
 }
 
-/* placeholder */
 select:invalid { color: #b5b5b8; }
 
 /* BOTÃO */
@@ -118,14 +121,23 @@ button {
   color: white;
   border: none;
   border-radius: 16px;
+  cursor: pointer;
 }
 
-/* TABELA */
+/* ✅ TABELA COM ESPAÇO PARA SCROLL NORMAL */
 table {
-  margin-top: 40px;
+  margin-top: 120px;
   width: 100%;
   border-collapse: collapse;
 }
+
+th, td {
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+.si { color: green; font-weight: bold; }
+.no { color: red; font-weight: bold; }
 
 </style>
 </head>
@@ -141,6 +153,7 @@ table {
 
 <div class="linha"></div>
 
+<!-- ✅ BLOCO STICKY -->
 <div class="sticky-bloco">
 
   <h2>Selecciona el país</h2>
@@ -152,24 +165,36 @@ table {
     <div class="pacote">
       <h3>Paquete 1</h3>
       <div class="grupo-selects">
-        <select id="cliente1" required></select>
-        <select id="pacote1" required></select>
+        <select id="cliente1" required>
+          <option value="" disabled selected>Selecciona el tipo de cliente</option>
+        </select>
+        <select id="pacote1" required>
+          <option value="" disabled selected>Selecciona el paquete</option>
+        </select>
       </div>
     </div>
 
     <div class="pacote">
       <h3>Paquete 2</h3>
       <div class="grupo-selects">
-        <select id="cliente2" required></select>
-        <select id="pacote2" required></select>
+        <select id="cliente2" required>
+          <option value="" disabled selected>Selecciona el tipo de cliente</option>
+        </select>
+        <select id="pacote2" required>
+          <option value="" disabled selected>Selecciona el paquete</option>
+        </select>
       </div>
     </div>
 
     <div class="pacote">
       <h3>Paquete 3</h3>
       <div class="grupo-selects">
-        <select id="cliente3" required></select>
-        <select id="pacote3" required></select>
+        <select id="cliente3" required>
+          <option value="" disabled selected>Selecciona el tipo de cliente</option>
+        </select>
+        <select id="pacote3" required>
+          <option value="" disabled selected>Selecciona el paquete</option>
+        </select>
       </div>
     </div>
 
@@ -188,7 +213,9 @@ table {
 
 <script>
 
+/* DADOS */
 let dados = [];
+let todosCanais = [];
 let paisSelecionado = "";
 
 /* CSV */
@@ -196,23 +223,34 @@ fetch('pacotes.csv')
 .then(r => r.text())
 .then(texto => {
 
-  const linhas = texto.split('\n');
+  const linhas = texto.replace(/\r/g,'').split('\n');
 
   linhas.forEach((linha,i)=>{
+
     if(i===0)return;
 
-    const col = linha.split(';');
+    const col = linha.split(';').map(c=>c.trim());
 
-    if(col[0]){
-      dados.push({
-        pais: col[0],
-        cliente: col[1],
-        pacote: col[2]
-      });
+    const pais = col[0];
+    const cliente = col[1];
+    const pacote = col[2];
+    const vc = col[3];
+    const canal = col[4]?.toUpperCase();
+    const resolucao = col[7];
+
+    if(pais){
+      dados.push({pais,cliente,pacote,canal,vc,resolucao});
+      todosCanais.push({canal,vc,resolucao});
     }
+
   });
 
+  todosCanais = Object.values(
+    Object.fromEntries(todosCanais.map(c=>[c.canal,c]))
+  );
+
   carregarBandeiras();
+
 });
 
 /* BANDEIRAS */
@@ -235,7 +273,9 @@ function carregarBandeiras(){
     div.onclick = () => selecionarPais(p, div);
 
     container.appendChild(div);
+
   });
+
 }
 
 /* SELECIONAR PAÍS */
@@ -249,7 +289,7 @@ function selecionarPais(pais, elemento){
   elemento.classList.add('active');
 
   const clientes = [...new Set(
-    dados.filter(d => d.pais === pais).map(d => d.cliente)
+    dados.filter(d=>d.pais===pais).map(d=>d.cliente)
   )];
 
   ['cliente1','cliente2','cliente3'].forEach(id=>{
@@ -257,7 +297,7 @@ function selecionarPais(pais, elemento){
     const select = document.getElementById(id);
 
     select.innerHTML =
-      '<option value="">Selecciona el tipo de cliente</option>';
+      '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
 
     clientes.forEach(c=>{
       select.innerHTML += `<option value="${c}">${c}</option>`;
@@ -275,16 +315,15 @@ function selecionarPais(pais, elemento){
     const cliente = this.value;
 
     const pacotes = [...new Set(
-      dados.filter(d =>
-        d.pais === paisSelecionado &&
-        d.cliente === cliente
-      ).map(d => d.pacote)
+      dados
+        .filter(d=>d.pais===paisSelecionado && d.cliente===cliente)
+        .map(d=>d.pacote)
     )];
 
     const selectPacote = document.getElementById(`pacote${index+1}`);
 
     selectPacote.innerHTML =
-      '<option value="">Selecciona el paquete</option>';
+      '<option value="" disabled selected>Selecciona el paquete</option>';
 
     pacotes.forEach(p=>{
       selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
@@ -294,7 +333,7 @@ function selecionarPais(pais, elemento){
 
 });
 
-/* COMPARAR */
+/* COMPARAR (TABELA REAL) */
 function comparar(){
 
   const config = [
@@ -316,7 +355,7 @@ function comparar(){
     }
   });
 
-  if (ativos.length === 0) {
+  if (!ativos.length){
     alert("Selecciona al menos un cliente y paquete");
     return;
   }
@@ -326,32 +365,31 @@ function comparar(){
 
   let html = '';
 
-  todosCanais
-    .sort((a,b)=>Number(a.vc)-Number(b.vc))
-    .forEach(c=>{
+  todosCanais.forEach(c=>{
 
-      html += `<tr>
-        <td>${c.vc}</td>
-        <td>${c.canal}</td>
-        <td>${c.resolucao}</td>`;
+    html += `<tr>
+      <td>${c.vc}</td>
+      <td>${c.canal}</td>
+      <td>${c.resolucao}</td>`;
 
-      ativos.forEach(p=>{
-        const tem = dados.some(d =>
-          d.pais === paisSelecionado &&
-          d.cliente === p.cliente &&
-          d.pacote === p.pacote &&
-          d.canal === c.canal
-        );
+    ativos.forEach(p=>{
+      const tem = dados.some(d =>
+        d.pais===paisSelecionado &&
+        d.cliente===p.cliente &&
+        d.pacote===p.pacote &&
+        d.canal===c.canal
+      );
 
-        html += `<td class="${tem?'si':'no'}">${tem?'SI':'NO'}</td>`;
-      });
-
-      html += '</tr>';
+      html += `<td class="${tem?'si':'no'}">${tem?'SI':'NO'}</td>`;
     });
 
+    html += '</tr>';
+
+  });
+
   document.getElementById('tbody').innerHTML = html;
+
 }
-``
 
 </script>
 
