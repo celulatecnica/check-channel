@@ -465,8 +465,38 @@ fetch('pacotes.csv')
   );
 
   carregarBandeiras();
+
+
+  ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
+ 
+  document.getElementById(id).addEventListener('change', function(){
+
+    const cliente = this.value;
+
+    const pacotes = [...new Set(
+      dados.filter(d=>d.pais===paisSelecionado && d.cliente===cliente)
+      .map(d=>d.pacote)
+    )];
+
+    const selectPacote = document.getElementById(`pacote${index+1}`);
+
+    selectPacote.innerHTML = '<option disabled selected>Selecciona el paquete</option>';
+
+    pacotes.forEach(p=>{
+      selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
+    });
+
+  });
 });
 
+  
+['pacote1','pacote2','pacote3'].forEach(id=>{
+  document.getElementById(id).addEventListener('change', ()=>{
+    comparar();
+  });
+});
+});
+  
 function carregarBandeiras(){
   const paises = [...new Set(dados.map(d=>d.pais))]
     .sort((a, b) => a.localeCompare(b));
@@ -491,45 +521,29 @@ function selecionarPais(pais, elemento){
   paisSelecionado = pais;
 
   document.querySelectorAll('.bandeira').forEach(b => b.classList.remove('active'));
-  elemento.classList.add('active');
-
+    elemento.classList.add('active');
+    
   const clientes = [...new Set(dados.filter(d=>d.pais===pais).map(d=>d.cliente))];
-
+  
   ['cliente1','cliente2','cliente3'].forEach(id=>{
     const select = document.getElementById(id);
-
+  
     select.innerHTML = '<option disabled selected>Selecciona el tipo de cliente</option>';
-
+  
     clientes.forEach(c=>{
       select.innerHTML += `<option value="${c}">${c}</option>`;
     });
   });
-}
-
-['cliente1','cliente2','cliente3'].forEach((id,index)=>{
-  document.getElementById(id).addEventListener('change', function(){
-
-    const cliente = this.value;
-
-    const pacotes = [...new Set(
-      dados.filter(d=>d.pais===paisSelecionado && d.cliente===cliente)
-      .map(d=>d.pacote)
-    )];
-
-    const selectPacote = document.getElementById(`pacote${index+1}`);
-
-    selectPacote.innerHTML = '<option disabled selected>Selecciona el paquete</option>';
-
-    pacotes.forEach(p=>{
-      selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
-    });
-
+  
+  /* ✅ RESET DOS PACOTES (SEPARADO) */
+  ['pacote1','pacote2','pacote3'].forEach(id=>{
+    const select = document.getElementById(id);
+  
+    select.innerHTML = '<option disabled selected>Selecciona el paquete</option>';
   });
-});
 
-['pacote1','pacote2','pacote3'].forEach(id=>{
-  document.getElementById(id).addEventListener('change', ()=>comparar());
-});
+  }
+  
 
 function comparar(){
 
