@@ -127,20 +127,18 @@ select:invalid {
   margin-top: 47px;
 }
 
-/* ✅ COLUNA AJUSTADA */
 .coluna {
   border-top: 1px solid #dadade;
   display: flex;
   flex-direction: column;
 }
 
-/* ✅ BLOCO ALINHADO */
+/* BLOCO */
 .canal-bloco {
-  height: 110px; /* altura fixa */
+  height: 110px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-
   border-bottom: 1px solid #eee;
 }
 
@@ -159,11 +157,11 @@ select:invalid {
   font-size: 16px;
 }
 
-/* ✅ PLACEHOLDER */
+/* PLACEHOLDER */
 .canal-off {
   display: flex;
   flex-direction: column;
-  justify-content: center; /* ✅ alinhado vertical */
+  justify-content: center;
   align-items: center;
   gap: 10px;
 }
@@ -173,7 +171,6 @@ select:invalid {
   border-radius: 8px;
 }
 
-/* FAKE LINES */
 .fake-numero {
   width: 90px;
   height: 14px;
@@ -210,27 +207,40 @@ select:invalid {
 
   <div class="grid">
 
+    <!-- ✅ AGORA COM PLACEHOLDER INICIAL -->
     <div class="pacote">
       <h3>Paquete 1</h3>
       <div class="grupo-selects">
-        <select id="cliente1"></select>
-        <select id="pacote1"></select>
+        <select id="cliente1">
+          <option value="" disabled selected>Selecciona el tipo de cliente</option>
+        </select>
+        <select id="pacote1">
+          <option value="" disabled selected>Selecciona el paquete</option>
+        </select>
       </div>
     </div>
 
     <div class="pacote">
       <h3>Paquete 2</h3>
       <div class="grupo-selects">
-        <select id="cliente2"></select>
-        <select id="pacote2"></select>
+        <select id="cliente2">
+          <option value="" disabled selected>Selecciona el tipo de cliente</option>
+        </select>
+        <select id="pacote2">
+          <option value="" disabled selected>Selecciona el paquete</option>
+        </select>
       </div>
     </div>
 
     <div class="pacote">
       <h3>Paquete 3</h3>
       <div class="grupo-selects">
-        <select id="cliente3"></select>
-        <select id="pacote3"></select>
+        <select id="cliente3">
+          <option value="" disabled selected>Selecciona el tipo de cliente</option>
+        </select>
+        <select id="pacote3">
+          <option value="" disabled selected>Selecciona el paquete</option>
+        </select>
       </div>
     </div>
 
@@ -252,6 +262,7 @@ let dados = [];
 let todosCanais = [];
 let paisSelecionado = "";
 
+/* CSV */
 fetch('pacotes.csv')
 .then(r => r.text())
 .then(texto => {
@@ -288,12 +299,13 @@ fetch('pacotes.csv')
   carregarBandeiras();
 });
 
+/* BANDEIRAS */
 function carregarBandeiras(){
 
   const container = document.getElementById('bandeiras');
-  const paises = [...new Set(dados.map(d=>d.pais))]
-  .sort((a, b) => a.localeCompare(b));
 
+  const paises = [...new Set(dados.map(d=>d.pais))]
+    .sort((a, b) => a.localeCompare(b));
 
   paises.forEach(p => {
 
@@ -310,6 +322,7 @@ function carregarBandeiras(){
   });
 }
 
+/* PAÍS */
 function selecionarPais(pais, elemento){
 
   paisSelecionado = pais;
@@ -334,6 +347,7 @@ function selecionarPais(pais, elemento){
   });
 }
 
+/* CLIENTE -> PACOTE */
 ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
 
   document.getElementById(id).addEventListener('change', function(){
@@ -357,10 +371,12 @@ function selecionarPais(pais, elemento){
 
 });
 
+/* AUTO */
 ['pacote1','pacote2','pacote3'].forEach(id=>{
   document.getElementById(id).addEventListener('change', ()=>comparar());
 });
 
+/* RENDER */
 function comparar(){
 
   const config = [
@@ -383,7 +399,6 @@ function comparar(){
       .sort((a, b) => Number(a.vc) - Number(b.vc))
       .forEach(c=>{
 
-
       const existe = dados.some(d =>
         d.pais===paisSelecionado &&
         d.cliente===cliente &&
@@ -394,7 +409,6 @@ function comparar(){
       const tipo = c.canal.includes("INT") ? "Internacional" : "Nacional";
 
       if (existe) {
-
         coluna.innerHTML += `
           <div class="canal-bloco">
             <div class="canal-numero">${c.vc} [${c.resolucao}]</div>
@@ -402,9 +416,7 @@ function comparar(){
             <div class="canal-tipo">${tipo}</div>
           </div>
         `;
-
       } else {
-
         coluna.innerHTML += `
           <div class="canal-bloco canal-off">
             <div class="fake-numero"></div>
@@ -412,7 +424,6 @@ function comparar(){
             <div class="fake-tipo"></div>
           </div>
         `;
-
       }
 
     });
