@@ -9,7 +9,7 @@
 /* HEADER */
 .top-bar { height: 44px; background: #fbfbfd; }
 .sub-bar { height: 440px; background: #f5f5f7; }
-
+f
 /* BODY */
 body {
   margin: 0;
@@ -275,20 +275,24 @@ fetch('pacotes.csv')
     const col = linha.split(';').map(c=>c.trim());
 
     if(col[0]){
-      dados.push({
-        pais: col[0],
-        cliente: col[1],
-        pacote: col[2],
-        vc: col[3],
-        canal: col[4],
-        resolucao: col[7]
-      });
+    dados.push({
+      pais: col[0],
+      cliente: col[1],
+      pacote: col[2],
+      vc: col[3],
+      canal: col[4],
+      categoria: col[6], // ✅ AJUSTE AQUI (posição da coluna)
+      resolucao: col[7]
+    });
 
-      todosCanais.push({
-        canal: col[4],
-        vc: col[3],
-        resolucao: col[7]
-      });
+
+     todosCanais.push({
+  canal: col[4],
+  vc: col[3],
+  categoria: col[6], // ✅ NOVO
+  resolucao: col[7]
+});
+
     }
   });
 
@@ -406,7 +410,7 @@ function comparar(){
         d.canal===c.canal
       );
 
-      const tipo = c.canal.includes("INT") ? "Internacional" : "Nacional";
+      const tipo = c.categoria || "";
 
       if (existe) {
         coluna.innerHTML += `
