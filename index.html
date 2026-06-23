@@ -270,7 +270,34 @@ select:invalid {
   display: none;
 }
 
+  /* ===== NOVO: COMPACTAÇÃO DO STICKY ===== */
+
+.sticky-bloco.compacto {
+  padding-bottom: 15px;
+}
+
+.sticky-bloco.compacto h2 {
+  margin-top: 20px;
+  font-size: 18px;
+}
+
+.sticky-bloco.compacto .bandeira {
+  transform: scale(0.8);
+}
+
+.sticky-bloco.compacto #bandeiras {
+  margin-top: 10px;
+}
+
+/* animação suave */
+.sticky-bloco,
+.bandeira,
+.sticky-bloco h2 {
+  transition: all 0.3s ease;
+}
+  
 </style>
+  
 </head>
 
 <body>
@@ -544,7 +571,24 @@ if (temResultado) {
 }
 }
 
+  /* ===== NOVO: DETECTAR STICKY CORRETAMENTE ===== */
+window.addEventListener('scroll', () => {
+  const bloco = document.querySelector('.sticky-bloco');
+
+  if (!bloco) return;
+
+  const topoInicial = bloco.offsetTop;
+
+  if (window.scrollY >= topoInicial - 20) {
+    bloco.classList.add('compacto');
+  } else {
+    bloco.classList.remove('compacto');
+  }
+});
+  
 </script>
 
+
+  
 </body>
 </html>
