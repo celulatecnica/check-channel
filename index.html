@@ -25,19 +25,22 @@ body {
   text-align: center;
 }
 
-/* TITULO */
+/* ✅ CORREÇÃO AQUI */
 h1 {
   margin-top: 47px;
   margin-bottom: 47px;
   font-size: 52px;
+  position: relative;
+  z-index: 20;
 }
 
-/* LINHA */
 .linha {
   border-bottom: 1px solid #dadade;
+  position: relative;
+  z-index: 20;
 }
 
-/* STICKY FINAL */
+/* STICKY */
 .sticky-bloco {
   position: sticky;
   top: 20px;
@@ -47,7 +50,7 @@ h1 {
 
   z-index: 10;
 
-  padding-bottom: 59px; /* ✅ 12 + 47 (ESSENCIAL) */
+  padding-bottom: 59px;
 }
 
 /* BLOQUEIO FUNDO */
@@ -77,7 +80,7 @@ h1 {
 .bandeira img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* ✅ mantém proporção */
+  object-fit: cover;
 }
 
 .bandeira.active {
@@ -131,7 +134,6 @@ th, td {
 .no { color: red; font-weight: bold; }
 
 </style>
-
 </head>
 
 <body>
@@ -205,7 +207,6 @@ let dados = [];
 let todosCanais = [];
 let paisSelecionado = "";
 
-/* CSV */
 fetch('pacotes.csv')
 .then(r => r.text())
 .then(texto => {
@@ -242,13 +243,14 @@ fetch('pacotes.csv')
   carregarBandeiras();
 });
 
-/* BANDEIRAS */
 function carregarBandeiras(){
+
   const container = document.getElementById('bandeiras');
 
   const paises = [...new Set(dados.map(d=>d.pais))];
 
   paises.forEach(p => {
+
     const div = document.createElement('div');
     div.className = 'bandeira';
 
@@ -256,13 +258,13 @@ function carregarBandeiras(){
     img.src = `flags/${p.toLowerCase().replace(/\s+/g,'')}.png`;
 
     div.appendChild(img);
+
     div.onclick = () => selecionarPais(p, div);
 
     container.appendChild(div);
   });
 }
 
-/* PAÍS */
 function selecionarPais(pais, elemento){
 
   paisSelecionado = pais;
@@ -286,7 +288,6 @@ function selecionarPais(pais, elemento){
   });
 }
 
-/* CLIENTE → PACOTE */
 ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
 
   document.getElementById(id).addEventListener('change', function(){
@@ -311,12 +312,10 @@ function selecionarPais(pais, elemento){
 
 });
 
-/* AUTO TABELA */
 ['pacote1','pacote2','pacote3'].forEach(id=>{
   document.getElementById(id).addEventListener('change', ()=>comparar());
 });
 
-/* TABELA */
 function comparar(){
 
   if (!paisSelecionado) return;
