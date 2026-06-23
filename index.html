@@ -296,10 +296,13 @@ select:invalid {
 }
 
 /* ✅ remove conflito de margem e aplica escala */
+
 .sticky-bloco.compacto .bandeira {
-  transform: scale(0.8);
-  margin: 0;
+  width: 58px;   /* ✅ menor que 72 */
+  height: 38px;  /* ✅ mantém proporção */
+  margin: 4px;   /* ✅ menor espaço real */
 }
+
 
 
 
