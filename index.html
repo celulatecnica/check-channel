@@ -127,14 +127,16 @@ select:invalid {
   margin-top: 47px;
 }
 
+/* ✅ COLUNA AJUSTADA */
 .coluna {
   border-top: 1px solid #dadade;
+  display: flex;
+  flex-direction: column;
 }
 
-/* BLOCO */
-
-canal-bloco {
-  height: 110px; /* ✅ ALTURA FIXA (ajuste fino) */
+/* ✅ BLOCO ALINHADO */
+.canal-bloco {
+  height: 110px; /* altura fixa */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -142,8 +144,7 @@ canal-bloco {
   border-bottom: 1px solid #eee;
 }
 
-
-/* TEXTO REAL */
+/* TEXTO */
 .canal-numero {
   font-size: 16px;
 }
@@ -158,10 +159,11 @@ canal-bloco {
   font-size: 16px;
 }
 
-/* ✅ PLACEHOLDER (novo efeito) */
+/* ✅ PLACEHOLDER */
 .canal-off {
   display: flex;
   flex-direction: column;
+  justify-content: center; /* ✅ alinhado vertical */
   align-items: center;
   gap: 10px;
 }
@@ -171,7 +173,7 @@ canal-bloco {
   border-radius: 8px;
 }
 
-/* BLOCOS FAKE */
+/* FAKE LINES */
 .fake-numero {
   width: 90px;
   height: 14px;
@@ -286,7 +288,6 @@ fetch('pacotes.csv')
   carregarBandeiras();
 });
 
-/* BANDEIRAS */
 function carregarBandeiras(){
 
   const container = document.getElementById('bandeiras');
@@ -304,11 +305,9 @@ function carregarBandeiras(){
     div.onclick = () => selecionarPais(p, div);
 
     container.appendChild(div);
-
   });
 }
 
-/* PAÍS */
 function selecionarPais(pais, elemento){
 
   paisSelecionado = pais;
@@ -333,7 +332,6 @@ function selecionarPais(pais, elemento){
   });
 }
 
-/* CLIENTE → PACOTE */
 ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
 
   document.getElementById(id).addEventListener('change', function(){
@@ -357,12 +355,10 @@ function selecionarPais(pais, elemento){
 
 });
 
-/* AUTO */
 ['pacote1','pacote2','pacote3'].forEach(id=>{
   document.getElementById(id).addEventListener('change', ()=>comparar());
 });
 
-/* ✅ RENDER COM MÁSCARA */
 function comparar(){
 
   const config = [
