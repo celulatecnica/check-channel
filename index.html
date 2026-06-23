@@ -18,9 +18,9 @@ body {
   color: #272727;
 }
 
-/* ✅ CONTROLE DO STICKY (NOVO) */
+/* ✅ AJUSTADO */
 .conteudo {
-  padding-bottom: 487px; /* 440 footer + 47 espaço */
+  padding-bottom: 0;
 }
 
 /* CONTAINER */
@@ -202,11 +202,12 @@ select:invalid {
   height: 14px;
 }
 
-/* ✅ RODAPÉ (NOVO) */
+/* ✅ AJUSTADO */
 .rodape {
   height: 440px;
   background: #fbfbfd;
   margin-top: 47px;
+  display: none;
 }
 
 </style>
@@ -214,7 +215,6 @@ select:invalid {
 
 <body>
 
-<!-- ✅ NOVO WRAPPER -->
 <div class="conteudo">
 
 <div class="top-bar"></div>
@@ -280,14 +280,11 @@ select:invalid {
 
 </div>
 
-<!-- ✅ RODAPÉ -->
 <div class="rodape"></div>
 
 </div>
 
 <script>
-
-/* ✅ SEU JS COMPLETO INTACTO */
 
 let dados = [];
 let todosCanais = [];
@@ -332,14 +329,12 @@ fetch('pacotes.csv')
 });
 
 function carregarBandeiras(){
-
   const paises = [...new Set(dados.map(d=>d.pais))]
     .sort((a, b) => a.localeCompare(b));
 
   const container = document.getElementById('bandeiras');
 
   paises.forEach(p => {
-
     const div = document.createElement('div');
     div.className = 'bandeira';
 
@@ -354,7 +349,6 @@ function carregarBandeiras(){
 }
 
 function selecionarPais(pais, elemento){
-
   paisSelecionado = pais;
 
   document.querySelectorAll('.bandeira').forEach(b => b.classList.remove('active'));
@@ -374,7 +368,6 @@ function selecionarPais(pais, elemento){
 }
 
 ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
-
   document.getElementById(id).addEventListener('change', function(){
 
     const cliente = this.value;
@@ -393,7 +386,6 @@ function selecionarPais(pais, elemento){
     });
 
   });
-
 });
 
 ['pacote1','pacote2','pacote3'].forEach(id=>{
@@ -408,6 +400,8 @@ function comparar(){
     {cliente:'cliente3', pacote:'pacote3', col:'coluna3'}
   ];
 
+  let temResultado = false;
+
   config.forEach(cfg=>{
 
     const cliente = document.getElementById(cfg.cliente).value;
@@ -418,9 +412,8 @@ function comparar(){
 
     if(!cliente || !pacote) return;
 
-    todosCanais
-      .sort((a, b) => Number(a.vc) - Number(b.vc))
-      .forEach(c=>{
+    todosCanais.sort((a, b) => Number(a.vc) - Number(b.vc))
+    .forEach(c=>{
 
       const existe = dados.some(d =>
         d.pais===paisSelecionado &&
@@ -430,6 +423,8 @@ function comparar(){
       );
 
       if (existe) {
+        temResultado = true;
+
         coluna.innerHTML += `
           <div class="canal-bloco">
             <div class="canal-numero">${c.vc}</div>
@@ -454,6 +449,7 @@ function comparar(){
 
   });
 
+  document.querySelector('.rodape').style.display = temResultado ? 'block' : 'none';
 }
 
 </script>
