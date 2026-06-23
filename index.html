@@ -25,7 +25,7 @@ body {
   text-align: center;
 }
 
-/* TÍTULO */
+/* TITULO */
 h1 {
   margin-top: 47px;
   margin-bottom: 47px;
@@ -34,32 +34,28 @@ h1 {
   z-index: 20;
 }
 
-/* LINHA */
 .linha {
   border-bottom: 1px solid #dadade;
   position: relative;
   z-index: 20;
 }
 
-/* ✅ AJUSTE FINAL */
+/* H2 */
 h2 {
-  margin-top: 47px; /* ✅ agora padronizado */
+  margin-top: 47px;
 }
 
 /* STICKY */
 .sticky-bloco {
   position: sticky;
   top: 20px;
-
   background: rgba(255,255,255,0.98);
   backdrop-filter: blur(6px);
-
   z-index: 10;
-
   padding-bottom: 59px;
 }
 
-/* BLOQUEIO DO FUNDO */
+/* BLOQUEIO */
 .sticky-bloco::before {
   content: "";
   position: absolute;
@@ -125,22 +121,47 @@ select:invalid {
   color: #b5b5b8;
 }
 
-/* TABELA */
-table {
-  width: 100%;
-  border-collapse: collapse;
+/* ✅ RESULTADO EM COLUNAS */
+.resultados {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 47px;
 }
 
-th, td {
-  padding: 8px;
-  border: 1px solid #ddd;
+.coluna {
+  border-top: 1px solid #dadade;
 }
 
-.si { color: green; font-weight: bold; }
-.no { color: red; font-weight: bold; }
+/* CARD */
+.canal-bloco {
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+/* LINHAS */
+.canal-numero {
+  font-size: 13px;
+  color: #666;
+}
+
+.canal-nome {
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.canal-tipo {
+  font-size: 13px;
+  color: #666;
+}
+
+/* CANAL INATIVO */
+.canal-off {
+  color: #b5b5b8;
+}
 
 </style>
-
 </head>
 
 <body>
@@ -164,36 +185,24 @@ th, td {
     <div class="pacote">
       <h3>Paquete 1</h3>
       <div class="grupo-selects">
-        <select id="cliente1" required>
-          <option value="" disabled selected>Selecciona el tipo de cliente</option>
-        </select>
-        <select id="pacote1" required>
-          <option value="" disabled selected>Selecciona el paquete</option>
-        </select>
+        <select id="cliente1"></select>
+        <select id="pacote1"></select>
       </div>
     </div>
 
     <div class="pacote">
       <h3>Paquete 2</h3>
       <div class="grupo-selects">
-        <select id="cliente2" required>
-          <option value="" disabled selected>Selecciona el tipo de cliente</option>
-        </select>
-        <select id="pacote2" required>
-          <option value="" disabled selected>Selecciona el paquete</option>
-        </select>
+        <select id="cliente2"></select>
+        <select id="pacote2"></select>
       </div>
     </div>
 
     <div class="pacote">
       <h3>Paquete 3</h3>
       <div class="grupo-selects">
-        <select id="cliente3" required>
-          <option value="" disabled selected>Selecciona el tipo de cliente</option>
-        </select>
-        <select id="pacote3" required>
-          <option value="" disabled selected>Selecciona el paquete</option>
-        </select>
+        <select id="cliente3"></select>
+        <select id="pacote3"></select>
       </div>
     </div>
 
@@ -201,10 +210,12 @@ th, td {
 
 </div>
 
-<table>
-<thead id="thead"></thead>
-<tbody id="tbody"></tbody>
-</table>
+<!-- ✅ NOVO RESULTADO -->
+<div class="resultados">
+  <div class="coluna" id="coluna1"></div>
+  <div class="coluna" id="coluna2"></div>
+  <div class="coluna" id="coluna3"></div>
+</div>
 
 </div>
 
@@ -214,11 +225,12 @@ let dados = [];
 let todosCanais = [];
 let paisSelecionado = "";
 
+/* CSV */
 fetch('pacotes.csv')
 .then(r => r.text())
 .then(texto => {
 
-  const linhas = texto.replace(/\r/g,'').split('\n');
+  const linhas = texto.split('\n');
 
   linhas.forEach((linha,i)=>{
     if(i===0)return;
@@ -231,12 +243,12 @@ fetch('pacotes.csv')
         cliente: col[1],
         pacote: col[2],
         vc: col[3],
-        canal: col[4]?.toUpperCase(),
+        canal: col[4],
         resolucao: col[7]
       });
 
       todosCanais.push({
-        canal: col[4]?.toUpperCase(),
+        canal: col[4],
         vc: col[3],
         resolucao: col[7]
       });
@@ -250,12 +262,14 @@ fetch('pacotes.csv')
   carregarBandeiras();
 });
 
+/* BANDEIRAS */
 function carregarBandeiras(){
-  const container = document.getElementById('bandeiras');
 
+  const container = document.getElementById('bandeiras');
   const paises = [...new Set(dados.map(d=>d.pais))];
 
   paises.forEach(p => {
+
     const div = document.createElement('div');
     div.className = 'bandeira';
 
@@ -266,9 +280,11 @@ function carregarBandeiras(){
     div.onclick = () => selecionarPais(p, div);
 
     container.appendChild(div);
+
   });
 }
 
+/* PAÍS */
 function selecionarPais(pais, elemento){
 
   paisSelecionado = pais;
@@ -284,7 +300,8 @@ function selecionarPais(pais, elemento){
 
   ['cliente1','cliente2','cliente3'].forEach(id=>{
     const select = document.getElementById(id);
-    select.innerHTML = '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
+
+    select.innerHTML = '<option disabled selected>Selecciona el tipo de cliente</option>';
 
     clientes.forEach(c=>{
       select.innerHTML += `<option value="${c}">${c}</option>`;
@@ -292,6 +309,7 @@ function selecionarPais(pais, elemento){
   });
 }
 
+/* CLIENTE -> PACOTE */
 ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
 
   document.getElementById(id).addEventListener('change', function(){
@@ -305,8 +323,7 @@ function selecionarPais(pais, elemento){
 
     const selectPacote = document.getElementById(`pacote${index+1}`);
 
-    selectPacote.innerHTML =
-      '<option value="" disabled selected>Selecciona el paquete</option>';
+    selectPacote.innerHTML = '<option disabled selected>Selecciona el paquete</option>';
 
     pacotes.forEach(p=>{
       selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
@@ -316,67 +333,52 @@ function selecionarPais(pais, elemento){
 
 });
 
+/* AUTO */
 ['pacote1','pacote2','pacote3'].forEach(id=>{
   document.getElementById(id).addEventListener('change', ()=>comparar());
 });
 
+/* ✅ NOVO RENDER */
 function comparar(){
 
-  if (!paisSelecionado) return;
-
   const config = [
-    {c:'cliente1', p:'pacote1'},
-    {c:'cliente2', p:'pacote2'},
-    {c:'cliente3', p:'pacote3'}
+    {cliente:'cliente1', pacote:'pacote1', col:'coluna1'},
+    {cliente:'cliente2', pacote:'pacote2', col:'coluna2'},
+    {cliente:'cliente3', pacote:'pacote3', col:'coluna3'}
   ];
 
-  let header = '<tr><th>Channel</th><th>Canal</th><th>Resolución</th>';
-  let ativos = [];
+  config.forEach(cfg=>{
 
-  config.forEach(x=>{
-    const cliente = document.getElementById(x.c).value;
-    const pacote = document.getElementById(x.p).value;
+    const cliente = document.getElementById(cfg.cliente).value;
+    const pacote = document.getElementById(cfg.pacote).value;
 
-    if(cliente && pacote){
-      header += `<th>${pacote}</th>`;
-      ativos.push({cliente,pacote});
-    }
-  });
+    const coluna = document.getElementById(cfg.col);
+    coluna.innerHTML = '';
 
-  if (!ativos.length){
-    document.getElementById('thead').innerHTML = '';
-    document.getElementById('tbody').innerHTML = '';
-    return;
-  }
+    if(!cliente || !pacote) return;
 
-  header += '</tr>';
-  document.getElementById('thead').innerHTML = header;
+    todosCanais.forEach(c=>{
 
-  let html = '';
-
-  todosCanais.forEach(c=>{
-
-    html += `<tr>
-      <td>${c.vc}</td>
-      <td>${c.canal}</td>
-      <td>${c.resolucao}</td>`;
-
-    ativos.forEach(p=>{
-      const tem = dados.some(d =>
+      const existe = dados.some(d =>
         d.pais===paisSelecionado &&
-        d.cliente===p.cliente &&
-        d.pacote===p.pacote &&
+        d.cliente===cliente &&
+        d.pacote===pacote &&
         d.canal===c.canal
       );
 
-      html += `<td class="${tem?'si':'no'}">${tem?'SI':'NO'}</td>`;
-    });
+      const tipo = c.canal.includes("INT") ? "Internacional" : "Nacional";
 
-    html += '</tr>';
+      coluna.innerHTML += `
+        <div class="canal-bloco ${existe ? '' : 'canal-off'}">
+          <div class="canal-numero">${c.vc} [${c.resolucao}]</div>
+          <div class="canal-nome">${c.canal}</div>
+          <div class="canal-tipo">${tipo}</div>
+        </div>
+      `;
+    });
 
   });
 
-  document.getElementById('tbody').innerHTML = html;
 }
 
 </script>
