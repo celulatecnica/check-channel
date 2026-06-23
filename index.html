@@ -36,6 +36,12 @@ h1 {
 
 .linha {
   border-bottom: 1px solid #dadade;
+  position: relative;
+  z-index: 20;
+}
+
+h2 {
+  margin-top: 47px;
 }
 
 /* STICKY */
@@ -44,7 +50,19 @@ h1 {
   top: 20px;
   background: rgba(255,255,255,0.98);
   backdrop-filter: blur(6px);
+  z-index: 10;
   padding-bottom: 35px;
+}
+
+.sticky-bloco::before {
+  content: "";
+  position: absolute;
+  top: -80px;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: white;
+  z-index: -1;
 }
 
 /* BANDEIRAS */
@@ -77,6 +95,10 @@ h1 {
   margin-top: 24px;
 }
 
+.pacote h3 {
+  margin-bottom: 6px;
+}
+
 /* SELECT */
 .grupo-selects {
   display: flex;
@@ -93,11 +115,22 @@ select {
   font-size: 18px;
 }
 
+select:invalid {
+  color: #b5b5b8;
+}
+
 /* RESULTADOS */
 .resultados {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
+  margin-top: 0px;
+}
+
+.coluna {
+  border-top: 1px solid #dadade;
+  display: flex;
+  flex-direction: column;
 }
 
 /* BLOCO */
@@ -109,24 +142,49 @@ select {
   border-bottom: 1px solid #eee;
 }
 
-.canal-numero { font-size: 16px; }
-.canal-nome { font-size: 18px; font-weight: 600; }
-.canal-tipo { font-size: 16px; }
+/* TEXTO */
+.canal-numero {
+  font-size: 16px;
+}
+
+.canal-nome {
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.canal-tipo {
+  font-size: 16px;
+}
 
 /* PLACEHOLDER */
 .canal-off {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   gap: 10px;
 }
-.fake-numero, .fake-nome, .fake-tipo {
+
+.canal-off div {
   background: #f5f5f7;
   border-radius: 8px;
 }
-.fake-numero { width: 90px; height: 14px; }
-.fake-nome { width: 160px; height: 18px; }
-.fake-tipo { width: 110px; height: 14px; }
+
+.fake-numero {
+  width: 90px;
+  height: 14px;
+}
+
+.fake-nome {
+  width: 160px;
+  height: 18px;
+}
+
+.fake-tipo {
+  width: 110px;
+  height: 14px;
+}
 
 </style>
 </head>
@@ -143,42 +201,57 @@ select {
 
 <div class="sticky-bloco">
 
-<h2>Selecciona el país</h2>
-<div id="bandeiras"></div>
+  <h2>Selecciona el país</h2>
 
-<div class="grid">
+  <div id="bandeiras"></div>
 
-<div class="pacote">
-  <h3>Paquete 1</h3>
-  <div class="grupo-selects">
-    <select id="cliente1"><option disabled selected>Selecciona el cliente</option></select>
-    <select id="pacote1"><option disabled selected>Selecciona el paquete</option></select>
+  <div class="grid">
+
+    <!-- ✅ AGORA COM PLACEHOLDER INICIAL -->
+    <div class="pacote">
+      <h3>Paquete 1</h3>
+      <div class="grupo-selects">
+        <select id="cliente1">
+          <option value="" disabled selected>Selecciona el tipo de cliente</option>
+        </select>
+        <select id="pacote1">
+          <option value="" disabled selected>Selecciona el paquete</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="pacote">
+      <h3>Paquete 2</h3>
+      <div class="grupo-selects">
+        <select id="cliente2">
+          <option value="" disabled selected>Selecciona el tipo de cliente</option>
+        </select>
+        <select id="pacote2">
+          <option value="" disabled selected>Selecciona el paquete</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="pacote">
+      <h3>Paquete 3</h3>
+      <div class="grupo-selects">
+        <select id="cliente3">
+          <option value="" disabled selected>Selecciona el tipo de cliente</option>
+        </select>
+        <select id="pacote3">
+          <option value="" disabled selected>Selecciona el paquete</option>
+        </select>
+      </div>
+    </div>
+
   </div>
-</div>
 
-<div class="pacote">
-  <h3>Paquete 2</h3>
-  <div class="grupo-selects">
-    <select id="cliente2"><option disabled selected>Selecciona el cliente</option></select>
-    <select id="pacote2"><option disabled selected>Selecciona el paquete</option></select>
-  </div>
-</div>
-
-<div class="pacote">
-  <h3>Paquete 3</h3>
-  <div class="grupo-selects">
-    <select id="cliente3"><option disabled selected>Selecciona el cliente</option></select>
-    <select id="pacote3"><option disabled selected>Selecciona el paquete</option></select>
-  </div>
-</div>
-
-</div>
 </div>
 
 <div class="resultados">
-  <div id="coluna1"></div>
-  <div id="coluna2"></div>
-  <div id="coluna3"></div>
+  <div class="coluna" id="coluna1"></div>
+  <div class="coluna" id="coluna2"></div>
+  <div class="coluna" id="coluna3"></div>
 </div>
 
 </div>
@@ -194,9 +267,10 @@ fetch('pacotes.csv')
 .then(r => r.text())
 .then(texto => {
 
-  texto.split('\n').forEach((linha,i)=>{
+  const linhas = texto.split('\n');
 
-    if(i===0) return;
+  linhas.forEach((linha,i)=>{
+    if(i===0)return;
 
     const col = linha.split(';').map(c=>c.trim());
 
@@ -207,14 +281,12 @@ fetch('pacotes.csv')
         pacote: col[2],
         vc: col[3],
         canal: col[4],
-        categoria: col[6],   // ✅ NOVO
         resolucao: col[7]
       });
 
       todosCanais.push({
         canal: col[4],
         vc: col[3],
-        categoria: col[6],   // ✅ NOVO
         resolucao: col[7]
       });
     }
@@ -232,7 +304,10 @@ function carregarBandeiras(){
 
   const container = document.getElementById('bandeiras');
 
-  [...new Set(dados.map(d=>d.pais))].forEach(p => {
+  const paises = [...new Set(dados.map(d=>d.pais))]
+    .sort((a, b) => a.localeCompare(b));
+
+  paises.forEach(p => {
 
     const div = document.createElement('div');
     div.className = 'bandeira';
@@ -248,18 +323,23 @@ function carregarBandeiras(){
 }
 
 /* PAÍS */
-function selecionarPais(pais, el){
+function selecionarPais(pais, elemento){
 
   paisSelecionado = pais;
 
-  document.querySelectorAll('.bandeira').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
+  document.querySelectorAll('.bandeira')
+    .forEach(b => b.classList.remove('active'));
 
-  const clientes = [...new Set(dados.filter(d=>d.pais===pais).map(d=>d.cliente))];
+  elemento.classList.add('active');
+
+  const clientes = [...new Set(
+    dados.filter(d=>d.pais===pais).map(d=>d.cliente)
+  )];
 
   ['cliente1','cliente2','cliente3'].forEach(id=>{
     const select = document.getElementById(id);
-    select.innerHTML = '<option disabled selected>Selecciona el cliente</option>';
+
+    select.innerHTML = '<option disabled selected>Selecciona el tipo de cliente</option>';
 
     clientes.forEach(c=>{
       select.innerHTML += `<option value="${c}">${c}</option>`;
@@ -272,16 +352,19 @@ function selecionarPais(pais, el){
 
   document.getElementById(id).addEventListener('change', function(){
 
+    const cliente = this.value;
+
     const pacotes = [...new Set(
-      dados.filter(d=>d.pais===paisSelecionado && d.cliente===this.value)
+      dados.filter(d=>d.pais===paisSelecionado && d.cliente===cliente)
       .map(d=>d.pacote)
     )];
 
-    const sp = document.getElementById(`pacote${index+1}`);
-    sp.innerHTML = '<option disabled selected>Selecciona el paquete</option>';
+    const selectPacote = document.getElementById(`pacote${index+1}`);
+
+    selectPacote.innerHTML = '<option disabled selected>Selecciona el paquete</option>';
 
     pacotes.forEach(p=>{
-      sp.innerHTML += `<option value="${p}">${p}</option>`;
+      selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
     });
 
   });
@@ -290,7 +373,7 @@ function selecionarPais(pais, el){
 
 /* AUTO */
 ['pacote1','pacote2','pacote3'].forEach(id=>{
-  document.getElementById(id).addEventListener('change', comparar);
+  document.getElementById(id).addEventListener('change', ()=>comparar());
 });
 
 /* RENDER */
@@ -306,14 +389,14 @@ function comparar(){
 
     const cliente = document.getElementById(cfg.cliente).value;
     const pacote = document.getElementById(cfg.pacote).value;
-    const coluna = document.getElementById(cfg.col);
 
+    const coluna = document.getElementById(cfg.col);
     coluna.innerHTML = '';
 
     if(!cliente || !pacote) return;
 
     todosCanais
-      .sort((a,b)=>Number(a.vc)-Number(b.vc))
+      .sort((a, b) => Number(a.vc) - Number(b.vc))
       .forEach(c=>{
 
       const existe = dados.some(d =>
@@ -323,7 +406,7 @@ function comparar(){
         d.canal===c.canal
       );
 
-      const tipo = c.categoria || ""; // ✅ AGORA USA CATEGORIA
+      const tipo = c.canal.includes("INT") ? "Internacional" : "Nacional";
 
       if (existe) {
         coluna.innerHTML += `
