@@ -41,6 +41,17 @@ h2 {
   margin-top: 30px;
 }
 
+/* ✅ BLOCO STICKY (EFEITO APPLE) */
+.sticky-bloco {
+  position: sticky;
+  top: 0;
+
+  background: white;
+  z-index: 10;
+
+  padding-bottom: 20px;
+}
+
 /* BANDEIRAS */
 .bandeira {
   display: inline-block;
@@ -88,21 +99,20 @@ h2 {
   margin-bottom: 6px;
 }
 
-/* ✅ GRUPO DE SELECTS (SOLUÇÃO REAL) */
+/* SELECT GROUP */
 .grupo-selects {
   display: flex;
   flex-direction: column;
-  gap: 6px; /* ✅ IGUAL ÀS BANDEIRAS */
+  gap: 6px;
 }
 
 /* SELECT */
 select {
-  display: block; /* ✅ ESSENCIAL */
+  display: block;
 
   width: 100%;
   height: 70px;
-
-  line-height: 70px; /* ✅ remove espaço fantasma */
+  line-height: 70px;
 
   padding: 0 20px;
 
@@ -122,15 +132,8 @@ select {
   background-position: right 18px center;
 }
 
-
-/* placeholder */
-select:invalid {
-  color: #b5b5b8;
-}
-
-select:valid {
-  color: #272727;
-}
+select:invalid { color: #b5b5b8; }
+select:valid { color: #272727; }
 
 /* BOTÃO */
 button {
@@ -151,19 +154,16 @@ button {
   transition: all 0.2s ease;
 }
 
-button:hover {
-  background: #0a84ff;
-}
+button:hover { background: #0a84ff; }
+button:active { transform: scale(0.97); }
 
-button:active {
-  transform: scale(0.97);
-}
-
-/* TABELA */
+/* ✅ TABELA ATRÁS */
 table {
   width: 100%;
   margin-top: 40px;
   border-collapse: collapse;
+  position: relative;
+  z-index: 1;
 }
 
 th, td {
@@ -189,49 +189,51 @@ th, td {
 
 <div class="linha"></div>
 
-<h2>Selecciona el país</h2>
+<!-- ✅ BLOCO QUE VAI FIXAR -->
+<div class="sticky-bloco">
 
-<div id="bandeiras"></div>
+  <h2>Selecciona el país</h2>
 
-<div class="grid">
+  <div id="bandeiras"></div>
 
-  <!-- PACOTE 1 -->
-  <div class="pacote">
-    <h3>Paquete 1</h3>
-    <div class="grupo-selects">
-      <select id="cliente1" required>
-        <option value="" disabled selected>Selecciona el tipo de cliente</option>
-      </select>
-      <select id="pacote1" required>
-        <option value="" disabled selected>Selecciona el paquete</option>
-      </select>
+  <div class="grid">
+
+    <div class="pacote">
+      <h3>Paquete 1</h3>
+      <div class="grupo-selects">
+        <select id="cliente1" required>
+          <option value="" disabled selected>Selecciona el tipo de cliente</option>
+        </select>
+        <select id="pacote1" required>
+          <option value="" disabled selected>Selecciona el paquete</option>
+        </select>
+      </div>
     </div>
-  </div>
 
-  <!-- PACOTE 2 -->
-  <div class="pacote">
-    <h3>Paquete 2</h3>
-    <div class="grupo-selects">
-      <select id="cliente2" required>
-        <option value="" disabled selected>Selecciona el tipo de cliente</option>
-      </select>
-      <select id="pacote2" required>
-        <option value="" disabled selected>Selecciona el paquete</option>
-      </select>
+    <div class="pacote">
+      <h3>Paquete 2</h3>
+      <div class="grupo-selects">
+        <select id="cliente2" required>
+          <option value="" disabled selected>Selecciona el tipo de cliente</option>
+        </select>
+        <select id="pacote2" required>
+          <option value="" disabled selected>Selecciona el paquete</option>
+        </select>
+      </div>
     </div>
-  </div>
 
-  <!-- PACOTE 3 -->
-  <div class="pacote">
-    <h3>Paquete 3</h3>
-    <div class="grupo-selects">
-      <select id="cliente3" required>
-        <option value="" disabled selected>Selecciona el tipo de cliente</option>
-      </select>
-      <select id="pacote3" required>
-        <option value="" disabled selected>Selecciona el paquete</option>
-      </select>
+    <div class="pacote">
+      <h3>Paquete 3</h3>
+      <div class="grupo-selects">
+        <select id="cliente3" required>
+          <option value="" disabled selected>Selecciona el tipo de cliente</option>
+        </select>
+        <select id="pacote3" required>
+          <option value="" disabled selected>Selecciona el paquete</option>
+        </select>
+      </div>
     </div>
+
   </div>
 
 </div>
@@ -302,10 +304,6 @@ function carregarBandeiras(){
     const img = document.createElement('img');
     img.src = `flags/${nomeArquivo}.png`;
 
-    img.onerror = () => {
-      div.innerHTML = `<span>${p.substring(0,2).toUpperCase()}</span>`;
-    };
-
     div.appendChild(img);
 
     div.onclick = () => selecionarPais(p, div);
@@ -315,108 +313,16 @@ function carregarBandeiras(){
 }
 
 function selecionarPais(pais, elemento){
-
   paisSelecionado = pais;
 
   document.querySelectorAll('.bandeira')
     .forEach(b => b.classList.remove('active'));
 
   elemento.classList.add('active');
-
-  const clientes = [...new Set(
-    dados.filter(d=>d.pais===pais).map(d=>d.cliente)
-  )];
-
-  ['cliente1','cliente2','cliente3'].forEach(id=>{
-
-    const select = document.getElementById(id);
-
-    select.innerHTML =
-      '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
-
-    clientes.forEach(c=>{
-      select.innerHTML += `<option value="${c}">${c}</option>`;
-    });
-  });
 }
 
-['cliente1','cliente2','cliente3'].forEach((id,index)=>{
-
-  document.getElementById(id).addEventListener('change', function(){
-
-    const cliente = this.value;
-
-    const pacotes = [...new Set(
-      dados.filter(d=>d.pais===paisSelecionado && d.cliente===cliente)
-      .map(d=>d.pacote)
-    )];
-
-    const selectPacote = document.getElementById(`pacote${index+1}`);
-
-    selectPacote.innerHTML =
-      '<option value="" disabled selected>Selecciona el paquete</option>';
-
-    pacotes.forEach(p=>{
-      selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
-    });
-
-  });
-});
-
 function comparar(){
-
-  const config = [
-    {c:'cliente1', p:'pacote1'},
-    {c:'cliente2', p:'pacote2'},
-    {c:'cliente3', p:'pacote3'}
-  ];
-
-  let header = '<tr><th>Channel</th><th>Canal</th><th>Resolución</th>';
-  let ativos = [];
-
-  config.forEach(x=>{
-    const cliente = document.getElementById(x.c).value;
-    const pacote = document.getElementById(x.p).value;
-
-    if(cliente && pacote){
-      header += `<th>${pacote}</th>`;
-      ativos.push({cliente,pacote});
-    }
-  });
-
-  if (ativos.length === 0) {
-    alert("Selecciona al menos un cliente y paquete");
-    return;
-  }
-
-  header += '</tr>';
-  document.getElementById('thead').innerHTML = header;
-
-  let html = '';
-
-  todosCanais.sort((a,b)=>Number(a.vc)-Number(b.vc))
-  .forEach(c=>{
-
-    html += `<tr>
-      <td>${c.vc}</td>
-      <td>${c.canal}</td>
-      <td>${c.resolucao}</td>`;
-
-    ativos.forEach(p=>{
-      const tem = dados.some(d =>
-        d.pais===paisSelecionado &&
-        d.cliente===p.cliente &&
-        d.pacote===p.pacote &&
-        d.canal===c.canal
-      );
-
-      html += `<td class="${tem?'si':'no'}">${tem?'SI':'NO'}</td>`;
-    });
-
-    html += '</tr>';
-  });
-
-  document.getElementById('tbody').innerHTML = html;
+  alert("Funcionando 👍");
 }
 
 </script>
