@@ -41,22 +41,30 @@ h2 {
   margin-top: 30px;
 }
 
-/* ✅ STICKY CORRETO (SEM TRAVAR SCROLL) */
+/* ✅ STICKY FINAL LIMPO */
+.sticky-bloco {
+  position: sticky;
+  top: 20px;
 
-.sticky-bloco::before {
-  content: "";
+  background: rgba(255,255,255,0.98); /* menos transparente */
+  backdrop-filter: blur(6px);
 
-  position: absolute;
-  top: -60px;   /* cobre área acima */
-  left: 0;
-  right: 0;
-  height: 60px;
+  z-index: 10;
 
-  background: white; /* ✅ bloqueia a tabela */
-
-  z-index: -1;
+  padding-bottom: 12px;
 }
 
+/* ✅ BLOQUEIA TEXTO DA TABELA */
+.sticky-bloco::before {
+  content: "";
+  position: absolute;
+  top: -80px;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: white;
+  z-index: -1;
+}
 
 /* BANDEIRAS */
 .bandeira {
@@ -110,7 +118,6 @@ select {
   border: none;
   background: #f5f5f7;
   font-size: 18px;
-  appearance: none;
   color: #272727;
 }
 
@@ -128,7 +135,7 @@ button {
   cursor: pointer;
 }
 
-/* ✅ TABELA COM ESPAÇO PARA SCROLL NORMAL */
+/* TABELA */
 table {
   margin-top: 120px;
   width: 100%;
@@ -157,7 +164,6 @@ th, td {
 
 <div class="linha"></div>
 
-<!-- ✅ BLOCO STICKY -->
 <div class="sticky-bloco">
 
   <h2>Selecciona el país</h2>
@@ -217,12 +223,10 @@ th, td {
 
 <script>
 
-/* DADOS */
 let dados = [];
 let todosCanais = [];
 let paisSelecionado = "";
 
-/* CSV */
 fetch('pacotes.csv')
 .then(r => r.text())
 .then(texto => {
@@ -230,23 +234,26 @@ fetch('pacotes.csv')
   const linhas = texto.replace(/\r/g,'').split('\n');
 
   linhas.forEach((linha,i)=>{
-
     if(i===0)return;
 
     const col = linha.split(';').map(c=>c.trim());
 
-    const pais = col[0];
-    const cliente = col[1];
-    const pacote = col[2];
-    const vc = col[3];
-    const canal = col[4]?.toUpperCase();
-    const resolucao = col[7];
+    if(col[0]){
+      dados.push({
+        pais: col[0],
+        cliente: col[1],
+        pacote: col[2],
+        vc: col[3],
+        canal: col[4]?.toUpperCase(),
+        resolucao: col[7]
+      });
 
-    if(pais){
-      dados.push({pais,cliente,pacote,canal,vc,resolucao});
-      todosCanais.push({canal,vc,resolucao});
+      todosCanais.push({
+        canal: col[4]?.toUpperCase(),
+        vc: col[3],
+        resolucao: col[7]
+      });
     }
-
   });
 
   todosCanais = Object.values(
@@ -254,10 +261,8 @@ fetch('pacotes.csv')
   );
 
   carregarBandeiras();
-
 });
 
-/* BANDEIRAS */
 function carregarBandeiras(){
 
   const container = document.getElementById('bandeiras');
@@ -277,12 +282,9 @@ function carregarBandeiras(){
     div.onclick = () => selecionarPais(p, div);
 
     container.appendChild(div);
-
   });
-
 }
 
-/* SELECIONAR PAÍS */
 function selecionarPais(pais, elemento){
 
   paisSelecionado = pais;
@@ -306,12 +308,9 @@ function selecionarPais(pais, elemento){
     clientes.forEach(c=>{
       select.innerHTML += `<option value="${c}">${c}</option>`;
     });
-
   });
-
 }
 
-/* CLIENTE -> PACOTE */
 ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
 
   document.getElementById(id).addEventListener('change', function(){
@@ -319,9 +318,8 @@ function selecionarPais(pais, elemento){
     const cliente = this.value;
 
     const pacotes = [...new Set(
-      dados
-        .filter(d=>d.pais===paisSelecionado && d.cliente===cliente)
-        .map(d=>d.pacote)
+      dados.filter(d=>d.pais===paisSelecionado && d.cliente===cliente)
+      .map(d=>d.pacote)
     )];
 
     const selectPacote = document.getElementById(`pacote${index+1}`);
@@ -334,10 +332,8 @@ function selecionarPais(pais, elemento){
     });
 
   });
-
 });
 
-/* COMPARAR (TABELA REAL) */
 function comparar(){
 
   const config = [
@@ -358,11 +354,6 @@ function comparar(){
       ativos.push({cliente,pacote});
     }
   });
-
-  if (!ativos.length){
-    alert("Selecciona al menos un cliente y paquete");
-    return;
-  }
 
   header += '</tr>';
   document.getElementById('thead').innerHTML = header;
@@ -388,11 +379,9 @@ function comparar(){
     });
 
     html += '</tr>';
-
   });
 
   document.getElementById('tbody').innerHTML = html;
-
 }
 
 </script>
