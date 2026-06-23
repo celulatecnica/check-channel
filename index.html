@@ -133,11 +133,12 @@ h2 {
 }
 
 
+
 .bandeira {
-  border: 2px solid transparent; /* ✅ reserva espaço */
-  box-shadow: 0 0 0 4px transparent; /* ✅ reserva espaço */
-  transition: none;
+  border: 2px solid transparent;
+  box-shadow: 0 0 0 4px transparent;
 }
+
 
 
 
@@ -147,6 +148,10 @@ h2 {
   grid-template-columns: repeat(3, 1fr);
   column-gap: 17px;
   margin-top: 24px;
+}
+  
+.sticky-bloco.compacto .grid {
+  margin-top: 12px; /* ✅ reduz o espaço */
 }
 
 .pacote h3 {
@@ -283,10 +288,12 @@ select:invalid {
 
 .sticky-bloco.compacto .bandeira {
   transform: scale(0.8);
+  margin: 4px; /* ✅ reduz proporcionalmente */
 }
 
+
 .sticky-bloco.compacto #bandeiras {
-  margin-top: 10px;
+  margin-top: 6px;
 }
 
 /* animação suave */
