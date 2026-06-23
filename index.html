@@ -286,10 +286,21 @@ select:invalid {
   font-size: 18px;
 }
 
+
+/* ✅ controla o espaçamento real no modo compacto */
+.sticky-bloco.compacto #bandeiras {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* ✅ remove conflito de margem e aplica escala */
 .sticky-bloco.compacto .bandeira {
   transform: scale(0.8);
-  margin: 4px; /* ✅ reduz proporcionalmente */
+  margin: 0;
 }
+
 
 
 .sticky-bloco.compacto 
