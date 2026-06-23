@@ -328,18 +328,39 @@ function selecionarPais(pais, elemento){
   )];
 
   // ✅ PREENCHER OS 3 SELECTS
-  ['cliente1','cliente2','cliente3'].forEach(id=>{
+['cliente1','cliente2','cliente3'].forEach((id,index)=>{
 
-    const select = document.getElementById(id);
+  const selectCliente = document.getElementById(id);
 
-    select.innerHTML =
-      '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
+  selectCliente.addEventListener('change', function(){
 
-    clientes.forEach(c=>{
-      select.innerHTML += `<option value="${c}">${c}</option>`;
+    const cliente = this.value;
+
+    if (!cliente || !paisSelecionado) return; // ✅ segurança
+
+    const pacotes = [...new Set(
+      dados
+        .filter(d => d.pais === paisSelecionado && d.cliente === cliente)
+        .map(d => d.pacote)
+    )];
+
+    const selectPacote = document.getElementById(`pacote${index+1}`);
+
+    // ✅ limpa antes
+    selectPacote.innerHTML =
+      '<option value="" disabled selected>Selecciona el paquete</option>';
+
+    // ✅ adiciona novos
+    pacotes.forEach(p=>{
+      selectPacote.insertAdjacentHTML(
+        'beforeend',
+        `<option value="${p}">${p}</option>`
+      );
     });
 
   });
+
+});
 
 }
 
