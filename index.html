@@ -25,7 +25,7 @@ body {
   text-align: center;
 }
 
-/* ✅ CORREÇÃO AQUI */
+/* TÍTULO */
 h1 {
   margin-top: 47px;
   margin-bottom: 47px;
@@ -34,10 +34,16 @@ h1 {
   z-index: 20;
 }
 
+/* LINHA */
 .linha {
   border-bottom: 1px solid #dadade;
   position: relative;
   z-index: 20;
+}
+
+/* ✅ AJUSTE FINAL */
+h2 {
+  margin-top: 47px; /* ✅ agora padronizado */
 }
 
 /* STICKY */
@@ -53,7 +59,7 @@ h1 {
   padding-bottom: 59px;
 }
 
-/* BLOQUEIO FUNDO */
+/* BLOQUEIO DO FUNDO */
 .sticky-bloco::before {
   content: "";
   position: absolute;
@@ -134,6 +140,7 @@ th, td {
 .no { color: red; font-weight: bold; }
 
 </style>
+
 </head>
 
 <body>
@@ -244,13 +251,11 @@ fetch('pacotes.csv')
 });
 
 function carregarBandeiras(){
-
   const container = document.getElementById('bandeiras');
 
   const paises = [...new Set(dados.map(d=>d.pais))];
 
   paises.forEach(p => {
-
     const div = document.createElement('div');
     div.className = 'bandeira';
 
@@ -258,7 +263,6 @@ function carregarBandeiras(){
     img.src = `flags/${p.toLowerCase().replace(/\s+/g,'')}.png`;
 
     div.appendChild(img);
-
     div.onclick = () => selecionarPais(p, div);
 
     container.appendChild(div);
