@@ -25,20 +25,15 @@ body {
   text-align: center;
 }
 
-/* TÍTULO */
+/* TITULO */
 h1 {
   margin-top: 47px;
   margin-bottom: 47px;
   font-size: 52px;
-  font-weight: 700;
 }
 
 .linha {
   border-bottom: 1px solid #dadade;
-}
-
-h2 {
-  margin-top: 30px;
 }
 
 /* STICKY */
@@ -77,13 +72,11 @@ h2 {
   border: 2px solid transparent;
 }
 
-
 .bandeira img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* ✅ mantém proporção sem deformar */
+  object-fit: cover; /* ✅ evita deformação */
 }
-
 
 .bandeira.active {
   border-color: #007aff;
@@ -98,20 +91,17 @@ h2 {
 }
 
 .pacote h3 {
-  font-size: 16px;
-  font-weight: 600;
   margin-bottom: 6px;
 }
 
+/* SELECT */
 .grupo-selects {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-/* SELECT */
 select {
-  width: 100%;
   height: 70px;
   padding: 0 20px;
   border-radius: 16px;
@@ -122,9 +112,13 @@ select {
 
 select:invalid { color: #b5b5b8; }
 
+/* ✅ ESPAÇADOR (ESSENCIAL) */
+.espaco-tabela {
+  height: 47px; /* ✅ sempre preservado */
+}
+
 /* TABELA */
 table {
-  margin-top: 47px;
   width: 100%;
   border-collapse: collapse;
 }
@@ -198,6 +192,9 @@ th, td {
 
 </div>
 
+<!-- ✅ ESPAÇO CORRETO -->
+<div class="espaco-tabela"></div>
+
 <table>
 <thead id="thead"></thead>
 <tbody id="tbody"></tbody>
@@ -239,7 +236,6 @@ fetch('pacotes.csv')
         resolucao: col[7]
       });
     }
-
   });
 
   todosCanais = Object.values(
@@ -247,18 +243,15 @@ fetch('pacotes.csv')
   );
 
   carregarBandeiras();
-
 });
 
 /* BANDEIRAS */
 function carregarBandeiras(){
-
   const container = document.getElementById('bandeiras');
 
   const paises = [...new Set(dados.map(d=>d.pais))];
 
   paises.forEach(p => {
-
     const div = document.createElement('div');
     div.className = 'bandeira';
 
@@ -266,7 +259,6 @@ function carregarBandeiras(){
     img.src = `flags/${p.toLowerCase().replace(/\s+/g,'')}.png`;
 
     div.appendChild(img);
-
     div.onclick = () => selecionarPais(p, div);
 
     container.appendChild(div);
@@ -289,14 +281,12 @@ function selecionarPais(pais, elemento){
 
   ['cliente1','cliente2','cliente3'].forEach(id=>{
     const select = document.getElementById(id);
-    select.innerHTML =
-      '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
+    select.innerHTML = '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
 
     clientes.forEach(c=>{
       select.innerHTML += `<option value="${c}">${c}</option>`;
     });
   });
-
 }
 
 /* CLIENTE → PACOTE */
@@ -324,13 +314,9 @@ function selecionarPais(pais, elemento){
 
 });
 
-/* ✅ AUTO GERAR TABELA */
+/* AUTO GERAR TABELA */
 ['pacote1','pacote2','pacote3'].forEach(id=>{
-
-  document.getElementById(id).addEventListener('change', ()=>{
-    comparar();
-  });
-
+  document.getElementById(id).addEventListener('change', ()=>comparar());
 });
 
 /* TABELA */
@@ -387,6 +373,7 @@ function comparar(){
     });
 
     html += '</tr>';
+
   });
 
   document.getElementById('tbody').innerHTML = html;
