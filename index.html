@@ -633,7 +633,7 @@ window.addEventListener('scroll', () => {
 
   if (!bloco) return;
 
-  const topoInicial = bloco.offsetTop;
+  const trigger = 300; // ajuste fino aqui
 
   if (window.scrollY >= topoInicial - 20) {
     bloco.classList.add('compacto');
