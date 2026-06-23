@@ -291,7 +291,9 @@ fetch('pacotes.csv')
 function carregarBandeiras(){
 
   const container = document.getElementById('bandeiras');
-  const paises = [...new Set(dados.map(d=>d.pais))];
+  const paises = [...new Set(dados.map(d=>d.pais))]
+  .sort((a, b) => a.localeCompare(b));
+
 
   paises.forEach(p => {
 
@@ -377,7 +379,10 @@ function comparar(){
 
     if(!cliente || !pacote) return;
 
-    todosCanais.forEach(c=>{
+    todosCanais
+      .sort((a, b) => Number(a.vc) - Number(b.vc))
+      .forEach(c=>{
+
 
       const existe = dados.some(d =>
         d.pais===paisSelecionado &&
