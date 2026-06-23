@@ -40,7 +40,6 @@ h1 {
   z-index: 20;
 }
 
-/* H2 */
 h2 {
   margin-top: 47px;
 }
@@ -55,7 +54,6 @@ h2 {
   padding-bottom: 59px;
 }
 
-/* BLOQUEIO */
 .sticky-bloco::before {
   content: "";
   position: absolute;
@@ -121,7 +119,7 @@ select:invalid {
   color: #b5b5b8;
 }
 
-/* ✅ RESULTADO EM COLUNAS */
+/* RESULTADOS */
 .resultados {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -133,16 +131,15 @@ select:invalid {
   border-top: 1px solid #dadade;
 }
 
-/* CARD */
+/* BLOCO */
 .canal-bloco {
   padding: 18px 0;
   border-bottom: 1px solid #eee;
 }
 
-/* LINHAS */
+/* TEXTO REAL */
 .canal-numero {
   font-size: 16px;
-  color: #272727;
 }
 
 .canal-nome {
@@ -153,12 +150,35 @@ select:invalid {
 
 .canal-tipo {
   font-size: 16px;
-  color: #272727;
 }
 
-/* CANAL INATIVO */
+/* ✅ PLACEHOLDER (novo efeito) */
 .canal-off {
-  color: #b5b5b8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.canal-off div {
+  background: #e5e5e7;
+  border-radius: 8px;
+}
+
+/* BLOCOS FAKE */
+.fake-numero {
+  width: 90px;
+  height: 14px;
+}
+
+.fake-nome {
+  width: 160px;
+  height: 18px;
+}
+
+.fake-tipo {
+  width: 110px;
+  height: 14px;
 }
 
 </style>
@@ -210,7 +230,6 @@ select:invalid {
 
 </div>
 
-<!-- ✅ NOVO RESULTADO -->
 <div class="resultados">
   <div class="coluna" id="coluna1"></div>
   <div class="coluna" id="coluna2"></div>
@@ -225,7 +244,6 @@ let dados = [];
 let todosCanais = [];
 let paisSelecionado = "";
 
-/* CSV */
 fetch('pacotes.csv')
 .then(r => r.text())
 .then(texto => {
@@ -309,7 +327,7 @@ function selecionarPais(pais, elemento){
   });
 }
 
-/* CLIENTE -> PACOTE */
+/* CLIENTE → PACOTE */
 ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
 
   document.getElementById(id).addEventListener('change', function(){
@@ -338,7 +356,7 @@ function selecionarPais(pais, elemento){
   document.getElementById(id).addEventListener('change', ()=>comparar());
 });
 
-/* ✅ NOVO RENDER */
+/* ✅ RENDER COM MÁSCARA */
 function comparar(){
 
   const config = [
@@ -368,13 +386,28 @@ function comparar(){
 
       const tipo = c.canal.includes("INT") ? "Internacional" : "Nacional";
 
-      coluna.innerHTML += `
-        <div class="canal-bloco ${existe ? '' : 'canal-off'}">
-          <div class="canal-numero">${c.vc} [${c.resolucao}]</div>
-          <div class="canal-nome">${c.canal}</div>
-          <div class="canal-tipo">${tipo}</div>
-        </div>
-      `;
+      if (existe) {
+
+        coluna.innerHTML += `
+          <div class="canal-bloco">
+            <div class="canal-numero">${c.vc} [${c.resolucao}]</div>
+            <div class="canal-nome">${c.canal}</div>
+            <div class="canal-tipo">${tipo}</div>
+          </div>
+        `;
+
+      } else {
+
+        coluna.innerHTML += `
+          <div class="canal-bloco canal-off">
+            <div class="fake-numero"></div>
+            <div class="fake-nome"></div>
+            <div class="fake-tipo"></div>
+          </div>
+        `;
+
+      }
+
     });
 
   });
