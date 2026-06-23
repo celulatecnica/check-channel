@@ -542,6 +542,17 @@ function selecionarPais(pais, elemento){
     select.innerHTML = '<option disabled selected>Selecciona el paquete</option>';
   });
 
+  /* ✅ LIMPAR RESULTADOS */
+['coluna1','coluna2','coluna3'].forEach(id=>{
+  document.getElementById(id).innerHTML = '';
+});
+
+/* ✅ esconder rodapé */
+document.querySelector('.rodape').style.display = 'none';
+
+/* ✅ remover modo sem espaço */
+document.querySelector('.conteudo').classList.remove('sem-espaco');
+
   }
   
 
