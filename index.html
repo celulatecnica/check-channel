@@ -313,13 +313,36 @@ function carregarBandeiras(){
 }
 
 function selecionarPais(pais, elemento){
+
   paisSelecionado = pais;
 
+  // seleção visual
   document.querySelectorAll('.bandeira')
     .forEach(b => b.classList.remove('active'));
 
   elemento.classList.add('active');
+
+  // ✅ BUSCAR CLIENTES DO PAÍS
+  const clientes = [...new Set(
+    dados.filter(d=>d.pais===pais).map(d=>d.cliente)
+  )];
+
+  // ✅ PREENCHER OS 3 SELECTS
+  ['cliente1','cliente2','cliente3'].forEach(id=>{
+
+    const select = document.getElementById(id);
+
+    select.innerHTML =
+      '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
+
+    clientes.forEach(c=>{
+      select.innerHTML += `<option value="${c}">${c}</option>`;
+    });
+
+  });
+
 }
+
 
 function comparar(){
   alert("Funcionando 👍");
