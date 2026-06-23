@@ -50,10 +50,17 @@ body {
 }
 
 /* COMPENSA HEADER FIXO */
+
 .conteudo {
   padding-top: 0px;
   padding-bottom: 250px;
+  transition: padding 0.4s ease;
 }
+
+.conteudo.sem-espaco {
+  padding-bottom: 0;
+}
+
 
 /* CONTAINER */
 .container {
@@ -516,6 +523,14 @@ function comparar(){
   });
 
   document.querySelector('.rodape').style.display = temResultado ? 'block' : 'none';
+  
+const conteudo = document.querySelector('.conteudo');
+
+if (temResultado) {
+  conteudo.classList.add('sem-espaco');
+} else {
+  conteudo.classList.remove('sem-espaco');
+}
 }
 
 </script>
