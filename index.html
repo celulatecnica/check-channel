@@ -114,7 +114,7 @@ h2 {
   display: inline-block;
   width: 72px;
   height: 48px;
-  margin: 6px;
+  margin: 0;
   border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
@@ -292,9 +292,14 @@ select:invalid {
 }
 
 
-.sticky-bloco.compacto #bandeiras {
-  margin-top: 6px;
+.sticky-bloco.compacto 
+#bandeiras {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px; /* ✅ controla o espaço corretamente */
 }
+
 
 /* animação suave */
 .sticky-bloco,
