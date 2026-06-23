@@ -42,17 +42,21 @@ h2 {
 }
 
 /* ✅ STICKY CORRETO (SEM TRAVAR SCROLL) */
-.sticky-bloco {
-  position: sticky;
-  top: 20px;
 
-  background: rgba(255,255,255,0.96);
-  backdrop-filter: blur(6px);
+.sticky-bloco::before {
+  content: "";
 
-  z-index: 10;
+  position: absolute;
+  top: -60px;   /* cobre área acima */
+  left: 0;
+  right: 0;
+  height: 60px;
 
-  padding-bottom: 12px;
+  background: white; /* ✅ bloqueia a tabela */
+
+  z-index: -1;
 }
+
 
 /* BANDEIRAS */
 .bandeira {
