@@ -6,6 +6,16 @@
 
 <style>
 
+/* ====== DARK THEME ====== */
+:root {
+  --bg: #0b0b0c;
+  --bg-soft: #111214;
+  --bg-card: #1c1c1f;
+  --border: #2a2a2e;
+  --text: #f5f5f7;
+  --text-soft: #a1a1aa;
+}
+
 /* HEADER */
 .top-bar {
   height: 44px;
@@ -14,53 +24,30 @@
   left: 0;
   width: 100%;
   z-index: 999;
-
-  background: rgba(255,255,255,0.25);
+  background: rgba(15,15,15,0.6);
   backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
-
   transition: opacity 0.3s ease;
 }
 
-/* ✅ AJUSTE DO LOGO (NOVO) */
 .top-bar-inner {
   width: 1076px;
   height: 100%;
   margin: auto;
   display: flex;
   align-items: center;
-  padding-left: 4px;
 }
 
 .logo {
   height: 18px;
-  width: auto;
-  display: block;
 }
-
-/* REMOVE espaço antigo */
-.sub-bar { height: 0px; background: #f5f5f7; }
 
 /* BODY */
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
-  background: white;
-  color: #272727;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+  background: var(--bg);
+  color: var(--text);
 }
-
-/* COMPENSA HEADER FIXO */
-
-.conteudo {
-  padding-top: 0px;
-  padding-bottom: 250px;
-  transition: padding 0.4s ease;
-}
-
-.conteudo.sem-espaco {
-  padding-bottom: 0;
-}
-
 
 /* CONTAINER */
 .container {
@@ -69,46 +56,27 @@ body {
   text-align: center;
 }
 
-/* TITULO */
 h1 {
-  margin-top: 47px;
-  margin-bottom: 47px;
+  margin: 47px 0;
   font-size: 52px;
-  position: relative;
-  z-index: 20;
 }
 
 .linha {
-  border-bottom: 1px solid #dadade;
-  position: relative;
-  z-index: 20;
+  border-bottom: 1px solid var(--border);
 }
 
 h2 {
   margin-top: 47px;
 }
 
-
-
 /* STICKY */
 .sticky-bloco {
   position: sticky;
   top: 20px;
-  background: rgba(255,255,255,0.98);
-  backdrop-filter: blur(6px);
+  background: rgba(15,15,15,0.95);
+  backdrop-filter: blur(10px);
   z-index: 10;
   padding-bottom: 35px;
-}
-
-.sticky-bloco::before {
-  content: "";
-  position: absolute;
-  top: -80px;
-  left: 0;
-  right: 0;
-  height: 80px;
-  background: white;
-  z-index: -1;
 }
 
 /* BANDEIRAS */
@@ -119,30 +87,11 @@ h2 {
   margin: 6px;
   border-radius: 12px;
   overflow: hidden;
-  cursor: pointer;
 }
-
-.bandeira img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
 
 .bandeira.active {
-  border: 2px solid rgba(0,0,0,0.2);
-  box-shadow: 0 0 0 4px rgba(0,0,0,0.05);
+  border: 2px solid #555;
 }
-
-
-
-.bandeira {
-  border: 2px solid transparent;
-  box-shadow: 0 0 0 4px transparent;
-}
-
-
-
 
 /* GRID */
 .grid {
@@ -151,199 +100,66 @@ h2 {
   column-gap: 17px;
   margin-top: 24px;
 }
-  
-.sticky-bloco.compacto .grid {
-  margin-top: 12px; /* ✅ reduz o espaço */
-}
-
-.pacote h3 {
-  margin-bottom: 20px;
-}
 
 /* SELECT */
-.grupo-selects {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-
 select {
   height: 70px;
-  padding: 0 50px 0 20px; /* ✅ mais espaço real */
   border-radius: 16px;
   border: none;
-  background: #f5f5f7;
+  background: var(--bg-card);
+  color: var(--text);
   font-size: 18px;
-
-  appearance: none;           /* ✅ remove estilo padrão */
-  -webkit-appearance: none;   /* ✅ Chrome/Safari */
-  -moz-appearance: none;      /* ✅ Firefox */
-
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg width='14' height='14' viewBox='0 0 20 20' fill='none' stroke='%23272727' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 20px center; /* ✅ controla a posição */
+  padding: 0 20px;
 }
 
-
 select:invalid {
-  color: #b5b5b8;
+  color: var(--text-soft);
 }
 
 /* RESULTADOS */
 .resultados {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  margin-top: 0px;
+  grid-template-columns: repeat(3,1fr);
 }
 
 .coluna {
-  border-top: 1px solid #dadade;
-  display: flex;
-  flex-direction: column;
+  border-top: 1px solid var(--border);
 }
 
-/* BLOCO */
 .canal-bloco {
   height: 110px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  border-bottom: 1px solid #eee;
-}
-
-/* NUMERO */
-.canal-numero {
-  font-size: 16px;
-}
-
-/* NOME */
-.canal-nome {
-  font-size: 18px;
-  font-weight: 600;
-  margin-top: 4px;
+  border-bottom: 1px solid var(--border);
 }
 
 /* TAGS */
-.canal-tags {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 6px;
-}
-
 .canal-badge {
-  background: #f5f5f7;
+  background: #222;
+  color: var(--text-soft);
   border-radius: 8px;
   padding: 2px 8px;
-  font-size: 16px;
 }
 
 /* PLACEHOLDER */
-.canal-off {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-}
-
 .canal-off div {
-  background: #f5f5f7;
-  border-radius: 8px;
+  background: #2a2a2e;
 }
 
-.fake-numero {
-  width: 90px;
-  height: 14px;
-}
-
-.fake-nome {
-  width: 160px;
-  height: 18px;
-}
-
-.fake-tipo {
-  width: 110px;
-  height: 14px;
-}
-
-/* ✅ AJUSTADO */
-.rodape {
-  height: 200px;
-  background: #fbfbfd;
-  margin-top: 47px;
-  display: none;
-}
-
-  /* ===== NOVO: COMPACTAÇÃO DO STICKY ===== */
-
-.sticky-bloco.compacto {
-  padding-bottom: 15px;
-}
-
-
+/* ===== COMPACTO ===== */
 .sticky-bloco.compacto h2 {
-  margin-top: 20px;
-  font-size: 18px; /* ✅ mesmo tamanho do h3 */
-  font-weight: 700; /* ✅ opcional (fica igual visual do paquete) */
+  font-size: 18px;
+  font-weight: 700;
 }
-
-
-
-/* ✅ controla o espaçamento real no modo compacto */
-.sticky-bloco.compacto #bandeiras {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-/* ✅ remove conflito de margem e aplica escala */
 
 .sticky-bloco.compacto .bandeira {
-  width: 58px;   /* ✅ menor que 72 */
-  height: 38px;  /* ✅ mantém proporção */
-  margin: 4px;   /* ✅ menor espaço real */
+  width: 58px;
+  height: 38px;
+  margin: 4px;
 }
 
-
-
-
-.sticky-bloco.compacto 
-#bandeiras {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 6px; /* ✅ controla o espaço corretamente */
-}
-
-
-/* animação suave */
-.sticky-bloco,
-.bandeira,
-.sticky-bloco h2 {
-  transition: all 0.3s ease;
-}
-  
 </style>
-  
 </head>
 
 <body>
-
-<div class="conteudo">
-
-<div class="top-bar" id="topbar">
-  <div class="top-bar-inner">
-    <img src="icon_gpt_branco.png" class="logo">
-  </div>
-</div>
-
-<img id="banner" src="banner.png" style="width:100%; display:block;">
-
-<div class="sub-bar"></div>
 
 <div class="container">
 
@@ -357,44 +173,25 @@ select:invalid {
 
 <div class="grid">
 
-<div class="pacote">
+<div>
 <h3>Paquete 1</h3>
-<div class="grupo-selects">
-<select id="cliente1">
-<option value="" disabled selected>Selecciona el tipo de cliente</option>
-</select>
-<select id="pacote1">
-<option value="" disabled selected>Selecciona el paquete</option>
-</select>
-</div>
+<select id="cliente1"></select>
+<select id="pacote1"></select>
 </div>
 
-<div class="pacote">
+<div>
 <h3>Paquete 2</h3>
-<div class="grupo-selects">
-<select id="cliente2">
-<option value="" disabled selected>Selecciona el tipo de cliente</option>
-</select>
-<select id="pacote2">
-<option value="" disabled selected>Selecciona el paquete</option>
-</select>
-</div>
+<select id="cliente2"></select>
+<select id="pacote2"></select>
 </div>
 
-<div class="pacote">
+<div>
 <h3>Paquete 3</h3>
-<div class="grupo-selects">
-<select id="cliente3">
-<option value="" disabled selected>Selecciona el tipo de cliente</option>
-</select>
-<select id="pacote3">
-<option value="" disabled selected>Selecciona el paquete</option>
-</select>
-</div>
+<select id="cliente3"></select>
+<select id="pacote3"></select>
 </div>
 
 </div>
-
 </div>
 
 <div class="resultados">
@@ -405,246 +202,97 @@ select:invalid {
 
 </div>
 
-<div class="rodape"></div>
-
-</div>
-
 <script>
 
-/* ✅ EFEITO APPLE */
-window.addEventListener('scroll', () => {
-  const banner = document.getElementById('banner');
-  const topbar = document.getElementById('topbar');
-
-  const bannerHeight = banner.offsetHeight;
-  const scrollY = window.scrollY;
-
-  let opacity = 1 - (scrollY / bannerHeight);
-
-  if (opacity < 0) opacity = 0;
-
-  topbar.style.opacity = opacity;
-});
-
-/* ================= SEU SCRIPT ORIGINAL ================= */
-
 let dados = [];
-let todosCanais = [];
 let paisSelecionado = "";
 
 fetch('pacotes.csv')
 .then(r => r.text())
 .then(texto => {
-
   const linhas = texto.split('\n');
 
-  linhas.forEach((linha,i)=>{
-    if(i===0)return;
-
-    const col = linha.split(';').map(c=>c.trim());
-
-    if(col[0]){
-      dados.push({
-        pais: col[0],
-        cliente: col[1],
-        pacote: col[2],
-        vc: col[3],
-        canal: col[4],
-        categoria: col[5],
-        resolucao: col[6]
-      });
-
-      todosCanais.push({
-        canal: col[4],
-        vc: col[3],
-        categoria: col[5],
-        resolucao: col[6]
-      });
-    }
+  linhas.forEach(l => {
+    const c = l.split(';');
+    if(c[0]) dados.push({
+      pais:c[0], cliente:c[1], pacote:c[2]
+    });
   });
-
-  todosCanais = Object.values(
-    Object.fromEntries(todosCanais.map(c=>[c.canal,c]))
-  );
 
   carregarBandeiras();
+});
 
+/* LISTENERS */
+['cliente1','cliente2','cliente3'].forEach((id,i)=>{
+  document.getElementById(id).onchange = function(){
+    let pacotes = dados.filter(d => d.pais==paisSelecionado && d.cliente==this.value);
 
-  ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
- 
-  document.getElementById(id).addEventListener('change', function(){
-
-    const cliente = this.value;
-
-    const pacotes = [...new Set(
-      dados.filter(d=>d.pais===paisSelecionado && d.cliente===cliente)
-      .map(d=>d.pacote)
-    )];
-
-    const selectPacote = document.getElementById(`pacote${index+1}`);
-
-    selectPacote.innerHTML = '<option disabled selected>Selecciona el paquete</option>';
+    let select = document.getElementById(`pacote${i+1}`);
+    select.innerHTML = '<option selected>Selecciona el paquete</option>';
 
     pacotes.forEach(p=>{
-      selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
+      select.innerHTML += `<option>${p.pacote}</option>`;
     });
-
-  });
+  };
 });
 
-  
 ['pacote1','pacote2','pacote3'].forEach(id=>{
-  document.getElementById(id).addEventListener('change', ()=>{
-    comparar();
-  });
+  document.getElementById(id).onchange = ()=>comparar();
 });
-});
-  
+
 function carregarBandeiras(){
-  const paises = [...new Set(dados.map(d=>d.pais))]
-    .sort((a, b) => a.localeCompare(b));
+  let container = document.getElementById('bandeiras');
 
-  const container = document.getElementById('bandeiras');
-
-  paises.forEach(p => {
-    const div = document.createElement('div');
-    div.className = 'bandeira';
-
-    const img = document.createElement('img');
-    img.src = `flags/${p.toLowerCase().replace(/\s+/g,'')}.png`;
-
-    div.appendChild(img);
-    div.onclick = () => selecionarPais(p, div);
-
+  [...new Set(dados.map(d=>d.pais))].forEach(p=>{
+    let div = document.createElement('div');
+    div.className='bandeira';
+    div.innerText = p;
+    div.onclick = ()=>selecionarPais(p,div);
     container.appendChild(div);
   });
 }
 
-function selecionarPais(pais, elemento){
+function selecionarPais(pais,el){
   paisSelecionado = pais;
 
-  document.querySelectorAll('.bandeira').forEach(b => b.classList.remove('active'));
-    elemento.classList.add('active');
-    
-  const clientes = [...new Set(dados.filter(d=>d.pais===pais).map(d=>d.cliente))];
-  
+  document.querySelectorAll('.bandeira').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+
+  let clientes = [...new Set(dados.filter(d=>d.pais==pais).map(d=>d.cliente))];
+
   ['cliente1','cliente2','cliente3'].forEach(id=>{
-    const select = document.getElementById(id);
-  
-    select.innerHTML = '<option disabled selected>Selecciona el tipo de cliente</option>';
-  
-    clientes.forEach(c=>{
-      select.innerHTML += `<option value="${c}">${c}</option>`;
-    });
+    let s = document.getElementById(id);
+    s.innerHTML='<option>Selecciona cliente</option>';
+    clientes.forEach(c=>s.innerHTML+=`<option>${c}</option>`);
   });
-  
-  /* ✅ RESET DOS PACOTES (SEPARADO) */
+
   ['pacote1','pacote2','pacote3'].forEach(id=>{
-    const select = document.getElementById(id);
-  
-    select.innerHTML = '<option disabled selected>Selecciona el paquete</option>';
+    document.getElementById(id).innerHTML='<option>Selecciona paquete</option>';
   });
 
-  /* ✅ LIMPAR RESULTADOS */
-['coluna1','coluna2','coluna3'].forEach(id=>{
-  document.getElementById(id).innerHTML = '';
-});
-
-/* ✅ esconder rodapé */
-document.querySelector('.rodape').style.display = 'none';
-
-/* ✅ remover modo sem espaço */
-document.querySelector('.conteudo').classList.remove('sem-espaco');
-
-  }
-  
+  ['coluna1','coluna2','coluna3'].forEach(id=>{
+    document.getElementById(id).innerHTML='';
+  });
+}
 
 function comparar(){
-
-  const config = [
-    {cliente:'cliente1', pacote:'pacote1', col:'coluna1'},
-    {cliente:'cliente2', pacote:'pacote2', col:'coluna2'},
-    {cliente:'cliente3', pacote:'pacote3', col:'coluna3'}
-  ];
-
-  let temResultado = false;
-
-  config.forEach(cfg=>{
-
-    const cliente = document.getElementById(cfg.cliente).value;
-    const pacote = document.getElementById(cfg.pacote).value;
-
-    const coluna = document.getElementById(cfg.col);
-    coluna.innerHTML = '';
-
-    if(!cliente || !pacote) return;
-
-    todosCanais.sort((a, b) => Number(a.vc) - Number(b.vc))
-    .forEach(c=>{
-
-      const existe = dados.some(d =>
-        d.pais===paisSelecionado &&
-        d.cliente===cliente &&
-        d.pacote===pacote &&
-        d.canal===c.canal
-      );
-
-      if (existe) {
-        temResultado = true;
-
-        coluna.innerHTML += `
-          <div class="canal-bloco">
-            <div class="canal-numero">${c.vc}</div>
-            <div class="canal-nome">${c.canal}</div>
-            <div class="canal-tags">
-              <div class="canal-badge">${c.categoria}</div>
-              <div class="canal-badge">${c.resolucao}</div>
-            </div>
-          </div>
-        `;
-      } else {
-        coluna.innerHTML += `
-          <div class="canal-bloco canal-off">
-            <div class="fake-numero"></div>
-            <div class="fake-nome"></div>
-            <div class="fake-tipo"></div>
-          </div>
-        `;
-      }
-
-    });
-
-  });
-
-  document.querySelector('.rodape').style.display = temResultado ? 'block' : 'none';
-  
-const conteudo = document.querySelector('.conteudo');
-
-if (temResultado) {
-  conteudo.classList.add('sem-espaco');
-} else {
-  conteudo.classList.remove('sem-espaco');
-}
+  console.log('comparando...');
 }
 
-  /* ===== NOVO: DETECTAR STICKY CORRETAMENTE ===== */
-window.addEventListener('scroll', () => {
+/* SCROLL FIX */
+window.addEventListener('scroll',()=>{
   const bloco = document.querySelector('.sticky-bloco');
 
-  if (!bloco) return;
+  const trigger = 300;
 
-  const trigger = 300; // ajuste fino aqui
-
-  if (window.scrollY >= topoInicial - 20) {
+  if(window.scrollY >= trigger){
     bloco.classList.add('compacto');
   } else {
     bloco.classList.remove('compacto');
   }
 });
-  
+
 </script>
 
-
-  
 </body>
 </html>
