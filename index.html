@@ -1,623 +1,165 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Check Channel - Comparar Planos</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<title>Check Channel</title>
 
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
-      background: #fff;
-      color: #272727;
-    }
+<style>
 
-    .top-bar {
-      height: 80px;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 999;
-      background: rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(30px);
-      -webkit-backdrop-filter: blur(30px);
-      transition: opacity 0.3s ease;
-    }
+/* RESET */
+* {
+  box-sizing: border-box;
+}
 
-    .top-bar-inner,
-    .container {
-      width: 1000px;
-      max-width: calc(100% - 32px);
-      margin: auto;
-    }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+}
 
- 
+/* ===== ESTRUTURA BASE ===== */
+
+.top-bar {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+
+  transition: all 0.25s ease;
+}
+
 .top-bar-inner {
+  width: 1000px;
+  max-width: calc(100% - 32px);
+  margin: auto;
+
   height: 100%;
   display: flex;
-  flex-direction: column;     /* ✅ empilha */
-  justify-content: center;    /* ✅ centraliza vertical */
   align-items: center;
 }
 
+/* ===== BARRA 1 (LOGO GRANDE) ===== */
 
-    .logo {
-      height: 18px;
-      width: auto;
-      display: block;
-    }
-
-    #banner {
-      width: 100%;
-      display: block;
-    }
-
-    .conteudo {
-      padding-bottom: 250px;
-      transition: padding 0.4s ease;
-    }
-
-    .conteudo.sem-espaco {
-      padding-bottom: 0;
-    }
-
-    .container {
-      text-align: center;
-    }
-
-    h1 {
-      margin: 47px 0;
-      font-size: 48px;
-      position: relative;
-      z-index: 20;
-    }
-
-    .linha {
-      border-bottom: 1px solid #dadade;
-      position: relative;
-      z-index: 20;
-    }
-
-    .sticky-bloco {
-      position: sticky;
-      top: 20px;
-      z-index: 10;
-      background: rgba(255, 255, 255, 0.98);
-      backdrop-filter: blur(6px);
-      padding-bottom: 47px;
-      transition: all 0.3s ease;
-    }
-
-    .sticky-bloco::before {
-      content: "";
-      position: absolute;
-      top: -80px;
-      left: 0;
-      right: 0;
-      height: 80px;
-      background: #fff;
-      z-index: -1;
-    }
-
-    .sticky-bloco h2 {
-      margin-top: 47px;
-      transition: all 0.3s ease;
-    }
-
-
-#bandeiras {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 0; /* ✅ remove conflito */
+.top-bar-main {
+  top: 0;
+  height: 80px;
+  background: rgba(255,255,255,0.25);
 }
 
+/* ===== BARRA 2 (TEXTO FIXO) ===== */
 
-    .bandeira {
-      width: 64px;
-      height: 42px;
-      margin: 4px;
-      border-radius: 12px;
-      overflow: hidden;
-      cursor: pointer;
-      border: 2px solid transparent;
-      box-shadow: 0 0 0 4px transparent;
-      transition: all 0.3s ease;
-    }
+.top-bar-sub {
+  top: 0;
+  height: 44px;
+  background: rgba(255,255,255,0.95);
 
-    .bandeira img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
+  opacity: 0;
+  transform: translateY(-10px);
+}
 
-    .bandeira.active {
-      border-color: rgba(0, 0, 0, 0.2);
-      box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
-    }
+/* ===== LOGO ===== */
 
-    .grid,
-    .resultados {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-    }
+.logo-bloco {
+  display: flex;
+  flex-direction: column;
+}
 
-    .grid {
-      column-gap: 17px;
-      margin-top: 24px;
-    }
+.logo {
+  height: 24px;
+}
 
-    .pacote h3 {
-      margin-bottom: 20px;
-    }
+.logo-texto {
+  font-size: 12px;
+  color: #6e6e73;
+}
 
-    .grupo-selects {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+/* ===== TÍTULO FIXO ===== */
 
-    select {
-      height: 70px;
-      padding: 0 50px 0 20px;
-      border-radius: 16px;
-      border: none;
-      background-color: #f5f5f7;
-      font-size: 18px;
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg width='14' height='14' viewBox='0 0 20 20' fill='none' stroke='%23272727' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 20px center;
-    }
+.titulo-pequeno {
+  font-size: 18px;
+  font-weight: 600;
+}
 
-    select:invalid {
-      color: #b5b5b8;
-    }
+/* ===== BANNER ===== */
 
-    .resultados {
-      gap: 24px;
-      margin-top: 0;
-    }
+#banner {
+  width: 100%;
+  display: block;
+  margin-top: 80px; /* espaço para header */
+}
 
-    .coluna {
-      border-top: 1px solid #dadade;
-      display: flex;
-      flex-direction: column;
-    }
+/* só pra rolagem */
+.fake-content {
+  height: 1500px;
+  background: #f5f5f7;
+}
 
-    .canal-bloco {
-      height: 110px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      border-bottom: 1px solid #eee;
-    }
-
-    .canal-numero {
-      font-size: 16px;
-    }
-
-    .canal-nome {
-      font-size: 18px;
-      font-weight: 600;
-      margin-top: 4px;
-    }
-
-    .canal-tags {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 6px;
-    }
-
-    .canal-badge {
-      background: #f5f5f7;
-      border-radius: 8px;
-      padding: 2px 8px;
-      font-size: 16px;
-    }
-
-    .canal-off {
-      align-items: center;
-      gap: 10px;
-    }
-
-    .canal-off div {
-      background: #f5f5f7;
-      border-radius: 8px;
-    }
-
-    .fake-numero {
-      width: 90px;
-      height: 14px;
-    }
-
-    .fake-nome {
-      width: 160px;
-      height: 18px;
-    }
-
-    .fake-tipo {
-      width: 110px;
-      height: 14px;
-    }
-
-    .rodape {
-      height: 1080px;
-      background: #fbfbfd;
-      margin-top: 47px;
-      display: none;
-    }
-
-    .sticky-bloco.compacto {
-      padding-bottom: 17px;
-    }
-
-    .sticky-bloco.compacto h2 {
-      margin-top: 20px;
-      font-size: 18px;
-      font-weight: 700;
-    }
-
-    .sticky-bloco.compacto .grid {
-      margin-top: 12px;
-    }
-
-    .sticky-bloco.compacto .bandeira {
-      width: 58px;
-      height: 38px;
-      margin: 4px;
-    }
-
-    @media (max-width: 768px) {
-      h1 {
-        font-size: 36px;
-      }
-
-      .grid,
-      .resultados {
-        grid-template-columns: 1fr;
-        gap: 24px;
-      }
-    }
-  </style>
+</style>
 </head>
 
 <body>
-  <div class="conteudo">
-    <header class="top-bar" id="topbar">
-      <div class="top-bar-inner">
-        
-<div class="logo-bloco">
-  <img src="icon_gpt_branco.png" class="logo">
-  <div class="logo-texto">Comparar Canais</div>
-</div>
 
-      </div>
-    </header>
+<!-- ✅ BARRA 1 (DESAPARECE) -->
+<div class="top-bar top-bar-main" id="topbarMain">
+  <div class="top-bar-inner">
 
-    <img id="banner" src="banner.png" alt="Banner Check Channel">
+    <div class="logo-bloco">
+      <img src="icon_gpt_branco.png" class="logo">
+      <div class="logo-texto">Comparar Canais</div>
+    </div>
 
-    <main class="container">
-<h1>Compare los planes de programación</h1>
-<div class="linha"></div>
-
-<div class="sticky-bloco">
-
-<h2>Selecciona el país</h2>
-<div id="bandeiras"></div>
-
-<div class="grid">
-
-<div class="pacote">
-<h3>Paquete 1</h3>
-<div class="grupo-selects">
-<select id="cliente1">
-<option value="" disabled selected>Selecciona el tipo de cliente</option>
-</select>
-<select id="pacote1">
-<option value="" disabled selected>Selecciona el paquete</option>
-</select>
-</div>
-</div>
-
-          <div class="pacote">
-            <h3>Paquete 2</h3>
-            <div class="grupo-selects">
-              <select id="cliente2" required>
-                <option value="" disabled selected>Selecciona el tipo de cliente</option>
-              </select>
-              <select id="pacote2" required>
-                <option value="" disabled selected>Selecciona el paquete</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="pacote">
-            <h3>Paquete 3</h3>
-            <div class="grupo-selects">
-              <select id="cliente3" required>
-                <option value="" disabled selected>Selecciona el tipo de cliente</option>
-              </select>
-              <select id="pacote3" required>
-                <option value="" disabled selected>Selecciona el paquete</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="resultados">
-        <div class="coluna" id="coluna1"></div>
-        <div class="coluna" id="coluna2"></div>
-        <div class="coluna" id="coluna3"></div>
-      </section>
-    </main>
-
-    <footer class="rodape"></footer>
   </div>
+</div>
 
-  <script>
-    let dados = [];
-    let todosCanais = [];
-    let paisSelecionado = "";
+<!-- ✅ BARRA 2 (FICA FIXA) -->
+<div class="top-bar top-bar-sub" id="topbarSub">
+  <div class="top-bar-inner">
 
-    const conteudo = document.querySelector('.conteudo');
-    const rodape = document.querySelector('.rodape');
-    const banner = document.getElementById('banner');
-    const topbar = document.getElementById('topbar');
-    const stickyBloco = document.getElementById('stickyBloco');
+    <div class="titulo-pequeno">Check Channel</div>
 
-    window.addEventListener('scroll', () => {
-      const bannerHeight = banner.offsetHeight || 1;
-      const opacity = Math.max(0, 1 - (window.scrollY / bannerHeight));
+  </div>
+</div>
 
-      topbar.style.opacity = opacity;
-      atualizarModoCompacto();
-    });
+<!-- ✅ BANNER -->
+<img id="banner" src="banner.png">
 
-    fetch('pacotes.csv')
-      .then(response => response.text())
-      .then(texto => {
-        carregarDados(texto);
-        carregarBandeiras();
-        configurarEventos();
-      })
-      .catch(error => {
-        console.error('Erro ao carregar o CSV:', error);
-      });
+<!-- conteúdo fake só pra poder rolar -->
+<div class="fake-content"></div>
 
-    function carregarDados(texto) {
-      const linhas = texto.trim().split(/\r?\n/);
 
-      linhas.forEach((linha, index) => {
-        if (index === 0) return;
+<script>
 
-        const col = linha.split(';').map(c => c.trim());
+/* ===== SCROLL (EFEITO APPLE) ===== */
 
-        if (!col[0]) return;
+window.addEventListener('scroll', () => {
 
-        const item = {
-          pais: col[0],
-          cliente: col[1],
-          pacote: col[2],
-          vc: col[3],
-          canal: col[4],
-          categoria: col[5],
-          resolucao: col[6]
-        };
+  const scrollY = window.scrollY;
 
-        dados.push(item);
+  const topMain = document.getElementById('topbarMain');
+  const topSub = document.getElementById('topbarSub');
 
-        todosCanais.push({
-          canal: item.canal,
-          vc: item.vc,
-          categoria: item.categoria,
-          resolucao: item.resolucao
-        });
-      });
+  const limite = 120;
 
-      todosCanais = Object.values(
-        Object.fromEntries(todosCanais.map(canal => [canal.canal, canal]))
-      );
-    }
+  if (scrollY > limite) {
+    topMain.style.opacity = 0;
+    topMain.style.pointerEvents = 'none';
 
-    function configurarEventos() {
-      ['cliente1', 'cliente2', 'cliente3'].forEach((id, index) => {
-        document.getElementById(id).addEventListener('change', function () {
-          carregarPacotes(this.value, index + 1);
-          atualizarModoCompacto();
-        });
-      });
+    topSub.style.opacity = 1;
+    topSub.style.transform = 'translateY(0)';
+  } else {
+    topMain.style.opacity = 1;
 
-      ['pacote1', 'pacote2', 'pacote3'].forEach(id => {
-        document.getElementById(id).addEventListener('change', () => {
-          comparar();
-          atualizarModoCompacto();
-        });
-      });
-    }
+    topSub.style.opacity = 0;
+    topSub.style.transform = 'translateY(-10px)';
+  }
 
-    function carregarBandeiras() {
-      const paises = [...new Set(dados.map(d => d.pais))]
-        .sort((a, b) => a.localeCompare(b));
+});
 
-      const container = document.getElementById('bandeiras');
-      container.innerHTML = '';
+</script>
 
-      paises.forEach(pais => {
-        const div = document.createElement('div');
-        div.className = 'bandeira';
-
-        const img = document.createElement('img');
-        img.src = `flags/${pais.toLowerCase().replace(/\s+/g, '')}.png`;
-        img.alt = pais;
-
-        div.appendChild(img);
-        div.addEventListener('click', () => selecionarPais(pais, div));
-
-        container.appendChild(div);
-      });
-    }
-
-    function selecionarPais(pais, elemento) {
-      paisSelecionado = pais;
-
-      document.querySelectorAll('.bandeira').forEach(b => {
-        b.classList.remove('active');
-      });
-
-      elemento.classList.add('active');
-
-      const clientes = [...new Set(
-        dados
-          .filter(d => d.pais === pais)
-          .map(d => d.cliente)
-      )];
-
-      ['cliente1', 'cliente2', 'cliente3'].forEach(id => {
-        preencherSelect(id, 'Selecciona el tipo de cliente', clientes);
-      });
-
-      ['pacote1', 'pacote2', 'pacote3'].forEach(id => {
-        preencherSelect(id, 'Selecciona el paquete', []);
-      });
-
-      limparResultados();
-      atualizarModoCompacto();
-    }
-
-    function carregarPacotes(cliente, numeroPacote) {
-      const pacotes = [...new Set(
-        dados
-          .filter(d => d.pais === paisSelecionado && d.cliente === cliente)
-          .map(d => d.pacote)
-      )];
-
-      preencherSelect(`pacote${numeroPacote}`, 'Selecciona el paquete', pacotes);
-    }
-
-    function preencherSelect(id, placeholder, opcoes) {
-      const select = document.getElementById(id);
-      select.innerHTML = '';
-
-      const optionInicial = document.createElement('option');
-      optionInicial.value = '';
-      optionInicial.disabled = true;
-      optionInicial.selected = true;
-      optionInicial.textContent = placeholder;
-      select.appendChild(optionInicial);
-
-      opcoes.forEach(valor => {
-        const option = document.createElement('option');
-        option.value = valor;
-        option.textContent = valor;
-        select.appendChild(option);
-      });
-    }
-
-    function comparar() {
-      const config = [
-        { cliente: 'cliente1', pacote: 'pacote1', coluna: 'coluna1' },
-        { cliente: 'cliente2', pacote: 'pacote2', coluna: 'coluna2' },
-        { cliente: 'cliente3', pacote: 'pacote3', coluna: 'coluna3' }
-      ];
-
-      let temResultado = false;
-
-      config.forEach(cfg => {
-        const cliente = document.getElementById(cfg.cliente).value;
-        const pacote = document.getElementById(cfg.pacote).value;
-        const coluna = document.getElementById(cfg.coluna);
-
-        coluna.innerHTML = '';
-
-        if (!cliente || !pacote) return;
-
-        const canaisOrdenados = [...todosCanais].sort((a, b) => Number(a.vc) - Number(b.vc));
-
-        canaisOrdenados.forEach(canal => {
-          const existe = dados.some(d =>
-            d.pais === paisSelecionado &&
-            d.cliente === cliente &&
-            d.pacote === pacote &&
-            d.canal === canal.canal
-          );
-
-          const bloco = existe ? criarCanalAtivo(canal) : criarCanalOff();
-
-          if (existe) temResultado = true;
-
-          coluna.appendChild(bloco);
-        });
-      });
-
-      rodape.style.display = temResultado ? 'block' : 'none';
-      conteudo.classList.toggle('sem-espaco', temResultado);
-    }
-
-    function criarCanalAtivo(canal) {
-      const bloco = document.createElement('div');
-      bloco.className = 'canal-bloco';
-
-      bloco.innerHTML = `
-        <div class="canal-numero">${canal.vc}</div>
-        <div class="canal-nome">${canal.canal}</div>
-        <div class="canal-tags">
-          <div class="canal-badge">${canal.categoria}</div>
-          <div class="canal-badge">${canal.resolucao}</div>
-        </div>
-      `;
-
-      return bloco;
-    }
-
-    function criarCanalOff() {
-      const bloco = document.createElement('div');
-      bloco.className = 'canal-bloco canal-off';
-
-      bloco.innerHTML = `
-        <div class="fake-numero"></div>
-        <div class="fake-nome"></div>
-        <div class="fake-tipo"></div>
-      `;
-
-      return bloco;
-    }
-
-    function limparResultados() {
-      ['coluna1', 'coluna2', 'coluna3'].forEach(id => {
-        document.getElementById(id).innerHTML = '';
-      });
-
-      rodape.style.display = 'none';
-      conteudo.classList.remove('sem-espaco');
-    }
-
-    function verificarPacoteSelecionado() {
-      return ['pacote1', 'pacote2', 'pacote3'].some(id => {
-        return document.getElementById(id).value !== '';
-      });
-    }
-
-    function atualizarModoCompacto() {
-      const existePacoteSelecionado = verificarPacoteSelecionado();
-
-      if (existePacoteSelecionado && window.scrollY >= 300) {
-        stickyBloco.classList.add('compacto');
-      } else {
-        stickyBloco.classList.remove('compacto');
-      }
-    }
-  </script>
 </body>
 </html>
