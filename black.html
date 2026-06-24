@@ -22,14 +22,19 @@
   transition: opacity 0.3s ease;
 }
 
+
+.banner-wrap {
+  line-height: 0;          /* ✅ remove gap do inline */
+  background: #0F0F0F;     /* ✅ garante cor correta */
+}
  
+
 
 #banner {
   width: 100%;
   display: block;
-  vertical-align: top;
-  background: #0F0F0F; /* ✅ CORRIGE A LINHA */
 }
+
 
  
 .bloco-topo {
@@ -362,7 +367,11 @@ select:invalid {
   </div>
 </div>
 
-<img id="banner" src="banner.png">
+
+<div class="banner-wrap">
+  <img id="banner" src="banner.png">
+</div>
+
 
 <div class="bloco-topo">
   <div class="container">
