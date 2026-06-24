@@ -319,13 +319,16 @@ select:focus {
     <div class="titulo-pacote">Paquete principal</div>
 
     <div class="grupo-selects">
-      <select>
-        <option value="" disabled selected>Selecciona el tipo de cliente</option>
-      </select>
+     
 
-      <select>
-        <option value="" disabled selected>Selecciona el paquete</option>
-      </select>
+<select id="cliente1">
+  <option value="" disabled selected>Selecciona el tipo de cliente</option>
+</select>
+
+<select id="pacote1">
+  <option value="" disabled selected>Selecciona el paquete</option>
+</select>
+
     </div>
   </div>
 
@@ -334,13 +337,15 @@ select:focus {
     <div class="titulo-pacote">Comparación 1</div>
 
     <div class="grupo-selects">
-      <select>
-        <option value="" disabled selected>Selecciona el tipo de cliente</option>
-      </select>
 
-      <select>
-        <option value="" disabled selected>Selecciona el paquete</option>
-      </select>
+<select id="cliente2">
+  <option value="" disabled selected>Selecciona el tipo de cliente</option>
+</select>
+
+<select id="pacote2">
+  <option value="" disabled selected>Selecciona el paquete</option>
+</select>
+
     </div>
   </div>
 
@@ -349,13 +354,15 @@ select:focus {
     <div class="titulo-pacote">Comparación 2</div>
 
     <div class="grupo-selects">
-      <select>
-        <option value="" disabled selected>Selecciona el tipo de cliente</option>
-      </select>
 
-      <select>
-        <option value="" disabled selected>Selecciona el paquete</option>
-      </select>
+<select id="cliente3">
+  <option value="" disabled selected>Selecciona el tipo de cliente</option>
+</select>
+
+<select id="pacote3">
+  <option value="" disabled selected>Selecciona el paquete</option>
+</select>
+
     </div>
   </div>
 
@@ -386,80 +393,148 @@ window.addEventListener('scroll', () => {
 
 });
 
-let dados = [
-  { pais: "Argentina" },
-  { pais: "Chile" },
-  { pais: "Colombia" },
-  { pais: "Ecuador" },
-  { pais: "Mexico" },
-  { pais: "Peru" },
-  { pais: "Puerto Rico" },
-  { pais: "Uruguay" }
-];
-  
+let dados = [];
+
+/* ✅ CRIA BANDEIRAS */
 function carregarBandeiras(){
-  const paises = [...new Set(dados.map(d => d.pais))]
-    .sort((a, b) => a.localeCompare(b));
+
+  const paises = [...new Set(dados.map(d => d.pais))].sort();
 
   const container = document.getElementById('bandeiras');
+  container.innerHTML = "";
 
   paises.forEach(p => {
+
     const div = document.createElement('div');
     div.className = 'bandeira';
 
     const img = document.createElement('img');
-    img.src = `flags/${p.toLowerCase().replace(/\s+/g,'')}.png`;
+
+    const nomeArquivo = p.toLowerCase().replace(/\s+/g,'');
+    img.src = `flags/${nomeArquivo}.png`;
 
     div.appendChild(img);
+
+    div.dataset.pais = p;
     div.onclick = () => selecionarPais(p, div);
 
     container.appendChild(div);
+
   });
+
 }
 
-
+/* ✅ SELECIONAR PAÍS */
 function selecionarPais(pais, elemento){
 
-  const jaAtiva = elemento.classList.contains('active');
-
-  // remove seleção visual
   document.querySelectorAll('.bandeira')
     .forEach(b => b.classList.remove('active'));
 
-  if (!jaAtiva) {
-    elemento.classList.add('active');
-  }
+  elemento.classList.add('active');
 
-  /* ✅ RESET DOS SELECTS */
-
+  /* RESET SELECTS */
   document.querySelectorAll('select').forEach(select => {
+    select.selectedIndex = 0;
+    select.classList.remove('ativo');
+  });
 
-    select.selectedIndex = 0; /* volta pro primeiro item */
+  /* CARREGAR CLIENTES */
+  const clientes = [...new Set(
+    dados
+      .filter(d => d.pais === pais)
+      .map(d => d.cliente)
+  )];
 
-    select.classList.remove('ativo'); /* volta pro estado "apagado" */
+  ['cliente1','cliente2','cliente3'].forEach(id => {
+
+    const select = document.getElementById(id);
+
+    select.innerHTML = '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
+
+    clientes.forEach(c => {
+      select.innerHTML += `<option value="${c}">${c}</option>`;
+    });
 
   });
 
 }
-  
-carregarBandeiras();
 
-/* ✅ DETECTAR SELEÇÃO */
+/* ✅ CARREGAR CSV (UMA VEZ SÓ) */
+fetch('pacotes.csv')
+  .then(response => response.text())
+  .then(texto => {
 
-document.querySelectorAll('select').forEach(select => {
+    const linhas = texto.split('\n');
 
-  select.addEventListener('change', function(){
+    linhas.forEach((linha, i) => {
 
-    if (this.value !== "") {
-      this.classList.add('ativo');
-    } else {
-      this.classList.remove('ativo');
-    }
+      if (i === 0) return;
+
+      const col = linha.split(';').map(c => c.trim());
+
+      if (col[0]) {
+        dados.push({
+          pais: col[0],
+          cliente: col[1],
+          pacote: col[2],
+          vc: col[3],
+          canal: col[4],
+          categoria: col[5],
+          tecnologia: col[6]
+        });
+      }
+
+    });
+
+    carregarBandeiras();
+
+    /* ✅ EVENTO CLIENTE → PACOTE */
+    ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
+
+      document.getElementById(id).addEventListener('change', function(){
+
+        const cliente = this.value;
+
+        const ativo = document.querySelector('.bandeira.active');
+        if (!ativo) return;
+
+        const pais = ativo.dataset.pais;
+
+        const pacotes = [...new Set(
+          dados
+            .filter(d => d.pais === pais && d.cliente === cliente)
+            .map(d => d.pacote)
+        )];
+
+        const selectPacote = document.getElementById(`pacote${index+1}`);
+
+        selectPacote.innerHTML = '<option value="" disabled selected>Selecciona el paquete</option>';
+
+        pacotes.forEach(p=>{
+          selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
+        });
+
+      });
+
+    });
+
+    /* ✅ COR DO SELECT */
+    document.querySelectorAll('select').forEach(select => {
+
+      select.addEventListener('change', function(){
+
+        if (this.value !== "") {
+          this.classList.add('ativo');
+        } else {
+          this.classList.remove('ativo');
+        }
+
+      });
+
+    });
 
   });
 
-});
-  
 </script>
 
 </body>
