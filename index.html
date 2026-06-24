@@ -263,10 +263,12 @@ select:focus {
 /* ===== RESULTADO ===== */
 
 #resultado {
-  display: none; /* ✅ ESCONDE INICIALMENTE */
+  display: none;
   margin-top: 47px;
   background: #ffffff;
   padding: 47px 0;
+
+  width: 100%;   /* ✅ NÃO usa mais 100vw */
 }
 
 .linha-resultado {
@@ -325,6 +327,10 @@ select:focus {
   width: 70%;
 }
 
+.body-branco {
+  background: #ffffff;
+}
+
 </style>
 </head>
 
@@ -363,7 +369,7 @@ select:focus {
 <!-- ✅ BANNER -->
 <img id="banner" src="banner.png">
 
-<div class="container">
+<div class="container" id="topo">
 
   <h1 class="titulo-principal">
     Consulte los planes de programación
@@ -540,6 +546,7 @@ function gerarResultado(){
   if (!paisAtivo || !selecionados[0].pacote) {
     resultado.style.display = "none";
     resultado.innerHTML = "";
+    document.body.classList.remove("body-branco");
     return;
   }
 
@@ -595,6 +602,7 @@ function gerarResultado(){
 
   // ✅ MOSTRA RESULTADO SÓ QUANDO TEM DADO
   resultado.style.display = "block";
+  document.body.classList.add("body-branco");
 
 }
   
