@@ -324,6 +324,10 @@ select:focus {
   font-weight: 600;
   color: #1d1d1f;
   margin: 4px 0;
+
+  white-space: nowrap;       /* ✅ NÃO quebra linha */
+  overflow: hidden;          /* ✅ esconde excesso */
+  text-overflow: ellipsis;   /* ✅ coloca ... */
 }
 
 /* tags */
