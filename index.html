@@ -440,8 +440,11 @@ html, body {
   
 /* ===== HEADER CLARO AO SCROLL ===== */
 .top-bar.scrolled {
-  background: rgba(255,255,255,0.95); /* fundo claro */
-  border-bottom: 1px solid #e5e5e5;
+  background: rgba(255,255,255,0.6); /* ✅ MAIS TRANSPARENTE */
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+
+  border-bottom: 1px solid rgba(0,0,0,0.08);
 }
 
 /* título */
@@ -461,6 +464,19 @@ html, body {
 .top-bar.scrolled .menu-item.ativo::after {
   background: #000000;
 }
+
+.top-bar.scrolled .blur-layer {
+  background: rgba(255,255,255,0.4);
+}
+
+.top-bar {
+  transition: all 0.3s ease;
+}
+
+.titulo-pequeno, .menu-item {
+  transition: color 0.3s ease;
+}
+
 </style>
 </head>
 
