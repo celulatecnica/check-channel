@@ -477,14 +477,10 @@ html, body {
   transition: color 0.3s ease;
 }
 
-body.sem-resultado {
-  overflow-y: hidden;
-}
 
 body.sem-resultado {
-  height: 100vh;
-  overflow-y: auto;
 }
+
 
 </style>
 </head>
@@ -623,34 +619,24 @@ window.addEventListener('scroll', () => {
   topMain.style.transform = `translateY(${movimento}px)`;
   topSub.style.transform = `translateY(${movimento}px)`;
 
-const resultado = document.getElementById('resultado');
-const topbars = document.querySelectorAll('.top-bar');
+  const resultado = document.getElementById('resultado');
+  const topbars = document.querySelectorAll('.top-bar');
 
-/* ✅ NÃO usa return → não quebra o resto do scroll */
-if (!resultado || resultado.style.display === "none") {
+  if (!resultado || resultado.style.display === "none") {
 
-  topbars.forEach(el => el.classList.remove('scrolled'));
-
-} else {
-
-  const trigger = resultado.offsetTop - 100;
-
-  if (window.scrollY >= trigger) {
-    topbars.forEach(el => el.classList.add('scrolled'));
-  } else {
     topbars.forEach(el => el.classList.remove('scrolled'));
+
+  } else {
+
+    const trigger = resultado.offsetTop - 100;
+
+    if (window.scrollY >= trigger) {
+      topbars.forEach(el => el.classList.add('scrolled'));
+    } else {
+      topbars.forEach(el => el.classList.remove('scrolled'));
+    }
+
   }
-
-}
-
-// altura máxima permitida (fim do banner)
-const limiteScroll = banner.offsetHeight - 100; // ajusta fino aqui se quiser
- 
-}
-                        
-travarScrollNoBanner();
-  
-);
 
 let dados = [];
   
@@ -659,12 +645,15 @@ function travarScrollNoBanner() {
   const banner = document.getElementById('banner');
   const resultado = document.getElementById('resultado');
 
-  // se NÃO tem resultado → trava
+  if (!banner || !resultado) return;
+
+  // só trava se NÃO tem resultado
   if (resultado.style.display === "none") {
 
     const alturaBanner = banner.offsetHeight;
 
-    const limite = alturaBanner - 100; // ajuste fino se precisar
+    const alturaHeader = 100; // 45 + 55
+    const limite = alturaBanner - alturaHeader;
 
     if (window.scrollY > limite) {
       window.scrollTo(0, limite);
