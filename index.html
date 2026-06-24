@@ -265,15 +265,17 @@ select:focus {
 }
 
 /* ===== RESULTADO ===== */
-
 #resultado {
   display: none;
-  margin-top: 0; /* ✅ REMOVE empurrão geral */
+  margin-top: 0;
   background: #ffffff;
   padding: 0;
 
   width: 100%;
+
   position: relative;
+  left: 50%;
+  transform: translateX(-50%); /* ✅ centraliza */
 }
 
 /* ✅ FAIXA BRANCA REAL (FULL WIDTH) */
@@ -281,10 +283,12 @@ select:focus {
   content: "";
   position: absolute;
 
-  left: 0;
-  width: 100%;  /* ✅ NÃO usa mais 100vw */
+  left: 50%;
+  transform: translateX(-50%);
 
+  width: 100vw;
   height: 100%;
+
   background: #ffffff;
   z-index: -1;
 }
@@ -430,7 +434,7 @@ select:focus {
   height: 16px;
 }
 
-body {
+html, body {
   overflow-x: hidden;
 }
 
