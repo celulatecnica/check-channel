@@ -358,6 +358,10 @@ select:focus {
   margin-top: 47px; /* ✅ espaçamento EXATO que você pediu */
 }
 
+.espacador-topo {
+  height: 47px; /* ✅ espaço branco interno */
+}
+
 </style>
 </head>
 
@@ -467,7 +471,10 @@ select:focus {
 </div>
 
 <!-- ✅ RESULTADO -->
-<div id="resultado"></div>
+<div id="resultado">
+  <div class="espacador-topo"></div>
+</div>
+
 
 <div class="fake-content"></div>
 
@@ -572,7 +579,7 @@ function gerarResultado(){
   // ✅ NÃO TEM PAÍS OU PACOTE → ESCONDE
   if (!paisAtivo || !selecionados[0].pacote) {
     resultado.style.display = "none";
-    resultado.innerHTML = "";
+    resultado.innerHTML = '<div class="espacador-topo"></div>';
     return;
   }
 
