@@ -481,6 +481,11 @@ body.sem-resultado {
   overflow-y: hidden;
 }
 
+body.sem-resultado {
+  height: 100vh;
+  overflow-y: auto;
+}
+
 </style>
 </head>
 
@@ -641,10 +646,34 @@ if (!resultado || resultado.style.display === "none") {
 // altura máxima permitida (fim do banner)
 const limiteScroll = banner.offsetHeight - 100; // ajusta fino aqui se quiser
  
-});
+}
+                        
+travarScrollNoBanner();
+  
+);
 
 let dados = [];
+  
+function travarScrollNoBanner() {
 
+  const banner = document.getElementById('banner');
+  const resultado = document.getElementById('resultado');
+
+  // se NÃO tem resultado → trava
+  if (resultado.style.display === "none") {
+
+    const alturaBanner = banner.offsetHeight;
+
+    const limite = alturaBanner - 100; // ajuste fino se precisar
+
+    if (window.scrollY > limite) {
+      window.scrollTo(0, limite);
+    }
+
+  }
+
+}
+  
 /* ✅ CRIA BANDEIRAS */
 function carregarBandeiras(){
 
