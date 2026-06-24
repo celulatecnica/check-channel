@@ -437,7 +437,30 @@ select:focus {
 html, body {
   overflow-x: hidden;
 }
+  
+/* ===== HEADER CLARO AO SCROLL ===== */
+.top-bar.scrolled {
+  background: rgba(255,255,255,0.95); /* fundo claro */
+  border-bottom: 1px solid #e5e5e5;
+}
 
+/* título */
+.top-bar.scrolled .titulo-pequeno {
+  color: #1d1d1f;
+}
+
+/* menu */
+.top-bar.scrolled .menu-item {
+  color: #6e6e73;
+}
+
+.top-bar.scrolled .menu-item.ativo {
+  color: #000000;
+}
+
+.top-bar.scrolled .menu-item.ativo::after {
+  background: #000000;
+}
 </style>
 </head>
 
@@ -574,6 +597,19 @@ window.addEventListener('scroll', () => {
 
   topMain.style.transform = `translateY(${movimento}px)`;
   topSub.style.transform = `translateY(${movimento}px)`;
+
+  const resultado = document.getElementById('resultado');
+  const topbars = document.querySelectorAll('.top-bar');
+
+  if (!resultado) return;
+
+  const trigger = resultado.offsetTop - 100; // ponto de troca
+
+  if (window.scrollY >= trigger) {
+    topbars.forEach(el => el.classList.add('scrolled'));
+  } else {
+    topbars.forEach(el => el.classList.remove('scrolled'));
+  }
 
 });
 
