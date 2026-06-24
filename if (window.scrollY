@@ -15,7 +15,7 @@
   width: 100%;
   z-index: 999;
 
-  background: rgba(255,255,255,0.25);
+  background: rgba(15,15,15,0.6);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
 
@@ -45,8 +45,8 @@
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
-  background: white;
-  color: #272727;
+  background: #0F0F0F;
+  color: #f5f5f7;
 }
 
 /* COMPENSA HEADER FIXO */
@@ -67,6 +67,7 @@ body {
   width: 1076px;
   margin: auto;
   text-align: center;
+  background: transparent;
 }
 
 /* TITULO */
@@ -79,7 +80,7 @@ h1 {
 }
 
 .linha {
-  border-bottom: 1px solid #dadade;
+  border-bottom: 1px solid #2a2a2e;
   position: relative;
   z-index: 20;
 }
@@ -94,7 +95,7 @@ h2 {
 .sticky-bloco {
   position: sticky;
   top: 20px;
-  background: rgba(255,255,255,0.98);
+  background: rgba(15,15,15,0.95);
   backdrop-filter: blur(6px);
   z-index: 10;
   padding-bottom: 35px;
@@ -107,7 +108,7 @@ h2 {
   left: 0;
   right: 0;
   height: 80px;
-  background: white;
+  background: #0F0F0F;
   z-index: -1;
 }
 
@@ -173,7 +174,8 @@ select {
   padding: 0 50px 0 20px; /* ✅ mais espaço real */
   border-radius: 16px;
   border: none;
-  background: #f5f5f7;
+  background: #1c1c1f;
+  color: #f5f5f7 ;
   font-size: 18px;
 
   appearance: none;           /* ✅ remove estilo padrão */
@@ -187,7 +189,7 @@ select {
 
 
 select:invalid {
-  color: #b5b5b8;
+  color: #a1a1aa;
 }
 
 /* RESULTADOS */
@@ -199,7 +201,7 @@ select:invalid {
 }
 
 .coluna {
-  border-top: 1px solid #dadade;
+  border-top: 1px solid #2a2a2e;
   display: flex;
   flex-direction: column;
 }
@@ -210,7 +212,7 @@ select:invalid {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #2a2a2e;
 }
 
 /* NUMERO */
@@ -234,7 +236,8 @@ select:invalid {
 }
 
 .canal-badge {
-  background: #f5f5f7;
+  background: #222226;
+  color: #a1a1aa;
   border-radius: 8px;
   padding: 2px 8px;
   font-size: 16px;
@@ -250,7 +253,7 @@ select:invalid {
 }
 
 .canal-off div {
-  background: #f5f5f7;
+  background: #2a2a2e;
   border-radius: 8px;
 }
 
@@ -272,7 +275,7 @@ select:invalid {
 /* ✅ AJUSTADO */
 .rodape {
   height: 200px;
-  background: #fbfbfd;
+  background: #0f0f12;
   margin-top: 47px;
   display: none;
 }
@@ -325,6 +328,91 @@ select:invalid {
 .bandeira,
 .sticky-bloco h2 {
   transition: all 0.3s ease;
+}
+
+/* ===== BARRA DE CATEGORIAS ===== */
+.barra-categorias {
+  width: 100%;
+  background: #ffffff;
+  color: #1d1d1f;
+  border-top: 1px solid #e5e5ea;
+  border-bottom: 1px solid #e5e5ea;
+
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 18px;
+
+  padding: 16px 20px;
+  margin-top: 30px;
+
+  font-size: 16px;
+  font-weight: 500;
+
+  position: relative;
+  z-index: 5;
+
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+
+.barra-categorias.ativa {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* categoria item */
+.categoria-item {
+  display: flex;
+  gap: 6px;
+}
+
+.categoria-nome {
+  color: #1d1d1f;
+}
+
+.categoria-qtd {
+  color: #6e6e73;
+}
+
+/* ===== FUNDO BRANCO RESULTADOS ===== */
+.resultados {
+  background: #ffffff;
+  padding-top: 20px;
+}
+
+/* canais em tema claro */
+.coluna {
+  border-top: 1px solid #e5e5ea;
+}
+
+.canal-bloco {
+  border-bottom: 1px solid #e5e5ea;
+}
+
+.canal-nome {
+  color: #1d1d1f;
+}
+
+.canal-numero {
+  color: #6e6e73;
+}
+
+.canal-badge {
+  background: #f2f2f7;
+  color: #1d1d1f;
+}
+
+/* placeholders claros */
+.canal-off div {
+  background: #e5e5ea;
+}
+
+/* ===== esconder no scroll (efeito elegante) ===== */
+.barra-categorias.oculta {
+  opacity: 0;
+  transform: translateY(-10px);
 }
   
 </style>
@@ -397,6 +485,8 @@ select:invalid {
 
 </div>
 
+<div id="barra-categorias" class="barra-categorias"></div>
+  
 <div class="resultados">
 <div class="coluna" id="coluna1"></div>
 <div class="coluna" id="coluna2"></div>
@@ -556,7 +646,12 @@ document.querySelector('.rodape').style.display = 'none';
 /* ✅ remover modo sem espaço */
 document.querySelector('.conteudo').classList.remove('sem-espaco');
 
-  }
+
+document.getElementById('barra-categorias').innerHTML = '';
+document.getElementById('barra-categorias').classList.remove('ativa');
+
+  
+                                                             }
   
 
 function comparar(){
@@ -614,7 +709,22 @@ function comparar(){
 
     });
 
-  });
+ });
+                window.addEventListener('scroll', () => {
+  const barra = document.getElementById('barra-categorias');
+
+  if (!barra) return;
+
+ 
+const trigger = document.querySelector('.resultados').offsetTop - 120;
+
+if (window.scrollY > trigger)
+ {
+    barra.classList.add('oculta');
+  } else {
+    barra.classList.remove('oculta');
+  }
+});
 
   document.querySelector('.rodape').style.display = temResultado ? 'block' : 'none';
   
@@ -625,6 +735,44 @@ if (temResultado) {
 } else {
   conteudo.classList.remove('sem-espaco');
 }
+
+const barra = document.getElementById('barra-categorias');
+
+if (temResultado) {
+  const categorias = {};
+
+  // contar categorias do pacote 1 (base)
+  const clienteBase = document.getElementById('cliente1').value;
+  const pacoteBase = document.getElementById('pacote1').value;
+
+  dados.forEach(d => {
+    if (
+      d.pais === paisSelecionado &&
+      d.cliente === clienteBase &&
+      d.pacote === pacoteBase
+    ) {
+      categorias[d.categoria] = (categorias[d.categoria] || 0) + 1;
+    }
+  });
+
+  // montar HTML
+  barra.innerHTML = Object.entries(categorias)
+    .sort((a,b) => a[0].localeCompare(b[0]))
+    .map(([nome, qtd]) => `
+      <div class="categoria-item">
+        <span class="categoria-nome">${nome}</span>
+        <span class="categoria-qtd">${qtd}</span>
+      </div>
+    `)
+    .join('');
+
+  barra.classList.add('ativa');
+
+} else {
+  barra.classList.remove('ativa');
+  barra.innerHTML = '';
+}
+  
 }
 
   /* ===== NOVO: DETECTAR STICKY CORRETAMENTE ===== */
