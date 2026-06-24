@@ -599,17 +599,68 @@ html, body {
 
 let dados = [];
 
-// ===== SCROLL =====
+// ===== LIMITE GLOBAL =====
+let limiteScroll = 0;
+
+// calcula limite correto
+function atualizarLimite() {
+  const banner = document.getElementById('banner');
+  if (!banner) return;
+
+  const alturaHeader = 100;
+  limiteScroll = banner.offsetHeight - alturaHeader;
+}
+
+// ===== BLOQUEIO REAL =====
+function bloquearScroll(e) {
+
+  const resultado = document.getElementById('resultado');
+
+  // só bloqueia quando NÃO tem resultado
+  if (resultado.style.display !== "none") return;
+
+  if (window.scrollY >= limiteScroll) {
+
+    // trava na linha exata
+    window.scrollTo(0, limiteScroll);
+
+    // impede continuar
+    e.preventDefault();
+    return false;
+  }
+}
+
+// mouse wheel
+window.addEventListener('wheel', bloquearScroll, { passive: false });
+
+// touch (celular)
+window.addEventListener('touchmove', bloquearScroll, { passive: false });
+
+// teclas (seta / page down)
+window.addEventListener('keydown', function(e) {
+
+  const resultado = document.getElementById('resultado');
+
+  if (resultado.style.display !== "none") return;
+
+  const keys = ['ArrowDown','PageDown',' '];
+
+  if (keys.includes(e.key) && window.scrollY >= limiteScroll) {
+    e.preventDefault();
+  }
+
+}, { passive: false });
+
+
+// ===== HEADER =====
 window.addEventListener('scroll', () => {
 
   const scrollY = window.scrollY;
 
-  // HEADER MOVIMENTO
   const topMain = document.getElementById('topbarMain');
   const topSub = document.getElementById('topbarSub');
 
-  const limiteAnim = 70;
-  let progresso = scrollY / limiteAnim;
+  let progresso = scrollY / 70;
   if (progresso > 1) progresso = 1;
 
   const movimento = -50 * progresso;
@@ -617,7 +668,6 @@ window.addEventListener('scroll', () => {
   topMain.style.transform = `translateY(${movimento}px)`;
   topSub.style.transform = `translateY(${movimento}px)`;
 
-  // HEADER COR
   const resultado = document.getElementById('resultado');
   const topbars = document.querySelectorAll('.top-bar');
 
@@ -629,20 +679,6 @@ window.addEventListener('scroll', () => {
       topbars.forEach(el => el.classList.add('scrolled'));
     } else {
       topbars.forEach(el => el.classList.remove('scrolled'));
-    }
-  }
-
-  // ===== TRAVA REAL (SEM scrollTo / SEM CSS GAMB) =====
-  if (resultado.style.display === "none") {
-
-    const banner = document.getElementById('banner');
-    if (!banner) return;
-
-    const alturaHeader = 100;
-    const limite = banner.offsetHeight - alturaHeader;
-
-    if (scrollY > limite) {
-      document.documentElement.scrollTop = limite;
     }
   }
 
@@ -666,6 +702,7 @@ function carregarBandeiras(){
 
     div.appendChild(img);
     div.dataset.pais = p;
+
     div.onclick = () => selecionarPais(p, div);
 
     container.appendChild(div);
@@ -702,10 +739,6 @@ function selecionarPais(pais, elemento){
 
   const resultado = document.getElementById('resultado');
   resultado.style.display = "none";
-  resultado.innerHTML = '<div class="espacador-topo"></div>';
-
-  document.querySelectorAll('.top-bar')
-    .forEach(el => el.classList.remove('scrolled'));
 }
 
 
@@ -800,40 +833,14 @@ fetch('pacotes.csv')
     });
 
     carregarBandeiras();
+    atualizarLimite();
+});
 
-    ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
-      document.getElementById(id).addEventListener('change', function(){
 
-        const cliente = this.value;
-        const ativo = document.querySelector('.bandeira.active');
-        if (!ativo) return;
-
-        const pais = ativo.dataset.pais;
-
-        const pacotes = [...new Set(
-          dados.filter(d => d.pais === pais && d.cliente === cliente)
-               .map(d => d.pacote)
-        )];
-
-        const selectPacote = document.getElementById(`pacote${index+1}`);
-        selectPacote.innerHTML = '<option value="" disabled selected>Selecciona el paquete</option>';
-
-        pacotes.forEach(p => {
-          selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
-          selectPacote.addEventListener('change', gerarResultado);
-        });
-      });
-    });
-
-    document.querySelectorAll('select').forEach(select=>{
-      select.addEventListener('change', function(){
-        this.classList.toggle('ativo', this.value !== "");
-      });
-    });
-
-  });
+window.addEventListener('load', atualizarLimite);
+window.addEventListener('resize', atualizarLimite);
 
 </script>
-
+  
 </body>
 </html>
