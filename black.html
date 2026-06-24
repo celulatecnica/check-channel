@@ -22,10 +22,22 @@
   transition: opacity 0.3s ease;
 }
 
-  
+ 
+#banner {
+  width: 100%;
+  display: block;
+  vertical-align: top;   /* ✅ remove linha fantasma */
+}
+ 
 .bloco-topo {
   background: #0F0F0F;
   padding-bottom: 47px;
+}
+
+
+.bloco-topo {
+  background: #0F0F0F;
+  margin-top: -2px; /* ✅ cola no banner */
 }
 
 .bloco-bottom {
@@ -34,6 +46,7 @@
   padding-bottom: 100px;
 }
 
+  
 /* ✅ AJUSTE DO LOGO (NOVO) */
 .top-bar-inner {
   width: 1076px;
@@ -350,7 +363,7 @@ select:invalid {
   </div>
 </div>
 
-<img id="banner" src="banner.png" style="width:100%; display:block;">
+<img id="banner" src="banner.png">
 
 <div class="bloco-topo">
   <div class="container">
