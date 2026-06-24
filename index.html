@@ -183,9 +183,10 @@ body {
 
 /* título pacote */
 .titulo-pacote {
-  margin-bottom: 16px;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 24px;       /* ✅ aumenta */
+  font-weight: 600;      /* mantém semibold */
+  margin-bottom: 20px;   /* ✅ mais respiro abaixo */
+  color: #f5f5f7;        /* ✅ mais contraste no dark */
 }
 
 /* selects agrupados */
@@ -248,7 +249,7 @@ select:invalid {
 <div class="container">
 
   <h1 class="titulo-principal">
-    Compare los planes de programación
+    Consulte los planes de programación
   </h1>
 
   <div class="linha"></div>
@@ -263,7 +264,7 @@ select:invalid {
 
   <!-- PACOTE 1 -->
   <div class="pacote">
-    <div class="titulo-pacote">Paquete 1</div>
+    <div class="titulo-pacote">Paquete principal</div>
 
     <div class="grupo-selects">
       <select>
@@ -278,7 +279,7 @@ select:invalid {
 
   <!-- PACOTE 2 -->
   <div class="pacote">
-    <div class="titulo-pacote">Paquete 2</div>
+    <div class="titulo-pacote">Comparación 1</div>
 
     <div class="grupo-selects">
       <select>
@@ -293,7 +294,7 @@ select:invalid {
 
   <!-- PACOTE 3 -->
   <div class="pacote">
-    <div class="titulo-pacote">Paquete 3</div>
+    <div class="titulo-pacote">Comparación 2</div>
 
     <div class="grupo-selects">
       <select>
