@@ -41,26 +41,27 @@ body {
   align-items: center;
 }
 
-/* ===== BARRA 1 (Fina - LOGO) ===== */
+/* ===== BARRA 1 (Fina - logo) ===== */
 .top-bar-main {
   top: 0;
-  height: 50px; /* ✅ mais fina */
-  background: rgba(15,15,15,0.01); /* só blur */
+  height: 50px;
+  background: transparent; /* ✅ SEM camada de cor */
 }
 
-/* ===== BARRA 2 (Grossa - Título) ===== */
+/* ===== BARRA 2 (Grossa - título) ===== */
 .top-bar-sub {
-  top: 50px; /* ✅ logo abaixo da barra fina */
-  height: 70px; /* ✅ mais grossa */
-  background: rgba(15,15,15,0.3);
+  top: 50px;
+  height: 70px;
+  background: rgba(0,0,0,0.2); /* ✅ leve, mas sem “lavar” */
 }
 
 /* ===== LOGO ===== */
 .logo {
-  height: 18px; /* proporcional à barra fina */
+  height: 20px;
+  display: block;
 }
 
-/* ===== TÍTULO ===== */
+/* ===== TITULO ===== */
 .titulo-pequeno {
   font-size: 22px;
   font-weight: 600;
@@ -86,7 +87,7 @@ body {
 <!-- ✅ BARRA 1 -->
 <div class="top-bar top-bar-main" id="topbarMain">
   <div class="top-bar-inner">
-    icon_gpt_branco.png
+    <img src="icon_gpt_branco.png" class="logo">
   </div>
 </div>
 
@@ -97,14 +98,12 @@ body {
   </div>
 </div>
 
-<!-- ✅ BANNER ATRÁS -->
+<!-- ✅ BANNER -->
 <img id="banner" src="banner.png">
 
 <div class="fake-content"></div>
 
 <script>
-
-/* ===== TRANSIÇÃO SUAVE (AJUSTADA PARA ALTURAS NOVAS) ===== */
 
 window.addEventListener('scroll', () => {
 
@@ -113,12 +112,12 @@ window.addEventListener('scroll', () => {
   const topMain = document.getElementById('topbarMain');
   const topSub = document.getElementById('topbarSub');
 
-  const limite = 70; // altura da barra 2
+  const limite = 70;
 
   let progresso = scrollY / limite;
   if (progresso > 1) progresso = 1;
 
-  const movimento = -50 * progresso; // altura barra 1
+  const movimento = -50 * progresso;
 
   topMain.style.transform = `translateY(${movimento}px)`;
   topSub.style.transform = `translateY(${movimento}px)`;
