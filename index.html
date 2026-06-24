@@ -225,6 +225,17 @@ body {
 
 window.addEventListener('scroll', () => {
 
+let dados = [
+  { pais: "Argentina" },
+  { pais: "Chile" },
+  { pais: "Colombia" },
+  { pais: "Ecuador" },
+  { pais: "Mexico" },
+  { pais: "Peru" },
+  { pais: "Puerto Rico" },
+  { pais: "Uruguay" }
+];
+
   const scrollY = window.scrollY;
 
   const topMain = document.getElementById('topbarMain');
@@ -262,6 +273,15 @@ function carregarBandeiras(){
   });
 }
 
+function selecionarPais(pais, elemento){
+  document.querySelectorAll('.bandeira')
+    .forEach(b => b.classList.remove('active'));
+
+  elemento.classList.add('active');
+}
+  
+carregarBandeiras();
+  
 </script>
 
 </body>
