@@ -478,8 +478,7 @@ html, body {
 }
 
 body.sem-resultado {
-  overflow: hidden;
-  height: 100vh;
+  overflow-y: hidden;
 }
 
 </style>
@@ -619,23 +618,25 @@ window.addEventListener('scroll', () => {
   topMain.style.transform = `translateY(${movimento}px)`;
   topSub.style.transform = `translateY(${movimento}px)`;
 
-  const resultado = document.getElementById('resultado');
-  const topbars = document.querySelectorAll('.top-bar');
-  
-  if (!resultado || resultado.style.display === "none") {
-    topbars.forEach(el => el.classList.remove('scrolled'));
-    return;
-  }
+const resultado = document.getElementById('resultado');
+const topbars = document.querySelectorAll('.top-bar');
 
-  const trigger = resultado.offsetTop - 100; // ponto de troca
+/* ✅ NÃO usa return → não quebra o resto do scroll */
+if (!resultado || resultado.style.display === "none") {
+
+  topbars.forEach(el => el.classList.remove('scrolled'));
+
+} else {
+
+  const trigger = resultado.offsetTop - 100;
 
   if (window.scrollY >= trigger) {
     topbars.forEach(el => el.classList.add('scrolled'));
   } else {
     topbars.forEach(el => el.classList.remove('scrolled'));
   }
-const banner = document.getElementById('banner');
-const resultado = document.getElementById('resultado');
+
+}
 
 // altura máxima permitida (fim do banner)
 const limiteScroll = banner.offsetHeight - 100; // ajusta fino aqui se quiser
