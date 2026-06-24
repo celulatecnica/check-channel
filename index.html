@@ -594,6 +594,7 @@ html, body {
 </div>
 
 <div class="fake-content"></div>
+
 <script>
 
 let dados = [];
@@ -603,11 +604,11 @@ window.addEventListener('scroll', () => {
 
   const scrollY = window.scrollY;
 
+  // HEADER MOVIMENTO
   const topMain = document.getElementById('topbarMain');
   const topSub = document.getElementById('topbarSub');
 
   const limiteAnim = 70;
-
   let progresso = scrollY / limiteAnim;
   if (progresso > 1) progresso = 1;
 
@@ -616,6 +617,7 @@ window.addEventListener('scroll', () => {
   topMain.style.transform = `translateY(${movimento}px)`;
   topSub.style.transform = `translateY(${movimento}px)`;
 
+  // HEADER COR
   const resultado = document.getElementById('resultado');
   const topbars = document.querySelectorAll('.top-bar');
 
@@ -623,7 +625,6 @@ window.addEventListener('scroll', () => {
     topbars.forEach(el => el.classList.remove('scrolled'));
   } else {
     const trigger = resultado.offsetTop - 100;
-
     if (scrollY >= trigger) {
       topbars.forEach(el => el.classList.add('scrolled'));
     } else {
@@ -631,16 +632,17 @@ window.addEventListener('scroll', () => {
     }
   }
 
-  // ===== TRAVA NO BANNER =====
+  // ===== TRAVA REAL (SEM scrollTo / SEM CSS GAMB) =====
   if (resultado.style.display === "none") {
 
     const banner = document.getElementById('banner');
+    if (!banner) return;
+
     const alturaHeader = 100;
     const limite = banner.offsetHeight - alturaHeader;
 
     if (scrollY > limite) {
       document.documentElement.scrollTop = limite;
-      document.body.scrollTop = limite;
     }
   }
 
@@ -651,7 +653,6 @@ window.addEventListener('scroll', () => {
 function carregarBandeiras(){
 
   const paises = [...new Set(dados.map(d => d.pais))].sort();
-
   const container = document.getElementById('bandeiras');
   container.innerHTML = "";
 
@@ -665,7 +666,6 @@ function carregarBandeiras(){
 
     div.appendChild(img);
     div.dataset.pais = p;
-
     div.onclick = () => selecionarPais(p, div);
 
     container.appendChild(div);
@@ -687,17 +687,13 @@ function selecionarPais(pais, elemento){
   });
 
   const clientes = [...new Set(
-    dados
-      .filter(d => d.pais === pais)
-      .map(d => d.cliente)
+    dados.filter(d => d.pais === pais).map(d => d.cliente)
   )];
 
   ['cliente1','cliente2','cliente3'].forEach(id => {
 
     const select = document.getElementById(id);
-
-    select.innerHTML =
-      '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
+    select.innerHTML = '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
 
     clientes.forEach(c => {
       select.innerHTML += `<option value="${c}">${c}</option>`;
@@ -756,23 +752,20 @@ function gerarResultado(){
         d.vc === ref.vc
       );
 
-      linha.innerHTML += match ? `
-        <div class="canal">
-          <div class="canal-vc">${match.vc}</div>
-          <div class="canal-nome">${match.canal}</div>
-          <div class="tags">
-            <div class="tag">${match.categoria}</div>
-            <div class="tag">${match.tecnologia}</div>
-          </div>
-        </div>
-      ` :
-      `
-        <div class="canal">
-          <div class="skeleton vc"></div>
-          <div class="skeleton nome"></div>
-          <div class="skeleton tags"></div>
-        </div>
-      `;
+      linha.innerHTML += match
+        ? `<div class="canal">
+            <div class="canal-vc">${match.vc}</div>
+            <div class="canal-nome">${match.canal}</div>
+            <div class="tags">
+              <div class="tag">${match.categoria}</div>
+              <div class="tag">${match.tecnologia}</div>
+            </div>
+          </div>`
+        : `<div class="canal">
+            <div class="skeleton vc"></div>
+            <div class="skeleton nome"></div>
+            <div class="skeleton tags"></div>
+          </div>`;
     });
 
     resultado.appendChild(linha);
@@ -784,12 +777,10 @@ function gerarResultado(){
 
 // ===== FETCH =====
 fetch('pacotes.csv')
-  .then(response => response.text())
+  .then(r => r.text())
   .then(texto => {
 
-    const linhas = texto.split('\n');
-
-    linhas.forEach((linha, i) => {
+    texto.split('\n').forEach((linha, i) => {
 
       if (i === 0) return;
 
@@ -820,31 +811,29 @@ fetch('pacotes.csv')
         const pais = ativo.dataset.pais;
 
         const pacotes = [...new Set(
-          dados
-            .filter(d => d.pais === pais && d.cliente === cliente)
-            .map(d => d.pacote)
+          dados.filter(d => d.pais === pais && d.cliente === cliente)
+               .map(d => d.pacote)
         )];
 
         const selectPacote = document.getElementById(`pacote${index+1}`);
-        selectPacote.innerHTML =
-          '<option value="" disabled selected>Selecciona el paquete</option>';
+        selectPacote.innerHTML = '<option value="" disabled selected>Selecciona el paquete</option>';
 
         pacotes.forEach(p => {
           selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
           selectPacote.addEventListener('change', gerarResultado);
         });
-
       });
     });
 
-    document.querySelectorAll('select').forEach(select => {
+    document.querySelectorAll('select').forEach(select=>{
       select.addEventListener('change', function(){
         this.classList.toggle('ativo', this.value !== "");
       });
     });
 
-});
+  });
 
 </script>
+
 </body>
 </html>
