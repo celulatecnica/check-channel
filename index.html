@@ -629,7 +629,20 @@ window.addEventListener('scroll', () => {
   } else {
     topbars.forEach(el => el.classList.remove('scrolled'));
   }
+const banner = document.getElementById('banner');
+const resultado = document.getElementById('resultado');
 
+// altura máxima permitida (fim do banner)
+const limiteScroll = banner.offsetHeight - 100; // ajusta fino aqui se quiser
+
+// ✅ se NÃO tem resultado, trava o scroll
+if (resultado.style.display === "none" && window.scrollY > limiteScroll) {
+  window.scrollTo({
+    top: limiteScroll,
+    behavior: "auto"
+  });
+}
+  
 });
 
 let dados = [];
