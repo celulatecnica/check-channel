@@ -268,7 +268,19 @@ select:focus {
   background: #ffffff;
   padding: 47px 0;
 
-  width: 100%;   /* ✅ NÃO usa mais 100vw */
+  width: 100%;
+  position: relative;
+}
+
+/* ✅ FAIXA BRANCA REAL (FULL WIDTH) */
+#resultado::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 100vw;
+  height: 100%;
+  background: #ffffff;
+  z-index: -1;
 }
 
 .linha-resultado {
@@ -546,7 +558,6 @@ function gerarResultado(){
   if (!paisAtivo || !selecionados[0].pacote) {
     resultado.style.display = "none";
     resultado.innerHTML = "";
-    document.body.classList.remove("body-branco");
     return;
   }
 
@@ -602,7 +613,6 @@ function gerarResultado(){
 
   // ✅ MOSTRA RESULTADO SÓ QUANDO TEM DADO
   resultado.style.display = "block";
-  document.body.classList.add("body-branco");
 
 }
   
