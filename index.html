@@ -215,9 +215,14 @@ select {
   transition: all 0.2s ease;
 }
 
-/* cor quando não selecionou nada */
-select:invalid {
-  color: #8e8e93; /* ✅ cinza suave (melhor UX) */
+/* estado padrão (sem seleção real) */
+select {
+  color: #8e8e93; /* ✅ cinza suave */
+}
+
+/* quando tiver valor escolhido */
+select.ativo {
+  color: #ffffff; /* ✅ branco */
 }
 
 /* hover leve */
@@ -233,10 +238,6 @@ select:focus {
 }
 
 /* placeholder mais claro */
-select:invalid {
-  color: #9e9e9e;
-}
-  
 .menu-header {
   display: flex;
   gap: 24px;
@@ -329,11 +330,11 @@ select:invalid {
 
     <div class="grupo-selects">
       <select>
-        <option disabled selected>Selecciona el tipo de cliente</option>
+        <option value="" disabled selected>Selecciona el tipo de cliente</option>
       </select>
 
       <select>
-        <option disabled selected>Selecciona el paquete</option>
+        <option value="" disabled selected>Selecciona el paquete</option>
       </select>
     </div>
   </div>
@@ -344,11 +345,11 @@ select:invalid {
 
     <div class="grupo-selects">
       <select>
-        <option disabled selected>Selecciona el tipo de cliente</option>
+        <option value="" disabled selected>Selecciona el tipo de cliente</option>
       </select>
 
       <select>
-        <option disabled selected>Selecciona el paquete</option>
+        <option value="" disabled selected>Selecciona el paquete</option>
       </select>
     </div>
   </div>
@@ -359,11 +360,11 @@ select:invalid {
 
     <div class="grupo-selects">
       <select>
-        <option disabled selected>Selecciona el tipo de cliente</option>
+        <option value="" disabled selected>Selecciona el tipo de cliente</option>
       </select>
 
       <select>
-        <option disabled selected>Selecciona el paquete</option>
+        <option value="" disabled selected>Selecciona el paquete</option>
       </select>
     </div>
   </div>
@@ -426,22 +427,46 @@ function carregarBandeiras(){
   });
 }
 
+
 function selecionarPais(pais, elemento){
 
   const jaAtiva = elemento.classList.contains('active');
 
-  // remove todos
+  // remove seleção visual
   document.querySelectorAll('.bandeira')
     .forEach(b => b.classList.remove('active'));
 
-  // se NÃO estava ativa, ativa
   if (!jaAtiva) {
     elemento.classList.add('active');
   }
 
+  /* ✅ RESET DOS SELECTS */
+
+  document.querySelectorAll('select').forEach(select => {
+
+    select.selectedIndex = 0; /* volta pro primeiro item */
+
+    select.classList.remove('ativo'); /* volta pro estado "apagado" */
+
+  });
+
 }
   
 carregarBandeiras();
+
+/* ✅ DETECTAR SELEÇÃO */
+
+document.querySelectorAll('select').forEach(select => {
+
+  select.addEventListener('change', function(){
+
+    if (this.value !== "") {
+      this.classList.add('ativo'); /* vira branco */
+    }
+
+  });
+
+});
   
 </script>
 
