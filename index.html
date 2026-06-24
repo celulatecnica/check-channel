@@ -315,7 +315,7 @@ select:focus {
   height: 90px; /* pode manter o que já estiver usando */
   max-width: 100%;
   gap: 2px;
-  /* ⚠️ PROBLEMA:
+  /*⚠️ PROBLEMA:
      a altura está livre → cada linha cresce diferente */
 
   /* ✅ SOLUÇÃO (não quebra nada):
@@ -597,81 +597,6 @@ html, body {
 
 <script>
 
-let dados = [];
-
-// ===== LIMITE CALCULADO =====
-let LIMITE = 0;
-
-function calcularLimite() {
-  const banner = document.getElementById('banner');
-  if (!banner) return;
-
-  const alturaHeader = 100;
-  LIMITE = banner.offsetHeight - alturaHeader;
-}
-
-// ===== TRAVA REAL (ANTES DO SCROLL EXECUTAR) =====
-
-// wheel (mouse)
-window.addEventListener('wheel', function(e) {
-
-  const resultado = document.getElementById('resultado');
-
-  if (resultado.style.display === "none") {
-
-    if (window.scrollY >= LIMITE && e.deltaY > 0) {
-      e.preventDefault();
-      window.scrollTo(0, LIMITE);
-    }
-
-  }
-
-}, { passive: false });
-
-// touch (mobile)
-let lastTouchY = 0;
-
-window.addEventListener('touchstart', function(e) {
-  lastTouchY = e.touches[0].clientY;
-});
-
-window.addEventListener('touchmove', function(e) {
-
-  const resultado = document.getElementById('resultado');
-  const currentY = e.touches[0].clientY;
-
-  if (resultado.style.display === "none") {
-
-    if (window.scrollY >= LIMITE && lastTouchY > currentY) {
-      e.preventDefault();
-      window.scrollTo(0, LIMITE);
-    }
-
-  }
-
-  lastTouchY = currentY;
-
-}, { passive: false });
-
-// teclado
-window.addEventListener('keydown', function(e) {
-
-  const resultado = document.getElementById('resultado');
-
-  if (resultado.style.display === "none") {
-
-    const keys = ['ArrowDown','PageDown',' '];
-
-    if (keys.includes(e.key) && window.scrollY >= LIMITE) {
-      e.preventDefault();
-      window.scrollTo(0, LIMITE);
-    }
-
-  }
-
-});
-
-// ===== SCROLL (HEADER) =====
 window.addEventListener('scroll', () => {
 
   const scrollY = window.scrollY;
@@ -679,7 +604,9 @@ window.addEventListener('scroll', () => {
   const topMain = document.getElementById('topbarMain');
   const topSub = document.getElementById('topbarSub');
 
-  let progresso = scrollY / 70;
+  const limite = 70;
+
+  let progresso = scrollY / limite;
   if (progresso > 1) progresso = 1;
 
   const movimento = -50 * progresso;
@@ -689,30 +616,29 @@ window.addEventListener('scroll', () => {
 
   const resultado = document.getElementById('resultado');
   const topbars = document.querySelectorAll('.top-bar');
-
+  
   if (!resultado || resultado.style.display === "none") {
-
     topbars.forEach(el => el.classList.remove('scrolled'));
+    return;
+  }
 
+  const trigger = resultado.offsetTop - 100; // ponto de troca
+
+  if (window.scrollY >= trigger) {
+    topbars.forEach(el => el.classList.add('scrolled'));
   } else {
-
-    const trigger = resultado.offsetTop - 100;
-
-    if (scrollY >= trigger) {
-      topbars.forEach(el => el.classList.add('scrolled'));
-    } else {
-      topbars.forEach(el => el.classList.remove('scrolled'));
-    }
-
+    topbars.forEach(el => el.classList.remove('scrolled'));
   }
 
 });
 
+let dados = [];
 
-// ===== BANDEIRAS =====
+/* ✅ CRIA BANDEIRAS */
 function carregarBandeiras(){
 
   const paises = [...new Set(dados.map(d => d.pais))].sort();
+
   const container = document.getElementById('bandeiras');
   container.innerHTML = "";
 
@@ -722,18 +648,22 @@ function carregarBandeiras(){
     div.className = 'bandeira';
 
     const img = document.createElement('img');
-    img.src = `flags/${p.toLowerCase().replace(/\s+/g,'')}.png`;
+
+    const nomeArquivo = p.toLowerCase().replace(/\s+/g,'');
+    img.src = `flags/${nomeArquivo}.png`;
 
     div.appendChild(img);
+
     div.dataset.pais = p;
     div.onclick = () => selecionarPais(p, div);
 
     container.appendChild(div);
+
   });
+
 }
 
-
-// ===== PAÍS =====
+/* ✅ SELECIONAR PAÍS */
 function selecionarPais(pais, elemento){
 
   document.querySelectorAll('.bandeira')
@@ -741,18 +671,23 @@ function selecionarPais(pais, elemento){
 
   elemento.classList.add('active');
 
+  /* RESET SELECTS */
   document.querySelectorAll('select').forEach(select => {
     select.selectedIndex = 0;
     select.classList.remove('ativo');
   });
 
+  /* CARREGAR CLIENTES */
   const clientes = [...new Set(
-    dados.filter(d => d.pais === pais).map(d => d.cliente)
+    dados
+      .filter(d => d.pais === pais)
+      .map(d => d.cliente)
   )];
 
   ['cliente1','cliente2','cliente3'].forEach(id => {
 
     const select = document.getElementById(id);
+
     select.innerHTML = '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
 
     clientes.forEach(c => {
@@ -761,12 +696,16 @@ function selecionarPais(pais, elemento){
 
   });
 
-  const resultado = document.getElementById('resultado');
-  resultado.style.display = "none";
+    const resultado = document.getElementById('resultado');
+    resultado.style.display = "none";
+    resultado.innerHTML = '<div class="espacador-topo"></div>';
+
+    /* ✅ RESET HEADER */
+    const topbars = document.querySelectorAll('.top-bar');
+    topbars.forEach(el => el.classList.remove('scrolled'));
+
 }
-
-
-// ===== RESULTADO =====
+  
 function gerarResultado(){
 
   const resultado = document.getElementById('resultado');
@@ -778,20 +717,23 @@ function gerarResultado(){
 
   const paisAtivo = document.querySelector('.bandeira.active');
 
+  // ✅ NÃO TEM PAÍS OU PACOTE → ESCONDE
   if (!paisAtivo || !selecionados[0].pacote) {
     resultado.style.display = "none";
+    resultado.innerHTML = '<div class="espacador-topo"></div>';
     return;
   }
 
   const pais = paisAtivo.dataset.pais;
 
+  /* pegar canais do pacote 1 como base */
   const base = dados
-    .filter(d =>
-      d.pais === pais &&
-      d.cliente === selecionados[0].cliente &&
-      d.pacote === selecionados[0].pacote
-    )
-    .sort((a, b) => (parseInt(a.vc) || 0) - (parseInt(b.vc) || 0));
+  .filter(d =>
+    d.pais === pais &&
+    d.cliente === selecionados[0].cliente &&
+    d.pacote === selecionados[0].pacote
+  )
+  .sort((a, b) => (parseInt(a.vc) || 0) - (parseInt(b.vc) || 0));
 
   resultado.innerHTML = '<div class="topo-branco"></div>';
 
@@ -809,35 +751,48 @@ function gerarResultado(){
         d.vc === ref.vc
       );
 
-      linha.innerHTML += match
-        ? `<div class="canal">
+      if(match){
+        linha.innerHTML += `
+          <div class="canal">
             <div class="canal-vc">${match.vc}</div>
             <div class="canal-nome">${match.canal}</div>
             <div class="tags">
               <div class="tag">${match.categoria}</div>
               <div class="tag">${match.tecnologia}</div>
             </div>
-          </div>`
-        : `<div class="canal">
+          </div>
+        `;
+      } else {
+
+        linha.innerHTML += `
+          <div class="canal">
             <div class="skeleton vc"></div>
             <div class="skeleton nome"></div>
             <div class="skeleton tags"></div>
-          </div>`;
+          </div>
+        `;
+
+      }
+
     });
 
     resultado.appendChild(linha);
+
   });
 
+  // ✅ MOSTRA RESULTADO SÓ QUANDO TEM DADO
   resultado.style.display = "block";
+
 }
-
-
-// ===== FETCH =====
+  
+/* ✅ CARREGAR CSV (UMA VEZ SÓ) */
 fetch('pacotes.csv')
-  .then(r => r.text())
+  .then(response => response.text())
   .then(texto => {
 
-    texto.split('\n').forEach((linha, i) => {
+    const linhas = texto.split('\n');
+
+    linhas.forEach((linha, i) => {
 
       if (i === 0) return;
 
@@ -858,14 +813,58 @@ fetch('pacotes.csv')
     });
 
     carregarBandeiras();
-    calcularLimite();
+
+    /* ✅ EVENTO CLIENTE → PACOTE */
+    ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
+
+      document.getElementById(id).addEventListener('change', function(){
+
+        const cliente = this.value;
+
+        const ativo = document.querySelector('.bandeira.active');
+        if (!ativo) return;
+
+        const pais = ativo.dataset.pais;
+
+        const pacotes = [...new Set(
+          dados
+            .filter(d => d.pais === pais && d.cliente === cliente)
+            .map(d => d.pacote)
+        )];
+
+        const selectPacote = document.getElementById(`pacote${index+1}`);
+
+        selectPacote.innerHTML = '<option value="" disabled selected>Selecciona el paquete</option>';
+
+        pacotes.forEach(p=>{
+          selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
+          document.getElementById(`pacote${index+1}`).addEventListener('change', gerarResultado);
+        });
+
+      });
+      
+gerarResultado();
+      
+    });
+
+    /* ✅ COR DO SELECT */
+    document.querySelectorAll('select').forEach(select => {
+
+      select.addEventListener('change', function(){
+
+        if (this.value !== "") {
+          this.classList.add('ativo');
+        } else {
+          this.classList.remove('ativo');
+        }
+
+      });
+
+    });
 
   });
 
-window.addEventListener('load', calcularLimite);
-window.addEventListener('resize', calcularLimite);
-
 </script>
-  
+
 </body>
 </html>
