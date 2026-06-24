@@ -20,7 +20,7 @@ body {
   color: #f5f5f7;
 }
 
-/* ===== BASE DAS BARRAS ===== */
+/* ===== BASE ===== */
 .top-bar {
   position: fixed;
   left: 0;
@@ -41,28 +41,28 @@ body {
   align-items: center;
 }
 
-/* ===== BARRA 1 ===== */
+/* ===== BARRA 1 (Fina - LOGO) ===== */
 .top-bar-main {
   top: 0;
-  height: 80px;
-  background: rgba(15,15,15,0.6);
+  height: 50px; /* ✅ mais fina */
+  background: rgba(15,15,15,0.01); /* só blur */
 }
 
-/* ===== BARRA 2 ===== */
+/* ===== BARRA 2 (Grossa - Título) ===== */
 .top-bar-sub {
-  top: 80px;
-  height: 44px;
-  background: rgba(15,15,15,0.9);
+  top: 50px; /* ✅ logo abaixo da barra fina */
+  height: 70px; /* ✅ mais grossa */
+  background: rgba(15,15,15,0.3);
 }
 
 /* ===== LOGO ===== */
 .logo {
-  height: 22px;
+  height: 18px; /* proporcional à barra fina */
 }
 
 /* ===== TÍTULO ===== */
 .titulo-pequeno {
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 600;
 }
 
@@ -70,10 +70,9 @@ body {
 #banner {
   width: 100%;
   display: block;
-  margin-top: 124px;
 }
 
-/* espaço pra testar scroll */
+/* espaço pra scroll */
 .fake-content {
   height: 1500px;
   background: #0F0F0F;
@@ -84,28 +83,28 @@ body {
 
 <body>
 
-<!-- ✅ BARRA 1 (LOGO) -->
+<!-- ✅ BARRA 1 -->
 <div class="top-bar top-bar-main" id="topbarMain">
   <div class="top-bar-inner">
-    <img src="icon_gpt_branco.png" class="logo">
+    icon_gpt_branco.png
   </div>
 </div>
 
-<!-- ✅ BARRA 2 (TEXTO) -->
+<!-- ✅ BARRA 2 -->
 <div class="top-bar top-bar-sub" id="topbarSub">
   <div class="top-bar-inner">
     <div class="titulo-pequeno">Check Channel</div>
   </div>
 </div>
 
-<!-- ✅ BANNER -->
+<!-- ✅ BANNER ATRÁS -->
 <img id="banner" src="banner.png">
 
 <div class="fake-content"></div>
 
 <script>
 
-/* ===== TRANSIÇÃO SUAVE (ESTILO APPLE) ===== */
+/* ===== TRANSIÇÃO SUAVE (AJUSTADA PARA ALTURAS NOVAS) ===== */
 
 window.addEventListener('scroll', () => {
 
@@ -114,17 +113,15 @@ window.addEventListener('scroll', () => {
   const topMain = document.getElementById('topbarMain');
   const topSub = document.getElementById('topbarSub');
 
-  const limite = 80;
+  const limite = 70; // altura da barra 2
 
-  /* progresso de 0 a 1 */
   let progresso = scrollY / limite;
   if (progresso > 1) progresso = 1;
 
-  /* movimentos sincronizados */
-  const move = -80 * progresso;
+  const movimento = -50 * progresso; // altura barra 1
 
-  topMain.style.transform = `translateY(${move}px)`;
-  topSub.style.transform = `translateY(${move}px)`;
+  topMain.style.transform = `translateY(${movimento}px)`;
+  topSub.style.transform = `translateY(${movimento}px)`;
 
 });
 
