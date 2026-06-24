@@ -369,6 +369,32 @@ select:focus {
   background: #0F0F0F; /* ✅ mesma cor do fundo */
 }
 
+/* ===== SKELETON ===== */
+
+.skeleton {
+  background: #e5e5e5;
+  border-radius: 8px;
+  margin: 6px auto;
+}
+
+/* alinhado com VC */
+.skeleton.vc {
+  width: 40px;
+  height: 16px;
+}
+
+/* alinhado com nome */
+.skeleton.nome {
+  width: 120px;
+  height: 18px;
+}
+
+/* alinhado com tags */
+.skeleton.tags {
+  width: 90px;
+  height: 16px;
+}
+
 </style>
 </head>
 
@@ -629,11 +655,15 @@ function gerarResultado(){
           </div>
         `;
       } else {
+
         linha.innerHTML += `
           <div class="canal">
-            <div class="placeholder"></div>
+            <div class="skeleton vc"></div>
+            <div class="skeleton nome"></div>
+            <div class="skeleton tags"></div>
           </div>
         `;
+
       }
 
     });
