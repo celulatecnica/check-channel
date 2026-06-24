@@ -599,12 +599,11 @@ html, body {
 
 let dados = [];
 
-// ===== SCROLL =====
+// ===== SCROLL HEADER =====
 window.addEventListener('scroll', () => {
 
   const scrollY = window.scrollY;
 
-  // HEADER MOVIMENTO
   const topMain = document.getElementById('topbarMain');
   const topSub = document.getElementById('topbarSub');
 
@@ -634,30 +633,35 @@ window.addEventListener('scroll', () => {
     }
   }
 
-  // ✅ trava no banner
-  travarScroll();
-
 });
 
-// ===== TRAVA SCROLL NO BANNER =====
-function travarScroll() {
+
+// ===== TRAVA CORRETA NO BANNER =====
+function limitarScrollBanner() {
 
   const banner = document.getElementById('banner');
   const resultado = document.getElementById('resultado');
 
   if (!banner || !resultado) return;
 
-  // só trava quando não tem resultado
+  // ✅ SEM resultado → trava
   if (resultado.style.display === "none") {
 
-    const alturaHeader = 100; // 45 + 55
+    const alturaHeader = 100;
     const limite = banner.offsetHeight - alturaHeader;
 
-    if (window.scrollY > limite) {
-      window.scrollTo(0, limite);
-    }
+    document.body.style.maxHeight = limite + "px";
+    document.body.style.overflow = "hidden";
+
+  } else {
+
+    document.body.style.maxHeight = "";
+    document.body.style.overflow = "";
+
   }
+
 }
+
 
 // ===== BANDEIRAS =====
 function carregarBandeiras(){
@@ -684,7 +688,8 @@ function carregarBandeiras(){
   });
 }
 
-// ===== SELECIONAR PAÍS =====
+
+// ===== PAÍS =====
 function selecionarPais(pais, elemento){
 
   document.querySelectorAll('.bandeira')
@@ -719,10 +724,13 @@ function selecionarPais(pais, elemento){
   resultado.style.display = "none";
   resultado.innerHTML = '<div class="espacador-topo"></div>';
 
-  // reset header
   document.querySelectorAll('.top-bar')
     .forEach(el => el.classList.remove('scrolled'));
+
+  // ✅ trava aqui
+  limitarScrollBanner();
 }
+
 
 // ===== RESULTADO =====
 function gerarResultado(){
@@ -738,6 +746,7 @@ function gerarResultado(){
 
   if (!paisAtivo || !selecionados[0].pacote) {
     resultado.style.display = "none";
+    limitarScrollBanner();
     return;
   }
 
@@ -775,23 +784,24 @@ function gerarResultado(){
             <div class="tag">${match.categoria}</div>
             <div class="tag">${match.tecnologia}</div>
           </div>
-        </div>
-      `
+        </div>`
       :
-      `
-        <div class="canal">
+      `<div class="canal">
           <div class="skeleton vc"></div>
           <div class="skeleton nome"></div>
           <div class="skeleton tags"></div>
-        </div>
-      `;
+        </div>`;
     });
 
     resultado.appendChild(linha);
   });
 
   resultado.style.display = "block";
+
+  // ✅ libera scroll
+  limitarScrollBanner();
 }
+
 
 // ===== FETCH =====
 fetch('pacotes.csv')
@@ -821,7 +831,9 @@ fetch('pacotes.csv')
 
     carregarBandeiras();
 
-    // eventos de select
+    // ✅ trava inicial
+    limitarScrollBanner();
+
     ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
       document.getElementById(id).addEventListener('change', function(){
 
@@ -845,17 +857,13 @@ fetch('pacotes.csv')
           selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
           selectPacote.addEventListener('change', gerarResultado);
         });
-      });
-    });
 
-    document.querySelectorAll('select').forEach(select => {
-      select.addEventListener('change', function(){
-        this.classList.toggle('ativo', this.value !== "");
       });
     });
 
 });
 </script>
+
 
 
 </body>
