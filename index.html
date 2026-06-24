@@ -46,7 +46,6 @@ body {
 }
 
 /* ===== BARRA 1 (Fina - logo) ===== */
-
 .top-bar-main {
   position: fixed;
   top: 0;
@@ -62,7 +61,7 @@ body {
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
 
-  background: rgba(15,15,15); /* controla clareamento */
+  background: rgba(15,15,15);
   z-index: 1;
 }
 
@@ -70,8 +69,8 @@ body {
 .top-bar-sub {
   top: 45px;
   height: 55px;
-  background: rgba(0,0,0,0.2); /* ✅ leve, mas sem “lavar” */
-  border-bottom: 1px solid #4D4D4D; /* ✅ linha full width */
+  background: rgba(0,0,0,0.2);
+  border-bottom: 1px solid #4D4D4D;
 }
 
 /* ===== LOGO ===== */
@@ -104,10 +103,8 @@ body {
   max-width: calc(100% - 32px);
   margin: auto;
   text-align: center;
-
   padding-left: 16px;
   padding-right: 16px;
-
 }
 
 /* ===== TÍTULO PRINCIPAL ===== */
@@ -115,13 +112,13 @@ body {
   font-size: 32px;
   margin-top: 47px;
   margin-bottom: 47px;
-  font-weight: 600; /* ✅ semibold */
+  font-weight: 600;
 }
   
 .linha {
   width: 100%;
   border-bottom: 1px solid #4D4D4D;
-  margin-bottom: 47px; /* ✅ espaço abaixo */
+  margin-bottom: 47px;
 }
 
 /* ===== TITULO DE SEÇÃO ===== */
@@ -130,11 +127,11 @@ body {
   max-width: calc(100% - 32px);
   margin: auto;
 
-  margin-top: 47px;   /* ✅ distância superior */
-  margin-bottom: 23px; /* ✅ distância inferior */
+  margin-top: 47px;
+  margin-bottom: 23px;
 
   font-size: 24px;
-  font-weight: 600; /* ✅ semibold */
+  font-weight: 600;
 
   text-align: center;
 }
@@ -143,7 +140,6 @@ body {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-
   margin-bottom: 47px;
 }
 
@@ -170,24 +166,23 @@ body {
 
 .bandeira.active {
   box-shadow:
-    0 0 0 3px #0F0F0F,  /* ✅ espaço (cor do fundo) */
-    0 0 0 5px #0071e3;  /* ✅ borda branca */
+    0 0 0 3px #0F0F0F,
+    0 0 0 5px #0071e3;
 }
   
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-
   margin-top: 24px;
 }
 
 /* título pacote */
 .titulo-pacote {
-  font-size: 24px;       /* ✅ aumenta */
-  font-weight: 600;      /* mantém semibold */
-  margin-bottom: 23px;   /* ✅ mais respiro abaixo */
-  color: #f5f5f7;        /* ✅ mais contraste no dark */
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 23px;
+  color: #f5f5f7;
 }
 
 /* selects agrupados */
@@ -207,37 +202,31 @@ select {
   font-size: 18px;
   background: #2A2A2A;
 
-  color: #8e8e93; /* ✅ padrão cinza */
-
+  color: #8e8e93;
   outline: none;
   appearance: none;
   transition: all 0.2s ease;
 }
 
-/* quando tiver valor escolhido */
 select.ativo {
-  color: #ffffff; /* ✅ branco */
+  color: #ffffff;
 }
 
-/* hover leve */
 select:hover {
   background: #333333;
 }
 
-/* foco (clicado) */
 select:focus {
   outline: none;
-  box-shadow: none;  /* ✅ remove brilho branco */
+  box-shadow: none;
   background: #333333;
 }
 
-/* placeholder mais claro */
 .menu-header {
   display: flex;
   gap: 24px;
 }
 
-/* itens */
 .menu-item {
   font-size: 14px;
   font-weight: 500;
@@ -246,21 +235,18 @@ select:focus {
   position: relative;
 }
 
-/* ativo (Paquetes) */
 .menu-item.ativo {
   font-weight: 500;
   color: #ffffff;
 }
 
-/* linha ativa */
 .menu-item.ativo::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -16px; /* encosta no fundo da barra */
-
-  height: 2px; /* ✅ mais grossa */
+  bottom: -16px;
+  height: 2px;
   background: #ffffff;
 }
 
@@ -275,7 +261,7 @@ select:focus {
 
   position: relative;
   left: 50%;
-  transform: translateX(-50%); /* ✅ centraliza */
+  transform: translateX(-50%);
 }
 
 /* ✅ FAIXA BRANCA REAL (FULL WIDTH) */
@@ -301,8 +287,8 @@ select:focus {
   width: 950px;
   max-width: calc(100% - 32px);
 
-  margin-left: 0px;
-  margin-right: 0px;
+  margin-left: auto;
+  margin-right: auto;
 
   margin-bottom: 12px;
 }
@@ -312,14 +298,10 @@ select:focus {
   text-align: center;
   padding-bottom: 16px;
   border-bottom: 1px solid #e5e5e5;
-  height: 90px; /* pode manter o que já estiver usando */
+  height: 90px;
   max-width: 100%;
   gap: 2px;
-  /*⚠️ PROBLEMA:
-     a altura está livre → cada linha cresce diferente */
 
-  /* ✅ SOLUÇÃO (não quebra nada):
-     fixa a estrutura interna */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -330,8 +312,6 @@ select:focus {
   font-size: 16px;
   color: #6e6e73;
 
-  /* ✅ ESSENCIAL:
-     garante que TODOS ocupem o mesmo espaço */
   height: 18px;
   display: flex;
   align-items: center;
@@ -349,8 +329,6 @@ select:focus {
   overflow: hidden;
   text-overflow: ellipsis;
 
-  /* ✅ ESSENCIAL:
-     remove variação de altura */
   height: 20px;
   display: flex;
   align-items: center;
@@ -362,9 +340,6 @@ select:focus {
   display: flex;
   gap: 6px;
   justify-content: center;
-
-  /* ✅ ESSENCIAL:
-     mesmo espaço mesmo sem conteúdo */
   height: 24px;
   align-items: center;
 }
@@ -377,21 +352,8 @@ select:focus {
   color: #1d1d1f;
 }
 
-/* placeholder */
-.placeholder {
-  height: 60px;
-  border-radius: 12px;
-  background: #e5e5e5;
-  margin: auto;
-  width: 70%;
-}
-
-.body-branco {
-  background: #ffffff;
-}
-  
 .linha-resultado:first-child {
-  margin-top: 47px; /* ✅ espaçamento EXATO que você pediu */
+  margin-top: 47px;
 }
 
 .topo-branco {
@@ -402,33 +364,26 @@ select:focus {
 .topo-preto {
   height: 47px;
   width: 100%;
-  background: #0F0F0F; /* ✅ mesma cor do fundo */
+  background: #0F0F0F;
 }
 
 /* ===== SKELETON ===== */
-
 .skeleton {
   background: #e5e5e5;
   border-radius: 8px;
   margin: 6px auto;
-
-  /* ✅ IMPORTANTE:
-     garante alinhamento vertical consistente com textos */
 }
 
-/* alinhado com VC */
 .skeleton.vc {
   width: 40px;
   height: 16px;
 }
 
-/* alinhado com nome */
 .skeleton.nome {
   width: 120px;
   height: 18px;
 }
 
-/* alinhado com tags */
 .skeleton.tags {
   width: 90px;
   height: 16px;
@@ -440,19 +395,16 @@ html, body {
   
 /* ===== HEADER CLARO AO SCROLL ===== */
 .top-bar.scrolled {
-  background: rgba(255,255,255,0.6); /* ✅ MAIS TRANSPARENTE */
+  background: rgba(255,255,255,0.6);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
-
   border-bottom: 1px solid rgba(0,0,0,0.08);
 }
 
-/* título */
 .top-bar.scrolled .titulo-pequeno {
   color: #1d1d1f;
 }
 
-/* menu */
 .top-bar.scrolled .menu-item {
   color: #6e6e73;
 }
@@ -483,33 +435,22 @@ html, body {
 <body>
 
 <!-- ✅ BARRA 1 -->
-
 <div class="top-bar top-bar-main" id="topbarMain">
-
-  <!-- ✅ camada com blur -->
   <div class="blur-layer"></div>
-
-  <!-- ✅ conteúdo (NÃO sofre blur) -->
   <div class="top-bar-inner">
     <img src="icon_gpt_branco.png" class="logo">
   </div>
-
 </div>
 
 <!-- ✅ BARRA 2 -->
 <div class="top-bar top-bar-sub" id="topbarSub">
-
-<div class="top-bar-inner">
-
-  <div class="titulo-pequeno">Check Channel</div>
-
-  <div class="menu-header">
-    <div class="menu-item ativo">Paquetes</div>
-    <div class="menu-item">Canales</div>
+  <div class="top-bar-inner">
+    <div class="titulo-pequeno">Check Channel</div>
+    <div class="menu-header">
+      <div class="menu-item ativo">Paquetes</div>
+      <div class="menu-item">Canales</div>
+    </div>
   </div>
-
-</div>
-
 </div>
 
 <!-- ✅ BANNER -->
@@ -531,61 +472,53 @@ html, body {
 
   <div class="grid">
 
-  <!-- PACOTE 1 -->
-  <div class="pacote">
-    <div class="titulo-pacote">Paquete principal</div>
+    <!-- PACOTE 1 -->
+    <div class="pacote">
+      <div class="titulo-pacote">Paquete principal</div>
+      <div class="grupo-selects">
+        <select id="cliente1">
+          <option value="" disabled selected>Selecciona el tipo de cliente</option>
+        </select>
 
-    <div class="grupo-selects">
-     
-
-<select id="cliente1">
-  <option value="" disabled selected>Selecciona el tipo de cliente</option>
-</select>
-
-<select id="pacote1">
-  <option value="" disabled selected>Selecciona el paquete</option>
-</select>
-
+        <select id="pacote1">
+          <option value="" disabled selected>Selecciona el paquete</option>
+        </select>
+      </div>
     </div>
-  </div>
 
-  <!-- PACOTE 2 -->
-  <div class="pacote">
-    <div class="titulo-pacote">Comparación 1</div>
+    <!-- PACOTE 2 -->
+    <div class="pacote">
+      <div class="titulo-pacote">Comparación 1</div>
+      <div class="grupo-selects">
+        <select id="cliente2">
+          <option value="" disabled selected>Selecciona el tipo de cliente</option>
+        </select>
 
-    <div class="grupo-selects">
-
-<select id="cliente2">
-  <option value="" disabled selected>Selecciona el tipo de cliente</option>
-</select>
-
-<select id="pacote2">
-  <option value="" disabled selected>Selecciona el paquete</option>
-</select>
-
+        <select id="pacote2">
+          <option value="" disabled selected>Selecciona el paquete</option>
+        </select>
+      </div>
     </div>
-  </div>
 
-  <!-- PACOTE 3 -->
-  <div class="pacote">
-    <div class="titulo-pacote">Comparación 2</div>
+    <!-- PACOTE 3 -->
+    <div class="pacote">
+      <div class="titulo-pacote">Comparación 2</div>
+      <div class="grupo-selects">
+        <select id="cliente3">
+          <option value="" disabled selected>Selecciona el tipo de cliente</option>
+        </select>
 
-    <div class="grupo-selects">
-
-<select id="cliente3">
-  <option value="" disabled selected>Selecciona el tipo de cliente</option>
-</select>
-
-<select id="pacote3">
-  <option value="" disabled selected>Selecciona el paquete</option>
-</select>
-
+        <select id="pacote3">
+          <option value="" disabled selected>Selecciona el paquete</option>
+        </select>
+      </div>
     </div>
-  </div>
-    
-<div class="topo-preto"></div>
 
   </div>
+
+  <div class="topo-preto"></div>
+
+</div> <!-- ✅ FECHAMENTO CORRETO DO CONTAINER -->
 
 <!-- ✅ RESULTADO -->
 <div id="resultado">
@@ -622,7 +555,7 @@ window.addEventListener('scroll', () => {
     return;
   }
 
-  const trigger = resultado.offsetTop - 100; // ponto de troca
+  const trigger = resultado.offsetTop - 100;
 
   if (window.scrollY >= trigger) {
     topbars.forEach(el => el.classList.add('scrolled'));
@@ -671,13 +604,11 @@ function selecionarPais(pais, elemento){
 
   elemento.classList.add('active');
 
-  /* RESET SELECTS */
   document.querySelectorAll('select').forEach(select => {
     select.selectedIndex = 0;
     select.classList.remove('ativo');
   });
 
-  /* CARREGAR CLIENTES */
   const clientes = [...new Set(
     dados
       .filter(d => d.pais === pais)
@@ -696,13 +627,12 @@ function selecionarPais(pais, elemento){
 
   });
 
-    const resultado = document.getElementById('resultado');
-    resultado.style.display = "none";
-    resultado.innerHTML = '<div class="espacador-topo"></div>';
+  const resultado = document.getElementById('resultado');
+  resultado.style.display = "none";
+  resultado.innerHTML = '<div class="espacador-topo"></div>';
 
-    /* ✅ RESET HEADER */
-    const topbars = document.querySelectorAll('.top-bar');
-    topbars.forEach(el => el.classList.remove('scrolled'));
+  const topbars = document.querySelectorAll('.top-bar');
+  topbars.forEach(el => el.classList.remove('scrolled'));
 
 }
   
@@ -717,7 +647,6 @@ function gerarResultado(){
 
   const paisAtivo = document.querySelector('.bandeira.active');
 
-  // ✅ NÃO TEM PAÍS OU PACOTE → ESCONDE
   if (!paisAtivo || !selecionados[0].pacote) {
     resultado.style.display = "none";
     resultado.innerHTML = '<div class="espacador-topo"></div>';
@@ -726,7 +655,6 @@ function gerarResultado(){
 
   const pais = paisAtivo.dataset.pais;
 
-  /* pegar canais do pacote 1 como base */
   const base = dados
   .filter(d =>
     d.pais === pais &&
@@ -780,12 +708,10 @@ function gerarResultado(){
 
   });
 
-  // ✅ MOSTRA RESULTADO SÓ QUANDO TEM DADO
   resultado.style.display = "block";
 
 }
   
-/* ✅ CARREGAR CSV (UMA VEZ SÓ) */
 fetch('pacotes.csv')
   .then(response => response.text())
   .then(texto => {
@@ -814,7 +740,6 @@ fetch('pacotes.csv')
 
     carregarBandeiras();
 
-    /* ✅ EVENTO CLIENTE → PACOTE */
     ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
 
       document.getElementById(id).addEventListener('change', function(){
@@ -838,16 +763,13 @@ fetch('pacotes.csv')
 
         pacotes.forEach(p=>{
           selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
-          document.getElementById(`pacote${index+1}`).addEventListener('change', gerarResultado);
+          selectPacote.addEventListener('change', gerarResultado);
         });
 
       });
-      
-gerarResultado();
-      
+
     });
 
-    /* ✅ COR DO SELECT */
     document.querySelectorAll('select').forEach(select => {
 
       select.addEventListener('change', function(){
