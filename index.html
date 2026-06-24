@@ -616,8 +616,11 @@ window.addEventListener('scroll', () => {
 
   const resultado = document.getElementById('resultado');
   const topbars = document.querySelectorAll('.top-bar');
-
-  if (!resultado) return;
+  
+  if (!resultado || resultado.style.display === "none") {
+    topbars.forEach(el => el.classList.remove('scrolled'));
+    return;
+  }
 
   const trigger = resultado.offsetTop - 100; // ponto de troca
 
