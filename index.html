@@ -268,9 +268,9 @@ select:focus {
 
 #resultado {
   display: none;
-  margin-top: 23px; /* 👈 melhor encaixe visual */
+  margin-top: 0; /* ✅ REMOVE empurrão geral */
   background: #ffffff;
-  padding: 47px 0;
+  padding: 0;
 
   width: 100%;
   position: relative;
@@ -352,6 +352,10 @@ select:focus {
 
 .body-branco {
   background: #ffffff;
+}
+  
+.linha-resultado:first-child {
+  margin-top: 47px; /* ✅ espaçamento EXATO que você pediu */
 }
 
 </style>
