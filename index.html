@@ -530,10 +530,43 @@ html, body {
 
 <script>
 
-window.addEventListener('scroll', () => {
+let dados = [];
+const ALTURA_HEADER_TOTAL = 100;
+const ALTURA_FAKE_RESULTADO = 1500;
 
+function resultadoVisivel() {
+  const resultado = document.getElementById('resultado');
+  return resultado && getComputedStyle(resultado).display !== 'none';
+}
+
+function ajustarAlturaInicial() {
+  const fake = document.querySelector('.fake-content');
+  const banner = document.getElementById('banner');
+  const resultado = document.getElementById('resultado');
+
+  if (!fake || !banner || !resultado) return;
+
+  if (!resultadoVisivel()) {
+    // mede a página sem a fake-content
+    fake.style.height = '0px';
+
+    const scrollDesejado = Math.max(0, banner.offsetHeight - ALTURA_HEADER_TOTAL);
+    const alturaDocumentoDesejada = window.innerHeight + scrollDesejado;
+
+    const alturaAtualDocumento = document.documentElement.scrollHeight;
+    const alturaNecessariaFake = Math.max(0, alturaDocumentoDesejada - alturaAtualDocumento);
+
+    fake.style.height = `${alturaNecessariaFake}px`;
+  } else {
+    fake.style.height = `${ALTURA_FAKE_RESULTADO}px`;
+  }
+}
+
+// ===== SCROLL =====
+window.addEventListener('scroll', () => {
   const scrollY = window.scrollY;
 
+  // HEADER MOVIMENTO
   const topMain = document.getElementById('topbarMain');
   const topSub = document.getElementById('topbarSub');
 
@@ -547,9 +580,10 @@ window.addEventListener('scroll', () => {
   topMain.style.transform = `translateY(${movimento}px)`;
   topSub.style.transform = `translateY(${movimento}px)`;
 
+  // HEADER COR
   const resultado = document.getElementById('resultado');
   const topbars = document.querySelectorAll('.top-bar');
-  
+
   if (!resultado || resultado.style.display === "none") {
     topbars.forEach(el => el.classList.remove('scrolled'));
     return;
@@ -562,61 +596,54 @@ window.addEventListener('scroll', () => {
   } else {
     topbars.forEach(el => el.classList.remove('scrolled'));
   }
-
 });
 
-let dados = [];
-
-/* ✅ CRIA BANDEIRAS */
-function carregarBandeiras(){
-
+// ===== BANDEIRAS =====
+function carregarBandeiras() {
   const paises = [...new Set(dados.map(d => d.pais))].sort();
 
   const container = document.getElementById('bandeiras');
   container.innerHTML = "";
 
   paises.forEach(p => {
-
     const div = document.createElement('div');
     div.className = 'bandeira';
 
     const img = document.createElement('img');
-
-    const nomeArquivo = p.toLowerCase().replace(/\s+/g,'');
+    const nomeArquivo = p.toLowerCase().replace(/\s+/g, '');
     img.src = `flags/${nomeArquivo}.png`;
 
     div.appendChild(img);
-
     div.dataset.pais = p;
     div.onclick = () => selecionarPais(p, div);
 
     container.appendChild(div);
-
   });
 
+  ajustarAlturaInicial();
 }
 
-/* ✅ SELECIONAR PAÍS */
-function selecionarPais(pais, elemento){
-
+// ===== SELECIONAR PAÍS =====
+function selecionarPais(pais, elemento) {
   document.querySelectorAll('.bandeira')
     .forEach(b => b.classList.remove('active'));
 
   elemento.classList.add('active');
 
+  // RESET SELECTS
   document.querySelectorAll('select').forEach(select => {
     select.selectedIndex = 0;
     select.classList.remove('ativo');
   });
 
+  // CARREGAR CLIENTES
   const clientes = [...new Set(
     dados
       .filter(d => d.pais === pais)
       .map(d => d.cliente)
   )];
 
-  ['cliente1','cliente2','cliente3'].forEach(id => {
-
+  ['cliente1', 'cliente2', 'cliente3'].forEach(id => {
     const select = document.getElementById(id);
 
     select.innerHTML = '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
@@ -624,54 +651,54 @@ function selecionarPais(pais, elemento){
     clientes.forEach(c => {
       select.innerHTML += `<option value="${c}">${c}</option>`;
     });
-
   });
 
   const resultado = document.getElementById('resultado');
   resultado.style.display = "none";
   resultado.innerHTML = '<div class="espacador-topo"></div>';
 
-  const topbars = document.querySelectorAll('.top-bar');
-  topbars.forEach(el => el.classList.remove('scrolled'));
+  document.querySelectorAll('.top-bar')
+    .forEach(el => el.classList.remove('scrolled'));
 
+  ajustarAlturaInicial();
 }
-  
-function gerarResultado(){
 
+// ===== RESULTADO =====
+function gerarResultado() {
   const resultado = document.getElementById('resultado');
 
-  const selecionados = [1,2,3].map(i => ({
+  const selecionados = [1, 2, 3].map(i => ({
     cliente: document.getElementById(`cliente${i}`).value,
     pacote: document.getElementById(`pacote${i}`).value
   }));
 
   const paisAtivo = document.querySelector('.bandeira.active');
 
+  // NÃO TEM PAÍS OU PACOTE → ESCONDE
   if (!paisAtivo || !selecionados[0].pacote) {
     resultado.style.display = "none";
     resultado.innerHTML = '<div class="espacador-topo"></div>';
+    ajustarAlturaInicial();
     return;
   }
 
   const pais = paisAtivo.dataset.pais;
 
   const base = dados
-  .filter(d =>
-    d.pais === pais &&
-    d.cliente === selecionados[0].cliente &&
-    d.pacote === selecionados[0].pacote
-  )
-  .sort((a, b) => (parseInt(a.vc) || 0) - (parseInt(b.vc) || 0));
+    .filter(d =>
+      d.pais === pais &&
+      d.cliente === selecionados[0].cliente &&
+      d.pacote === selecionados[0].pacote
+    )
+    .sort((a, b) => (parseInt(a.vc) || 0) - (parseInt(b.vc) || 0));
 
   resultado.innerHTML = '<div class="topo-branco"></div>';
 
   base.forEach(ref => {
-
     const linha = document.createElement('div');
     linha.className = 'linha-resultado';
 
-    [0,1,2].forEach(i => {
-
+    [0, 1, 2].forEach(i => {
       const match = dados.find(d =>
         d.pais === pais &&
         d.cliente === selecionados[i].cliente &&
@@ -679,7 +706,7 @@ function gerarResultado(){
         d.vc === ref.vc
       );
 
-      if(match){
+      if (match) {
         linha.innerHTML += `
           <div class="canal">
             <div class="canal-vc">${match.vc}</div>
@@ -691,7 +718,6 @@ function gerarResultado(){
           </div>
         `;
       } else {
-
         linha.innerHTML += `
           <div class="canal">
             <div class="skeleton vc"></div>
@@ -699,27 +725,23 @@ function gerarResultado(){
             <div class="skeleton tags"></div>
           </div>
         `;
-
       }
-
     });
 
     resultado.appendChild(linha);
-
   });
 
   resultado.style.display = "block";
-
+  ajustarAlturaInicial();
 }
-  
+
+// ===== FETCH CSV =====
 fetch('pacotes.csv')
   .then(response => response.text())
   .then(texto => {
-
     const linhas = texto.split('\n');
 
     linhas.forEach((linha, i) => {
-
       if (i === 0) return;
 
       const col = linha.split(';').map(c => c.trim());
@@ -735,15 +757,13 @@ fetch('pacotes.csv')
           tecnologia: col[6]
         });
       }
-
     });
 
     carregarBandeiras();
 
-    ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
-
-      document.getElementById(id).addEventListener('change', function(){
-
+    // EVENTO CLIENTE → PACOTE
+    ['cliente1', 'cliente2', 'cliente3'].forEach((id, index) => {
+      document.getElementById(id).addEventListener('change', function() {
         const cliente = this.value;
 
         const ativo = document.querySelector('.bandeira.active');
@@ -757,36 +777,35 @@ fetch('pacotes.csv')
             .map(d => d.pacote)
         )];
 
-        const selectPacote = document.getElementById(`pacote${index+1}`);
-
+        const selectPacote = document.getElementById(`pacote${index + 1}`);
         selectPacote.innerHTML = '<option value="" disabled selected>Selecciona el paquete</option>';
 
-        pacotes.forEach(p=>{
+        pacotes.forEach(p => {
           selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
-          selectPacote.addEventListener('change', gerarResultado);
         });
 
+        selectPacote.onchange = gerarResultado;
       });
-
     });
 
+    // COR DOS SELECTS
     document.querySelectorAll('select').forEach(select => {
-
-      select.addEventListener('change', function(){
-
+      select.addEventListener('change', function() {
         if (this.value !== "") {
           this.classList.add('ativo');
         } else {
           this.classList.remove('ativo');
         }
-
       });
-
     });
 
+    ajustarAlturaInicial();
   });
 
-</script>
+window.addEventListener('load', ajustarAlturaInicial);
+window.addEventListener('resize', ajustarAlturaInicial);
 
+</script>
+  
 </body>
 </html>
