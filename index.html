@@ -101,17 +101,6 @@ h2 {
   padding-bottom: 35px;
 }
 
-.sticky-bloco::before {
-  content: "";
-  position: absolute;
-  top: -80px;
-  left: 0;
-  right: 0;
-  height: 80px;
-  background: #0F0F0F;
-  z-index: -1;
-}
-
 /* BANDEIRAS */
 .bandeira {
   display: inline-block;
@@ -194,15 +183,12 @@ select:invalid {
 
 
 
-.transicao {
+
+.espaco-dark {
   height: 47px;
-  background: linear-gradient(
-    to bottom,
-    #0F0F0F 0%,
-    #0F0F0F 60%,
-    #ffffff 100%
-  );
+  background: #0F0F0F;
 }
+
 
 
 /* RESULTADOS */
@@ -494,13 +480,15 @@ select:invalid {
 </div>
 </div>
 
+
 </div>
 
 </div>
-  
-<div class="transicao"></div>
-  
+
+<div class="espaco-dark"></div>
+
 <div id="barra-categorias" class="barra-categorias"></div>
+
   
 <div class="resultados">
 <div class="coluna" id="coluna1"></div>
