@@ -697,6 +697,10 @@ function selecionarPais(pais, elemento){
     resultado.style.display = "none";
     resultado.innerHTML = '<div class="espacador-topo"></div>';
 
+    /* ✅ RESET HEADER */
+    const topbars = document.querySelectorAll('.top-bar');
+    topbars.forEach(el => el.classList.remove('scrolled'));
+
 }
   
 function gerarResultado(){
