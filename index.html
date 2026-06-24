@@ -107,17 +107,19 @@
       transition: all 0.3s ease;
     }
 
-    #bandeiras {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
+
+#bandeiras {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0; /* ✅ remove conflito */
+}
+
 
     .bandeira {
-      width: 72px;
-      height: 48px;
-      margin: 6px;
+      width: 64px;
+      height: 42px;
+      margin: 4px;
       border-radius: 12px;
       overflow: hidden;
       cursor: pointer;
