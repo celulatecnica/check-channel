@@ -39,6 +39,7 @@ body {
   height: 100%;
   display: flex;
   align-items: center;
+  justify-content: space-between; /* ✅ ADICIONAR ISSO */
 }
 
 /* ===== BARRA 1 (Fina - logo) ===== */
@@ -218,6 +219,38 @@ select:invalid {
   color: #9e9e9e;
 }
   
+.menu-header {
+  display: flex;
+  gap: 24px;
+}
+
+/* itens */
+.menu-item {
+  font-size: 14px;
+  font-weight: 500;
+  color: #b5b5b8;
+  cursor: pointer;
+  position: relative;
+}
+
+/* ativo (Paquetes) */
+.menu-item.ativo {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* linha ativa */
+.menu-item.ativo::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -16px; /* encosta no fundo da barra */
+
+  height: 2px; /* ✅ mais grossa */
+  background: #ffffff;
+}
+  
 </style>
 </head>
 
@@ -239,9 +272,18 @@ select:invalid {
 
 <!-- ✅ BARRA 2 -->
 <div class="top-bar top-bar-sub" id="topbarSub">
-  <div class="top-bar-inner">
-    <div class="titulo-pequeno">Check Channel</div>
+
+<div class="top-bar-inner">
+
+  <div class="titulo-pequeno">Check Channel</div>
+
+  <div class="menu-header">
+    <div class="menu-item ativo">Paquetes</div>
+    <div class="menu-item">Canales</div>
   </div>
+
+</div>
+
 </div>
 
 <!-- ✅ BANNER -->
