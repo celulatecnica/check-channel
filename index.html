@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Check Channel</title>
+<title>DIRECTV - Check Channel</title>
 
 <style>
 
@@ -29,11 +29,8 @@ body {
 
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
-
-  transition: transform 0.25s ease;
 }
 
-/* conteudo central */
 .top-bar-inner {
   width: 1000px;
   max-width: calc(100% - 32px);
@@ -44,16 +41,16 @@ body {
   align-items: center;
 }
 
-/* ===== BARRA 1 (LOGO) ===== */
+/* ===== BARRA 1 ===== */
 .top-bar-main {
   top: 0;
   height: 80px;
   background: rgba(15,15,15,0.6);
 }
 
-/* ===== BARRA 2 (TEXTO) ===== */
+/* ===== BARRA 2 ===== */
 .top-bar-sub {
-  top: 80px; /* ✅ fica embaixo */
+  top: 80px;
   height: 44px;
   background: rgba(15,15,15,0.9);
 }
@@ -63,7 +60,7 @@ body {
   height: 22px;
 }
 
-/* ===== TITULO ===== */
+/* ===== TÍTULO ===== */
 .titulo-pequeno {
   font-size: 18px;
   font-weight: 600;
@@ -73,10 +70,10 @@ body {
 #banner {
   width: 100%;
   display: block;
-  margin-top: 124px; /* 80 + 44 */
+  margin-top: 124px;
 }
 
-/* conteúdo fake só pra scroll */
+/* espaço pra testar scroll */
 .fake-content {
   height: 1500px;
   background: #0F0F0F;
@@ -104,12 +101,11 @@ body {
 <!-- ✅ BANNER -->
 <img id="banner" src="banner.png">
 
-<!-- só pra rolar -->
 <div class="fake-content"></div>
 
 <script>
 
-/* ===== EFEITO APPLE (SUBSTITUIÇÃO REAL) ===== */
+/* ===== TRANSIÇÃO SUAVE (ESTILO APPLE) ===== */
 
 window.addEventListener('scroll', () => {
 
@@ -120,21 +116,15 @@ window.addEventListener('scroll', () => {
 
   const limite = 80;
 
-  if (scrollY > limite) {
+  /* progresso de 0 a 1 */
+  let progresso = scrollY / limite;
+  if (progresso > 1) progresso = 1;
 
-    /* barra do logo sobe */
-    topMain.style.transform = 'translateY(-100%)';
+  /* movimentos sincronizados */
+  const move = -80 * progresso;
 
-    /* barra do titulo sobe para o lugar */
-    topSub.style.transform = 'translateY(-80px)';
-
-  } else {
-
-    /* volta ao normal */
-    topMain.style.transform = 'translateY(0)';
-    topSub.style.transform = 'translateY(0)';
-
-  }
+  topMain.style.transform = `translateY(${move}px)`;
+  topSub.style.transform = `translateY(${move}px)`;
 
 });
 
