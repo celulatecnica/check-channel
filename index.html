@@ -477,11 +477,6 @@ html, body {
   transition: color 0.3s ease;
 }
 
-
-body.sem-resultado {
-}
-
-
 </style>
 </head>
 
@@ -640,24 +635,30 @@ window.addEventListener('scroll', () => {
 
 let dados = [];
   
-function travarScrollNoBanner() {
+function limitarAlturaInicial() {
 
   const banner = document.getElementById('banner');
   const resultado = document.getElementById('resultado');
 
   if (!banner || !resultado) return;
 
-  // só trava se NÃO tem resultado
+  // ✅ se NÃO tem resultado → limita scroll
   if (resultado.style.display === "none") {
 
+    const alturaHeader = 100; // 45 + 55
     const alturaBanner = banner.offsetHeight;
 
-    const alturaHeader = 100; // 45 + 55
     const limite = alturaBanner - alturaHeader;
 
-    if (window.scrollY > limite) {
-      window.scrollTo(0, limite);
-    }
+    document.documentElement.style.height = limite + "px";
+    document.body.style.height = limite + "px";
+    document.body.style.overflowY = "auto";
+
+  } else {
+
+    document.documentElement.style.height = "";
+    document.body.style.height = "";
+    document.body.style.overflowY = "";
 
   }
 
@@ -734,6 +735,7 @@ function selecionarPais(pais, elemento){
     topbars.forEach(el => el.classList.remove('scrolled'));
     
     document.body.classList.add("sem-resultado");
+  limitarAlturaInicial();
 }
   
 function gerarResultado(){
@@ -812,13 +814,17 @@ function gerarResultado(){
 
   // ✅ MOSTRA RESULTADO SÓ QUANDO TEM DADO
   resultado.style.display = "block";
-
+  limitarAlturaInicial();
   document.body.classList.remove("sem-resultado");
   
 }
   
 /* ✅ CARREGAR CSV (UMA VEZ SÓ) */
 fetch('pacotes.csv')
+  
+window.addEventListener('load', limitarAlturaInicial);
+window.addEventListener('resize', limitarAlturaInicial);
+
   .then(response => response.text())
   .then(texto => {
 
