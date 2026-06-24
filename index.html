@@ -716,7 +716,14 @@ function gerarResultado(){
   const pais = paisAtivo.dataset.pais;
 
   /* pegar canais do pacote 1 como base */
-  const base = dados.filter(d =>
+  const base = dados
+  .filter(d =>
+    d.pais === pais &&
+    d.cliente === selecionados[0].cliente &&
+    d.pacote === selecionados[0].pacote
+  )
+  .sort((a, b) => (parseInt(a.vc) || 0) - (parseInt(b.vc) || 0)); // ✅ ORDENA
+
     d.pais === pais &&
     d.cliente === selecionados[0].cliente &&
     d.pacote === selecionados[0].pacote
