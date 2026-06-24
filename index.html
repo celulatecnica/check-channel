@@ -225,17 +225,6 @@ body {
 
 window.addEventListener('scroll', () => {
 
-let dados = [
-  { pais: "Argentina" },
-  { pais: "Chile" },
-  { pais: "Colombia" },
-  { pais: "Ecuador" },
-  { pais: "Mexico" },
-  { pais: "Peru" },
-  { pais: "Puerto Rico" },
-  { pais: "Uruguay" }
-];
-
   const scrollY = window.scrollY;
 
   const topMain = document.getElementById('topbarMain');
@@ -253,6 +242,17 @@ let dados = [
 
 });
 
+let dados = [
+  { pais: "Argentina" },
+  { pais: "Chile" },
+  { pais: "Colombia" },
+  { pais: "Ecuador" },
+  { pais: "Mexico" },
+  { pais: "Peru" },
+  { pais: "Puerto Rico" },
+  { pais: "Uruguay" }
+];
+  
 function carregarBandeiras(){
   const paises = [...new Set(dados.map(d => d.pais))]
     .sort((a, b) => a.localeCompare(b));
