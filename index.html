@@ -581,26 +581,52 @@ html, body {
 <div class="fake-content"></div>
 
 <script>
-
 let dados = [];
 
-// ===== HELPERS HEADER =====
+const HEADER_TOTAL = 100; // 45 + 55
+let limiteInicial = 0;
+let touchStartY = 0;
+let travando = false;
+
+// ===== HELPERS =====
+function getResultado() {
+  return document.getElementById('resultado');
+}
+
 function resultadoVisivel() {
-  const resultado = document.getElementById('resultado');
+  const resultado = getResultado();
   return resultado && getComputedStyle(resultado).display !== 'none';
+}
+
+function calcularLimiteInicial() {
+  const banner = document.getElementById('banner');
+  if (!banner) return;
+  limiteInicial = Math.max(0, banner.offsetHeight - HEADER_TOTAL);
+}
+
+function clampScrollInicial() {
+  if (resultadoVisivel()) return;
+
+  const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+
+  if (y > limiteInicial && !travando) {
+    travando = true;
+    requestAnimationFrame(() => {
+      window.scrollTo(0, limiteInicial);
+      travando = false;
+    });
+  }
 }
 
 function atualizarEstadoCabecalho() {
   const topbars = document.querySelectorAll('.top-bar');
-  const resultado = document.getElementById('resultado');
 
-  // sem resultado visível = cabeçalho escuro
   if (!resultadoVisivel()) {
     topbars.forEach(el => el.classList.remove('scrolled'));
     return;
   }
 
-  // com resultado visível = só clareia quando entra na área branca
+  const resultado = getResultado();
   const trigger = resultado.offsetTop - 100;
   const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
 
@@ -611,74 +637,112 @@ function atualizarEstadoCabecalho() {
   }
 }
 
+function atualizarEstadoInicial() {
+  calcularLimiteInicial();
+  clampScrollInicial();
+  atualizarEstadoCabecalho();
+}
+
 // ===== SCROLL =====
 window.addEventListener('scroll', () => {
-
   const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
 
   const topMain = document.getElementById('topbarMain');
   const topSub = document.getElementById('topbarSub');
 
-  const limite = 70;
-
-  let progresso = scrollY / limite;
+  let progresso = scrollY / 70;
   if (progresso > 1) progresso = 1;
 
   const movimento = -50 * progresso;
 
-  topMain.style.transform = `translateY(${movimento}px)`;
-  topSub.style.transform = `translateY(${movimento}px)`;
+  if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
+  if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
 
   atualizarEstadoCabecalho();
-});
+  clampScrollInicial();
+}, { passive: true });
 
-window.addEventListener('load', atualizarEstadoCabecalho);
-window.addEventListener('resize', atualizarEstadoCabecalho);
+// ===== BLOQUEIO WHEEL =====
+window.addEventListener('wheel', (e) => {
+  if (resultadoVisivel()) return;
 
-// ===== CRIA BANDEIRAS =====
-function carregarBandeiras(){
+  const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
 
+  if (e.deltaY > 0 && y >= limiteInicial) {
+    e.preventDefault();
+    window.scrollTo(0, limiteInicial);
+  }
+}, { passive: false });
+
+// ===== BLOQUEIO TECLADO =====
+window.addEventListener('keydown', (e) => {
+  if (resultadoVisivel()) return;
+
+  const teclas = ['ArrowDown', 'PageDown', ' ', 'End'];
+  if (!teclas.includes(e.key)) return;
+
+  const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+
+  if (y >= limiteInicial) {
+    e.preventDefault();
+    window.scrollTo(0, limiteInicial);
+  }
+}, { passive: false });
+
+// ===== BLOQUEIO TOUCH =====
+window.addEventListener('touchstart', (e) => {
+  if (!e.touches || !e.touches.length) return;
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+
+window.addEventListener('touchmove', (e) => {
+  if (resultadoVisivel()) return;
+  if (!e.touches || !e.touches.length) return;
+
+  const currentY = e.touches[0].clientY;
+  const descendo = touchStartY > currentY;
+  const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+
+  if (descendo && y >= limiteInicial) {
+    e.preventDefault();
+    window.scrollTo(0, limiteInicial);
+  }
+}, { passive: false });
+
+// ===== BANDEIRAS =====
+function carregarBandeiras() {
   const paises = [...new Set(dados.map(d => d.pais))].sort();
 
   const container = document.getElementById('bandeiras');
   container.innerHTML = "";
 
   paises.forEach(p => {
-
     const div = document.createElement('div');
     div.className = 'bandeira';
 
     const img = document.createElement('img');
-
-    const nomeArquivo = p.toLowerCase().replace(/\s+/g,'');
-    img.src = `flags/${nomeArquivo}.png`;
+    img.src = `flags/${p.toLowerCase().replace(/\s+/g,'')}.png`;
 
     div.appendChild(img);
-
     div.dataset.pais = p;
     div.onclick = () => selecionarPais(p, div);
 
     container.appendChild(div);
-
   });
-
 }
 
 // ===== SELECIONAR PAÍS =====
-function selecionarPais(pais, elemento){
-
+function selecionarPais(pais, elemento) {
   document.querySelectorAll('.bandeira')
     .forEach(b => b.classList.remove('active'));
 
   elemento.classList.add('active');
 
-  // reset selects
   document.querySelectorAll('select').forEach(select => {
     select.selectedIndex = 0;
     select.classList.remove('ativo');
   });
 
-  // carregar clientes
   const clientes = [...new Set(
     dados
       .filter(d => d.pais === pais)
@@ -686,33 +750,27 @@ function selecionarPais(pais, elemento){
   )];
 
   ['cliente1','cliente2','cliente3'].forEach(id => {
-
     const select = document.getElementById(id);
-
     select.innerHTML = '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
 
     clientes.forEach(c => {
       select.innerHTML += `<option value="${c}">${c}</option>`;
     });
-
   });
 
-  // reset resultado
-  const resultado = document.getElementById('resultado');
+  const resultado = getResultado();
   resultado.style.display = "none";
   resultado.innerHTML = '<div class="espacador-topo"></div>';
 
-  // reset visual do cabeçalho
   document.querySelectorAll('.top-bar')
     .forEach(el => el.classList.remove('scrolled'));
 
-  atualizarEstadoCabecalho();
+  atualizarEstadoInicial();
 }
 
 // ===== GERAR RESULTADO =====
-function gerarResultado(){
-
-  const resultado = document.getElementById('resultado');
+function gerarResultado() {
+  const resultado = getResultado();
 
   const selecionados = [1,2,3].map(i => ({
     cliente: document.getElementById(`cliente${i}`).value,
@@ -721,17 +779,15 @@ function gerarResultado(){
 
   const paisAtivo = document.querySelector('.bandeira.active');
 
-  // sem país ou sem pacote principal
   if (!paisAtivo || !selecionados[0].pacote) {
     resultado.style.display = "none";
     resultado.innerHTML = '<div class="espacador-topo"></div>';
-    atualizarEstadoCabecalho();
+    atualizarEstadoInicial();
     return;
   }
 
   const pais = paisAtivo.dataset.pais;
 
-  // base ordenada pelo número do canal
   const base = dados
     .filter(d =>
       d.pais === pais &&
@@ -743,12 +799,10 @@ function gerarResultado(){
   resultado.innerHTML = '<div class="topo-branco"></div>';
 
   base.forEach(ref => {
-
     const linha = document.createElement('div');
     linha.className = 'linha-resultado';
 
     [0,1,2].forEach(i => {
-
       const match = dados.find(d =>
         d.pais === pais &&
         d.cliente === selecionados[i].cliente &&
@@ -756,7 +810,7 @@ function gerarResultado(){
         d.vc === ref.vc
       );
 
-      if(match){
+      if (match) {
         linha.innerHTML += `
           <div class="canal">
             <div class="canal-vc">${match.vc}</div>
@@ -776,26 +830,22 @@ function gerarResultado(){
           </div>
         `;
       }
-
     });
 
     resultado.appendChild(linha);
-
   });
 
   resultado.style.display = "block";
-  atualizarEstadoCabecalho();
+  atualizarEstadoInicial();
 }
 
-// ===== CARREGAR CSV =====
+// ===== FETCH CSV =====
 fetch('pacotes.csv')
   .then(response => response.text())
   .then(texto => {
-
     const linhas = texto.split('\n');
 
     linhas.forEach((linha, i) => {
-
       if (i === 0) return;
 
       const col = linha.split(';').map(c => c.trim());
@@ -811,16 +861,13 @@ fetch('pacotes.csv')
           tecnologia: col[6]
         });
       }
-
     });
 
     carregarBandeiras();
 
     // cliente -> pacote
-    ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
-
-      document.getElementById(id).addEventListener('change', function(){
-
+    ['cliente1','cliente2','cliente3'].forEach((id,index) => {
+      document.getElementById(id).addEventListener('change', function() {
         const cliente = this.value;
         const ativo = document.querySelector('.bandeira.active');
         if (!ativo) return;
@@ -839,9 +886,7 @@ fetch('pacotes.csv')
         pacotes.forEach(p => {
           selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
         });
-
       });
-
     });
 
     // pacote -> resultado
@@ -849,16 +894,18 @@ fetch('pacotes.csv')
       document.getElementById(id).addEventListener('change', gerarResultado);
     });
 
-    // cor do select
+    // cor dos selects
     document.querySelectorAll('select').forEach(select => {
-      select.addEventListener('change', function(){
+      select.addEventListener('change', function() {
         this.classList.toggle('ativo', this.value !== "");
       });
     });
 
-    atualizarEstadoCabecalho();
-
+    atualizarEstadoInicial();
   });
+
+window.addEventListener('load', atualizarEstadoInicial);
+window.addEventListener('resize', atualizarEstadoInicial);
 
 </script>
   
