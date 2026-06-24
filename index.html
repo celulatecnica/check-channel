@@ -370,12 +370,7 @@
       const opacity = Math.max(0, 1 - (window.scrollY / bannerHeight));
 
       topbar.style.opacity = opacity;
-
-      if (window.scrollY >= 300) {
-        stickyBloco.classList.add('compacto');
-      } else {
-        stickyBloco.classList.remove('compacto');
-      }
+      atualizarModoCompacto();
     });
 
     fetch('pacotes.csv')
@@ -428,11 +423,15 @@
       ['cliente1', 'cliente2', 'cliente3'].forEach((id, index) => {
         document.getElementById(id).addEventListener('change', function () {
           carregarPacotes(this.value, index + 1);
+          atualizarModoCompacto();
         });
       });
 
       ['pacote1', 'pacote2', 'pacote3'].forEach(id => {
-        document.getElementById(id).addEventListener('change', comparar);
+        document.getElementById(id).addEventListener('change', () => {
+          comparar();
+          atualizarModoCompacto();
+        });
       });
     }
 
@@ -482,6 +481,7 @@
       });
 
       limparResultados();
+      atualizarModoCompacto();
     }
 
     function carregarPacotes(cliente, numeroPacote) {
@@ -496,7 +496,6 @@
 
     function preencherSelect(id, placeholder, opcoes) {
       const select = document.getElementById(id);
-
       select.innerHTML = '';
 
       const optionInicial = document.createElement('option');
@@ -504,7 +503,6 @@
       optionInicial.disabled = true;
       optionInicial.selected = true;
       optionInicial.textContent = placeholder;
-
       select.appendChild(optionInicial);
 
       opcoes.forEach(valor => {
@@ -591,6 +589,22 @@
 
       rodape.style.display = 'none';
       conteudo.classList.remove('sem-espaco');
+    }
+
+    function verificarPacoteSelecionado() {
+      return ['pacote1', 'pacote2', 'pacote3'].some(id => {
+        return document.getElementById(id).value !== '';
+      });
+    }
+
+    function atualizarModoCompacto() {
+      const existePacoteSelecionado = verificarPacoteSelecionado();
+
+      if (existePacoteSelecionado && window.scrollY >= 300) {
+        stickyBloco.classList.add('compacto');
+      } else {
+        stickyBloco.classList.remove('compacto');
+      }
     }
   </script>
 </body>
