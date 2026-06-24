@@ -281,12 +281,10 @@ select:focus {
   content: "";
   position: absolute;
 
-  left: 50%;
-  transform: translateX(-50%); /* ✅ CENTRALIZA DE VERDADE */
+  left: 0;
+  width: 100%;  /* ✅ NÃO usa mais 100vw */
 
-  width: 100vw;
   height: 100%;
-
   background: #ffffff;
   z-index: -1;
 }
@@ -310,14 +308,30 @@ select:focus {
   text-align: center;
   padding-bottom: 16px;
   border-bottom: 1px solid #e5e5e5;
-
+  height: 90px; /* pode manter o que já estiver usando */
   max-width: 100%;
+  gap: 2px;
+  /* ⚠️ PROBLEMA:
+     a altura está livre → cada linha cresce diferente */
+
+  /* ✅ SOLUÇÃO (não quebra nada):
+     fixa a estrutura interna */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 /* VC */
 .canal-vc {
   font-size: 16px;
   color: #6e6e73;
+
+  /* ✅ ESSENCIAL:
+     garante que TODOS ocupem o mesmo espaço */
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* nome */
@@ -327,9 +341,16 @@ select:focus {
   color: #1d1d1f;
   margin: 4px 0;
 
-  white-space: nowrap;       /* ✅ NÃO quebra linha */
-  overflow: hidden;          /* ✅ esconde excesso */
-  text-overflow: ellipsis;   /* ✅ coloca ... */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  /* ✅ ESSENCIAL:
+     remove variação de altura */
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* tags */
@@ -337,6 +358,11 @@ select:focus {
   display: flex;
   gap: 6px;
   justify-content: center;
+
+  /* ✅ ESSENCIAL:
+     mesmo espaço mesmo sem conteúdo */
+  height: 24px;
+  align-items: center;
 }
 
 .tag {
@@ -381,6 +407,9 @@ select:focus {
   background: #e5e5e5;
   border-radius: 8px;
   margin: 6px auto;
+
+  /* ✅ IMPORTANTE:
+     garante alinhamento vertical consistente com textos */
 }
 
 /* alinhado com VC */
@@ -399,6 +428,10 @@ select:focus {
 .skeleton.tags {
   width: 90px;
   height: 16px;
+}
+
+body {
+  overflow-x: hidden;
 }
 
 </style>
