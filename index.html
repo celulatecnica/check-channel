@@ -594,12 +594,11 @@ html, body {
 </div>
 
 <div class="fake-content"></div>
-
 <script>
 
 let dados = [];
 
-// ===== SCROLL HEADER =====
+// ===== SCROLL =====
 window.addEventListener('scroll', () => {
 
   const scrollY = window.scrollY;
@@ -607,9 +606,9 @@ window.addEventListener('scroll', () => {
   const topMain = document.getElementById('topbarMain');
   const topSub = document.getElementById('topbarSub');
 
-  const limite = 70;
+  const limiteAnim = 70;
 
-  let progresso = scrollY / limite;
+  let progresso = scrollY / limiteAnim;
   if (progresso > 1) progresso = 1;
 
   const movimento = -50 * progresso;
@@ -617,7 +616,6 @@ window.addEventListener('scroll', () => {
   topMain.style.transform = `translateY(${movimento}px)`;
   topSub.style.transform = `translateY(${movimento}px)`;
 
-  // HEADER COR
   const resultado = document.getElementById('resultado');
   const topbars = document.querySelectorAll('.top-bar');
 
@@ -626,41 +624,27 @@ window.addEventListener('scroll', () => {
   } else {
     const trigger = resultado.offsetTop - 100;
 
-    if (window.scrollY >= trigger) {
+    if (scrollY >= trigger) {
       topbars.forEach(el => el.classList.add('scrolled'));
     } else {
       topbars.forEach(el => el.classList.remove('scrolled'));
     }
   }
 
-});
-
-
-// ===== TRAVA CORRETA NO BANNER =====
-function limitarScrollBanner() {
-
-  const banner = document.getElementById('banner');
-  const resultado = document.getElementById('resultado');
-
-  if (!banner || !resultado) return;
-
-  // ✅ SEM resultado → trava
+  // ===== TRAVA NO BANNER =====
   if (resultado.style.display === "none") {
 
+    const banner = document.getElementById('banner');
     const alturaHeader = 100;
     const limite = banner.offsetHeight - alturaHeader;
 
-    document.body.style.maxHeight = limite + "px";
-    document.body.style.overflow = "hidden";
-
-  } else {
-
-    document.body.style.maxHeight = "";
-    document.body.style.overflow = "";
-
+    if (scrollY > limite) {
+      document.documentElement.scrollTop = limite;
+      document.body.scrollTop = limite;
+    }
   }
 
-}
+});
 
 
 // ===== BANDEIRAS =====
@@ -726,9 +710,6 @@ function selecionarPais(pais, elemento){
 
   document.querySelectorAll('.top-bar')
     .forEach(el => el.classList.remove('scrolled'));
-
-  // ✅ trava aqui
-  limitarScrollBanner();
 }
 
 
@@ -746,7 +727,6 @@ function gerarResultado(){
 
   if (!paisAtivo || !selecionados[0].pacote) {
     resultado.style.display = "none";
-    limitarScrollBanner();
     return;
   }
 
@@ -784,22 +764,21 @@ function gerarResultado(){
             <div class="tag">${match.categoria}</div>
             <div class="tag">${match.tecnologia}</div>
           </div>
-        </div>`
-      :
-      `<div class="canal">
+        </div>
+      ` :
+      `
+        <div class="canal">
           <div class="skeleton vc"></div>
           <div class="skeleton nome"></div>
           <div class="skeleton tags"></div>
-        </div>`;
+        </div>
+      `;
     });
 
     resultado.appendChild(linha);
   });
 
   resultado.style.display = "block";
-
-  // ✅ libera scroll
-  limitarScrollBanner();
 }
 
 
@@ -831,9 +810,6 @@ fetch('pacotes.csv')
 
     carregarBandeiras();
 
-    // ✅ trava inicial
-    limitarScrollBanner();
-
     ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
       document.getElementById(id).addEventListener('change', function(){
 
@@ -861,10 +837,14 @@ fetch('pacotes.csv')
       });
     });
 
+    document.querySelectorAll('select').forEach(select => {
+      select.addEventListener('change', function(){
+        this.classList.toggle('ativo', this.value !== "");
+      });
+    });
+
 });
+
 </script>
-
-
-
 </body>
 </html>
