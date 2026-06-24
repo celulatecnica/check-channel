@@ -202,16 +202,34 @@ body {
 select {
   height: 60px;
   padding: 0 20px;
-
-  border-radius: 16px;
+  border-radius: 12px;
   border: none;
 
   font-size: 18px;
-
-  background: #2A2A2A; /* dark */
+  background: #2A2A2A;
   color: #f5f5f7;
 
+  outline: none;        /* ✅ remove borda branca */
   appearance: none;
+
+  transition: all 0.2s ease;
+}
+
+/* cor quando não selecionou nada */
+select:invalid {
+  color: #8e8e93; /* ✅ cinza suave (melhor UX) */
+}
+
+/* hover leve */
+select:hover {
+  background: #333333;
+}
+
+/* foco (clicado) */
+select:focus {
+  outline: none;
+  box-shadow: none;  /* ✅ remove brilho branco */
+  background: #333333;
 }
 
 /* placeholder mais claro */
@@ -235,7 +253,7 @@ select:invalid {
 
 /* ativo (Paquetes) */
 .menu-item.ativo {
-  font-weight: 600;
+  font-weight: 500;
   color: #ffffff;
 }
 
