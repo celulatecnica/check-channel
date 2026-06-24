@@ -312,13 +312,31 @@ select:focus {
   border-bottom: 1px solid #e5e5e5;
 
   max-width: 100%;
+
+  /* ⚠️ PROBLEMA:
+     a altura está livre → cada linha cresce diferente */
+
+  /* ✅ SOLUÇÃO (não quebra nada):
+     fixa a estrutura interna */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 /* VC */
+
 .canal-vc {
   font-size: 16px;
   color: #6e6e73;
+
+  /* ✅ ESSENCIAL:
+     garante que TODOS ocupem o mesmo espaço */
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
 
 /* nome */
 .canal-nome {
@@ -327,16 +345,29 @@ select:focus {
   color: #1d1d1f;
   margin: 4px 0;
 
-  white-space: nowrap;       /* ✅ NÃO quebra linha */
-  overflow: hidden;          /* ✅ esconde excesso */
-  text-overflow: ellipsis;   /* ✅ coloca ... */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  /* ✅ ESSENCIAL:
+     remove variação de altura */
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* tags */
+
 .tags {
   display: flex;
   gap: 6px;
   justify-content: center;
+
+  /* ✅ ESSENCIAL:
+     mesmo espaço mesmo sem conteúdo */
+  height: 24px;
+  align-items: center;
 }
 
 .tag {
