@@ -358,8 +358,9 @@ select:focus {
   margin-top: 47px; /* ✅ espaçamento EXATO que você pediu */
 }
 
-.espacador-topo {
-  height: 47px; /* ✅ espaço branco interno */
+.topo-branco {
+  height: 47px;
+  width: 100%;
 }
 
 </style>
@@ -472,9 +473,8 @@ select:focus {
 
 <!-- ✅ RESULTADO -->
 <div id="resultado">
-  <div class="espacador-topo"></div>
+  <div class="topo-branco"></div>
 </div>
-
 
 <div class="fake-content"></div>
 
@@ -592,7 +592,7 @@ function gerarResultado(){
     d.pacote === selecionados[0].pacote
   );
 
-  resultado.innerHTML = "";
+  resultado.innerHTML = '<div class="topo-branco"></div>';
 
   base.forEach(ref => {
 
