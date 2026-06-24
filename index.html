@@ -722,12 +722,7 @@ function gerarResultado(){
     d.cliente === selecionados[0].cliente &&
     d.pacote === selecionados[0].pacote
   )
-  .sort((a, b) => (parseInt(a.vc) || 0) - (parseInt(b.vc) || 0)); // ✅ ORDENA
-
-    d.pais === pais &&
-    d.cliente === selecionados[0].cliente &&
-    d.pacote === selecionados[0].pacote
-  );
+  .sort((a, b) => (parseInt(a.vc) || 0) - (parseInt(b.vc) || 0));
 
   resultado.innerHTML = '<div class="topo-branco"></div>';
 
