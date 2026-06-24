@@ -22,6 +22,18 @@
   transition: opacity 0.3s ease;
 }
 
+  
+.bloco-topo {
+  background: #0F0F0F;
+  padding-bottom: 47px;
+}
+
+.bloco-bottom {
+  background: #ffffff;
+  padding-top: 20px;
+  padding-bottom: 100px;
+}
+
 /* ✅ AJUSTE DO LOGO (NOVO) */
 .top-bar-inner {
   width: 1076px;
@@ -101,17 +113,6 @@ h2 {
   padding-bottom: 35px;
 }
 
-
-.sticky-bloco::before {
-  content: "";
-  position: absolute;
-  top: -80px;
-  left: 0;
-  right: 0;
-  height: 80px;
-  background: #0F0F0F;
-  z-index: -1;
-}
 
 /* BANDEIRAS */
 .bandeira {
@@ -349,7 +350,10 @@ select:invalid {
 
 <div class="sub-bar"></div>
 
-<div class="container">
+
+<div class="bloco-topo">
+  <div class="container">
+
 
 <h1>Compare los planes de programación</h1>
 <div class="linha"></div>
@@ -401,10 +405,18 @@ select:invalid {
 
 </div>
 
-<div class="resultados">
-<div class="coluna" id="coluna1"></div>
-<div class="coluna" id="coluna2"></div>
-<div class="coluna" id="coluna3"></div>
+<div class="bloco-bottom">
+
+  <div class="container">
+
+    <div class="resultados">
+      <div class="coluna" id="coluna1"></div>
+      <div class="coluna" id="coluna2"></div>
+      <div class="coluna" id="coluna3"></div>
+    </div>
+
+  </div>
+
 </div>
 
 </div>
