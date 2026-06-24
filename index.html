@@ -259,7 +259,71 @@ select:focus {
   height: 2px; /* ✅ mais grossa */
   background: #ffffff;
 }
-  
+
+/* ===== RESULTADO ===== */
+
+#resultado {
+  margin-top: 47px;
+  background: #ffffff;
+  padding: 47px 0;
+}
+
+.linha-resultado {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+
+  width: 950px;
+  max-width: calc(100% - 32px);
+  margin: auto;
+  margin-bottom: 32px;
+}
+
+/* bloco canal */
+.canal {
+  text-align: center;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+/* VC */
+.canal-vc {
+  font-size: 14px;
+  color: #6e6e73;
+}
+
+/* nome */
+.canal-nome {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1d1d1f;
+  margin: 4px 0;
+}
+
+/* tags */
+.tags {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+.tag {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 10px;
+  background: #f2f2f2;
+  color: #1d1d1f;
+}
+
+/* placeholder */
+.placeholder {
+  height: 60px;
+  border-radius: 12px;
+  background: #e5e5e5;
+  margin: auto;
+  width: 70%;
+}
+
 </style>
 </head>
 
@@ -367,8 +431,9 @@ select:focus {
   </div>
 
 </div>
-  
-</div>
+
+<!-- ✅ RESULTADO -->
+<div id="resultado"></div>
 
 <div class="fake-content"></div>
 
@@ -458,7 +523,77 @@ function selecionarPais(pais, elemento){
   });
 
 }
+  
+function gerarResultado(){
 
+  const resultado = document.getElementById('resultado');
+
+  const selecionados = [1,2,3].map(i => {
+    return {
+      cliente: document.getElementById(`cliente${i}`).value,
+      pacote: document.getElementById(`pacote${i}`).value
+    };
+  });
+
+  const paisAtivo = document.querySelector('.bandeira.active');
+  if (!paisAtivo) return;
+
+  const pais = paisAtivo.dataset.pais;
+
+  /* pegar canais do pacote 1 como base */
+  const base = dados.filter(d =>
+    d.pais === pais &&
+    d.cliente === selecionados[0].cliente &&
+    d.pacote === selecionados[0].pacote
+  );
+
+  resultado.innerHTML = "";
+
+  base.forEach(ref => {
+
+    const linha = document.createElement('div');
+    linha.className = 'linha-resultado';
+
+    [0,1,2].forEach(i => {
+
+      const match = dados.find(d =>
+        d.pais === pais &&
+        d.cliente === selecionados[i].cliente &&
+        d.pacote === selecionados[i].pacote &&
+        d.canal === ref.canal
+      );
+
+      if(match){
+
+        linha.innerHTML += `
+          <div class="canal">
+            <div class="canal-vc">${match.vc}</div>
+            <div class="canal-nome">${match.canal}</div>
+            <div class="tags">
+              <div class="tag">${match.categoria}</div>
+              <div class="tag">${match.tecnologia}</div>
+            </div>
+          </div>
+        `;
+
+      } else {
+
+        linha.innerHTML += `
+          <div class="canal">
+            <div class="placeholder"></div>
+          </div>
+        `;
+
+      }
+
+    });
+
+    resultado.appendChild(linha);
+
+  });
+
+}
+  
 /* ✅ CARREGAR CSV (UMA VEZ SÓ) */
 fetch('pacotes.csv')
   .then(response => response.text())
@@ -512,10 +647,13 @@ fetch('pacotes.csv')
 
         pacotes.forEach(p=>{
           selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
+          document.getElementById(`pacote${index+1}`).addEventListener('change', gerarResultado);
         });
 
       });
-
+      
+gerarResultado();
+      
     });
 
     /* ✅ COR DO SELECT */
