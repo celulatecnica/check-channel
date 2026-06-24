@@ -8,7 +8,7 @@
 
 <style>
 
-/* RESET */
+/* BASE */
 * {
   box-sizing: border-box;
 }
@@ -16,9 +16,11 @@
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+  background: #0F0F0F;
+  color: #f5f5f7;
 }
 
-/* ===== ESTRUTURA BASE ===== */
+/* ===== HEADER BASE ===== */
 
 .top-bar {
   position: fixed;
@@ -29,7 +31,7 @@ body {
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
 
-  transition: all 0.25s ease;
+  transition: transform 0.25s ease;
 }
 
 .top-bar-inner {
@@ -42,42 +44,31 @@ body {
   align-items: center;
 }
 
-/* ===== BARRA 1 (LOGO GRANDE) ===== */
+/* ===== BARRA 1 (LOGO) ===== */
 
 .top-bar-main {
   top: 0;
   height: 80px;
-  background: rgba(255,255,255,0.25);
+  background: rgba(15,15,15,0.6);
 }
 
-/* ===== BARRA 2 (TEXTO FIXO) ===== */
+/* ===== BARRA 2 (TÍTULO FIXO) ===== */
 
 .top-bar-sub {
   top: 0;
   height: 44px;
-  background: rgba(255,255,255,0.95);
+  background: rgba(15,15,15,0.9);
 
-  opacity: 0;
-  transform: translateY(-10px);
+  transform: translateY(-100%); /* ✅ começa FORA da tela */
 }
 
 /* ===== LOGO ===== */
 
-.logo-bloco {
-  display: flex;
-  flex-direction: column;
-}
-
 .logo {
-  height: 24px;
+  height: 22px; /* ✅ ajustado (melhor proporção) */
 }
 
-.logo-texto {
-  font-size: 12px;
-  color: #6e6e73;
-}
-
-/* ===== TÍTULO FIXO ===== */
+/* ===== TÍTULO ===== */
 
 .titulo-pequeno {
   font-size: 18px;
@@ -89,13 +80,13 @@ body {
 #banner {
   width: 100%;
   display: block;
-  margin-top: 80px; /* espaço para header */
+  margin-top: 80px;
 }
 
-/* só pra rolagem */
+/* espaço pra rolar */
 .fake-content {
   height: 1500px;
-  background: #f5f5f7;
+  background: #0F0F0F;
 }
 
 </style>
@@ -103,37 +94,26 @@ body {
 
 <body>
 
-<!-- ✅ BARRA 1 (DESAPARECE) -->
+<!-- ✅ BARRA 1 (SAI) -->
 <div class="top-bar top-bar-main" id="topbarMain">
   <div class="top-bar-inner">
-
-    <div class="logo-bloco">
-      <img src="icon_gpt_branco.png" class="logo">
-      <div class="logo-texto">Comparar Canais</div>
-    </div>
-
+    <img src="icon_gpt_branco.png" class="logo">
   </div>
 </div>
 
-<!-- ✅ BARRA 2 (FICA FIXA) -->
+<!-- ✅ BARRA 2 (ENTRA) -->
 <div class="top-bar top-bar-sub" id="topbarSub">
   <div class="top-bar-inner">
-
     <div class="titulo-pequeno">Check Channel</div>
-
   </div>
 </div>
 
 <!-- ✅ BANNER -->
 <img id="banner" src="banner.png">
 
-<!-- conteúdo fake só pra poder rolar -->
 <div class="fake-content"></div>
 
-
 <script>
-
-/* ===== SCROLL (EFEITO APPLE) ===== */
 
 window.addEventListener('scroll', () => {
 
@@ -145,16 +125,15 @@ window.addEventListener('scroll', () => {
   const limite = 120;
 
   if (scrollY > limite) {
-    topMain.style.opacity = 0;
-    topMain.style.pointerEvents = 'none';
+    /* ✅ barra 1 sobe e some */
+    topMain.style.transform = 'translateY(-100%)';
 
-    topSub.style.opacity = 1;
+    /* ✅ barra 2 desce e aparece */
     topSub.style.transform = 'translateY(0)';
   } else {
-    topMain.style.opacity = 1;
-
-    topSub.style.opacity = 0;
-    topSub.style.transform = 'translateY(-10px)';
+    /* volta ao estado inicial */
+    topMain.style.transform = 'translateY(0)';
+    topSub.style.transform = 'translateY(-100%)';
   }
 
 });
