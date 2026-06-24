@@ -597,10 +597,14 @@ html, body {
 
 <script>
 
+let dados = [];
+
+// ===== SCROLL =====
 window.addEventListener('scroll', () => {
 
   const scrollY = window.scrollY;
 
+  // HEADER MOVIMENTO
   const topMain = document.getElementById('topbarMain');
   const topSub = document.getElementById('topbarSub');
 
@@ -614,15 +618,13 @@ window.addEventListener('scroll', () => {
   topMain.style.transform = `translateY(${movimento}px)`;
   topSub.style.transform = `translateY(${movimento}px)`;
 
+  // HEADER COR
   const resultado = document.getElementById('resultado');
   const topbars = document.querySelectorAll('.top-bar');
 
   if (!resultado || resultado.style.display === "none") {
-
     topbars.forEach(el => el.classList.remove('scrolled'));
-
   } else {
-
     const trigger = resultado.offsetTop - 100;
 
     if (window.scrollY >= trigger) {
@@ -630,41 +632,34 @@ window.addEventListener('scroll', () => {
     } else {
       topbars.forEach(el => el.classList.remove('scrolled'));
     }
-
   }
 
-let dados = [];
-  
-function limitarAlturaInicial() {
+  // ✅ trava no banner
+  travarScroll();
+
+});
+
+// ===== TRAVA SCROLL NO BANNER =====
+function travarScroll() {
 
   const banner = document.getElementById('banner');
   const resultado = document.getElementById('resultado');
 
   if (!banner || !resultado) return;
 
-  // ✅ se NÃO tem resultado → limita scroll
+  // só trava quando não tem resultado
   if (resultado.style.display === "none") {
 
     const alturaHeader = 100; // 45 + 55
-    const alturaBanner = banner.offsetHeight;
+    const limite = banner.offsetHeight - alturaHeader;
 
-    const limite = alturaBanner - alturaHeader;
-
-    document.documentElement.style.height = limite + "px";
-    document.body.style.height = limite + "px";
-    document.body.style.overflowY = "auto";
-
-  } else {
-
-    document.documentElement.style.height = "";
-    document.body.style.height = "";
-    document.body.style.overflowY = "";
-
+    if (window.scrollY > limite) {
+      window.scrollTo(0, limite);
+    }
   }
-
 }
-  
-/* ✅ CRIA BANDEIRAS */
+
+// ===== BANDEIRAS =====
 function carregarBandeiras(){
 
   const paises = [...new Set(dados.map(d => d.pais))].sort();
@@ -678,22 +673,18 @@ function carregarBandeiras(){
     div.className = 'bandeira';
 
     const img = document.createElement('img');
-
-    const nomeArquivo = p.toLowerCase().replace(/\s+/g,'');
-    img.src = `flags/${nomeArquivo}.png`;
+    img.src = `flags/${p.toLowerCase().replace(/\s+/g,'')}.png`;
 
     div.appendChild(img);
-
     div.dataset.pais = p;
+
     div.onclick = () => selecionarPais(p, div);
 
     container.appendChild(div);
-
   });
-
 }
 
-/* ✅ SELECIONAR PAÍS */
+// ===== SELECIONAR PAÍS =====
 function selecionarPais(pais, elemento){
 
   document.querySelectorAll('.bandeira')
@@ -701,13 +692,11 @@ function selecionarPais(pais, elemento){
 
   elemento.classList.add('active');
 
-  /* RESET SELECTS */
   document.querySelectorAll('select').forEach(select => {
     select.selectedIndex = 0;
     select.classList.remove('ativo');
   });
 
-  /* CARREGAR CLIENTES */
   const clientes = [...new Set(
     dados
       .filter(d => d.pais === pais)
@@ -718,26 +707,24 @@ function selecionarPais(pais, elemento){
 
     const select = document.getElementById(id);
 
-    select.innerHTML = '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
+    select.innerHTML =
+      '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
 
     clientes.forEach(c => {
       select.innerHTML += `<option value="${c}">${c}</option>`;
     });
-
   });
 
-    const resultado = document.getElementById('resultado');
-    resultado.style.display = "none";
-    resultado.innerHTML = '<div class="espacador-topo"></div>';
+  const resultado = document.getElementById('resultado');
+  resultado.style.display = "none";
+  resultado.innerHTML = '<div class="espacador-topo"></div>';
 
-    /* ✅ RESET HEADER */
-    const topbars = document.querySelectorAll('.top-bar');
-    topbars.forEach(el => el.classList.remove('scrolled'));
-    
-    document.body.classList.add("sem-resultado");
-  limitarAlturaInicial();
+  // reset header
+  document.querySelectorAll('.top-bar')
+    .forEach(el => el.classList.remove('scrolled'));
 }
-  
+
+// ===== RESULTADO =====
 function gerarResultado(){
 
   const resultado = document.getElementById('resultado');
@@ -749,23 +736,20 @@ function gerarResultado(){
 
   const paisAtivo = document.querySelector('.bandeira.active');
 
-  // ✅ NÃO TEM PAÍS OU PACOTE → ESCONDE
   if (!paisAtivo || !selecionados[0].pacote) {
     resultado.style.display = "none";
-    resultado.innerHTML = '<div class="espacador-topo"></div>';
     return;
   }
 
   const pais = paisAtivo.dataset.pais;
 
-  /* pegar canais do pacote 1 como base */
   const base = dados
-  .filter(d =>
-    d.pais === pais &&
-    d.cliente === selecionados[0].cliente &&
-    d.pacote === selecionados[0].pacote
-  )
-  .sort((a, b) => (parseInt(a.vc) || 0) - (parseInt(b.vc) || 0));
+    .filter(d =>
+      d.pais === pais &&
+      d.cliente === selecionados[0].cliente &&
+      d.pacote === selecionados[0].pacote
+    )
+    .sort((a, b) => (parseInt(a.vc) || 0) - (parseInt(b.vc) || 0));
 
   resultado.innerHTML = '<div class="topo-branco"></div>';
 
@@ -783,48 +767,34 @@ function gerarResultado(){
         d.vc === ref.vc
       );
 
-      if(match){
-        linha.innerHTML += `
-          <div class="canal">
-            <div class="canal-vc">${match.vc}</div>
-            <div class="canal-nome">${match.canal}</div>
-            <div class="tags">
-              <div class="tag">${match.categoria}</div>
-              <div class="tag">${match.tecnologia}</div>
-            </div>
+      linha.innerHTML += match ? `
+        <div class="canal">
+          <div class="canal-vc">${match.vc}</div>
+          <div class="canal-nome">${match.canal}</div>
+          <div class="tags">
+            <div class="tag">${match.categoria}</div>
+            <div class="tag">${match.tecnologia}</div>
           </div>
-        `;
-      } else {
-
-        linha.innerHTML += `
-          <div class="canal">
-            <div class="skeleton vc"></div>
-            <div class="skeleton nome"></div>
-            <div class="skeleton tags"></div>
-          </div>
-        `;
-
-      }
-
+        </div>
+      `
+      :
+      `
+        <div class="canal">
+          <div class="skeleton vc"></div>
+          <div class="skeleton nome"></div>
+          <div class="skeleton tags"></div>
+        </div>
+      `;
     });
 
     resultado.appendChild(linha);
-
   });
 
-  // ✅ MOSTRA RESULTADO SÓ QUANDO TEM DADO
   resultado.style.display = "block";
-  limitarAlturaInicial();
-  document.body.classList.remove("sem-resultado");
-  
 }
-  
-/* ✅ CARREGAR CSV (UMA VEZ SÓ) */
-fetch('pacotes.csv')
-  
-window.addEventListener('load', limitarAlturaInicial);
-window.addEventListener('resize', limitarAlturaInicial);
 
+// ===== FETCH =====
+fetch('pacotes.csv')
   .then(response => response.text())
   .then(texto => {
 
@@ -847,18 +817,15 @@ window.addEventListener('resize', limitarAlturaInicial);
           tecnologia: col[6]
         });
       }
-
     });
 
     carregarBandeiras();
 
-    /* ✅ EVENTO CLIENTE → PACOTE */
+    // eventos de select
     ['cliente1','cliente2','cliente3'].forEach((id,index)=>{
-
       document.getElementById(id).addEventListener('change', function(){
 
         const cliente = this.value;
-
         const ativo = document.querySelector('.bandeira.active');
         if (!ativo) return;
 
@@ -871,38 +838,25 @@ window.addEventListener('resize', limitarAlturaInicial);
         )];
 
         const selectPacote = document.getElementById(`pacote${index+1}`);
+        selectPacote.innerHTML =
+          '<option value="" disabled selected>Selecciona el paquete</option>';
 
-        selectPacote.innerHTML = '<option value="" disabled selected>Selecciona el paquete</option>';
-
-        pacotes.forEach(p=>{
+        pacotes.forEach(p => {
           selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
-          document.getElementById(`pacote${index+1}`).addEventListener('change', gerarResultado);
+          selectPacote.addEventListener('change', gerarResultado);
         });
-
       });
-      
-gerarResultado();
-      
     });
 
-    /* ✅ COR DO SELECT */
     document.querySelectorAll('select').forEach(select => {
-
       select.addEventListener('change', function(){
-
-        if (this.value !== "") {
-          this.classList.add('ativo');
-        } else {
-          this.classList.remove('ativo');
-        }
-
+        this.classList.toggle('ativo', this.value !== "");
       });
-
     });
 
-  });
-
+});
 </script>
+
 
 </body>
 </html>
