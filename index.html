@@ -599,60 +599,79 @@ html, body {
 
 let dados = [];
 
-// ===== LIMITE GLOBAL =====
-let limiteScroll = 0;
+// ===== LIMITE CALCULADO =====
+let LIMITE = 0;
 
-// calcula limite correto
-function atualizarLimite() {
+function calcularLimite() {
   const banner = document.getElementById('banner');
   if (!banner) return;
 
   const alturaHeader = 100;
-  limiteScroll = banner.offsetHeight - alturaHeader;
+  LIMITE = banner.offsetHeight - alturaHeader;
 }
 
-// ===== BLOQUEIO REAL =====
-function bloquearScroll(e) {
+// ===== TRAVA REAL (ANTES DO SCROLL EXECUTAR) =====
+
+// wheel (mouse)
+window.addEventListener('wheel', function(e) {
 
   const resultado = document.getElementById('resultado');
 
-  // só bloqueia quando NÃO tem resultado
-  if (resultado.style.display !== "none") return;
+  if (resultado.style.display === "none") {
 
-  if (window.scrollY >= limiteScroll) {
+    if (window.scrollY >= LIMITE && e.deltaY > 0) {
+      e.preventDefault();
+      window.scrollTo(0, LIMITE);
+    }
 
-    // trava na linha exata
-    window.scrollTo(0, limiteScroll);
-
-    // impede continuar
-    e.preventDefault();
-    return false;
-  }
-}
-
-// mouse wheel
-window.addEventListener('wheel', bloquearScroll, { passive: false });
-
-// touch (celular)
-window.addEventListener('touchmove', bloquearScroll, { passive: false });
-
-// teclas (seta / page down)
-window.addEventListener('keydown', function(e) {
-
-  const resultado = document.getElementById('resultado');
-
-  if (resultado.style.display !== "none") return;
-
-  const keys = ['ArrowDown','PageDown',' '];
-
-  if (keys.includes(e.key) && window.scrollY >= limiteScroll) {
-    e.preventDefault();
   }
 
 }, { passive: false });
 
+// touch (mobile)
+let lastTouchY = 0;
 
-// ===== HEADER =====
+window.addEventListener('touchstart', function(e) {
+  lastTouchY = e.touches[0].clientY;
+});
+
+window.addEventListener('touchmove', function(e) {
+
+  const resultado = document.getElementById('resultado');
+  const currentY = e.touches[0].clientY;
+
+  if (resultado.style.display === "none") {
+
+    if (window.scrollY >= LIMITE && lastTouchY > currentY) {
+      e.preventDefault();
+      window.scrollTo(0, LIMITE);
+    }
+
+  }
+
+  lastTouchY = currentY;
+
+}, { passive: false });
+
+// teclado
+window.addEventListener('keydown', function(e) {
+
+  const resultado = document.getElementById('resultado');
+
+  if (resultado.style.display === "none") {
+
+    const keys = ['ArrowDown','PageDown',' '];
+
+    if (keys.includes(e.key) && window.scrollY >= LIMITE) {
+      e.preventDefault();
+      window.scrollTo(0, LIMITE);
+    }
+
+  }
+
+});
+
+// ===== SCROLL (HEADER) =====
 window.addEventListener('scroll', () => {
 
   const scrollY = window.scrollY;
@@ -672,14 +691,19 @@ window.addEventListener('scroll', () => {
   const topbars = document.querySelectorAll('.top-bar');
 
   if (!resultado || resultado.style.display === "none") {
+
     topbars.forEach(el => el.classList.remove('scrolled'));
+
   } else {
+
     const trigger = resultado.offsetTop - 100;
+
     if (scrollY >= trigger) {
       topbars.forEach(el => el.classList.add('scrolled'));
     } else {
       topbars.forEach(el => el.classList.remove('scrolled'));
     }
+
   }
 
 });
@@ -702,7 +726,6 @@ function carregarBandeiras(){
 
     div.appendChild(img);
     div.dataset.pais = p;
-
     div.onclick = () => selecionarPais(p, div);
 
     container.appendChild(div);
@@ -735,6 +758,7 @@ function selecionarPais(pais, elemento){
     clientes.forEach(c => {
       select.innerHTML += `<option value="${c}">${c}</option>`;
     });
+
   });
 
   const resultado = document.getElementById('resultado');
@@ -830,15 +854,16 @@ fetch('pacotes.csv')
           tecnologia: col[6]
         });
       }
+
     });
 
     carregarBandeiras();
-    atualizarLimite();
-});
+    calcularLimite();
 
+  });
 
-window.addEventListener('load', atualizarLimite);
-window.addEventListener('resize', atualizarLimite);
+window.addEventListener('load', calcularLimite);
+window.addEventListener('resize', calcularLimite);
 
 </script>
   
