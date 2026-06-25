@@ -686,7 +686,7 @@ html, body {
 .busca-canal-wrap {
   width: 100%;
   max-width: 420px;
-  margin: 47px auto 0 auto;
+  margin: 0 auto;
 
   display: flex;
   flex-direction: column;
@@ -841,8 +841,14 @@ html, body {
   </h1>
 
   <div class="linha"></div>
+
+  <div class="titulo-secao">
+    Seleccione el país
+  </div>
+
+  <div id="bandeiras"></div>
   
-<div class="busca-canal-wrap">
+  <div class="busca-canal-wrap">
   <input
     type="text"
     id="buscaCanal"
@@ -1135,34 +1141,6 @@ function selecionarPais(pais, elemento) {
   document.querySelectorAll('.bandeira').forEach(b => b.classList.remove('active'));
   elemento.classList.add('active');
 
-  const clienteSelect = document.getElementById('cliente1');
-  const pacoteSelect = document.getElementById('pacote1');
-
-  if (clienteSelect) {
-    clienteSelect.innerHTML = '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
-    clienteSelect.classList.remove('ativo');
-  }
-
-  if (pacoteSelect) {
-    pacoteSelect.innerHTML = '<option value="" disabled selected>Selecciona el paquete</option>';
-    pacoteSelect.classList.remove('ativo');
-  }
-
-  const clientes = [...new Set(
-    dados
-      .filter(d => d.pais === pais)
-      .map(d => d.cliente)
-      .filter(Boolean)
-  )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
-
-  if (clienteSelect) {
-    clienteSelect.innerHTML = '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
-
-    clientes.forEach(c => {
-      clienteSelect.innerHTML += `<option value="${c}">${c}</option>`;
-    });
-  }
-
   const resultado = getResultado();
   if (resultado) {
     resultado.style.display = "none";
@@ -1171,7 +1149,6 @@ function selecionarPais(pais, elemento) {
 
   document.querySelectorAll('.top-bar').forEach(el => el.classList.remove('scrolled'));
 
-  atualizarBarraPacotes();
   atualizarEstadoInicial();
 }
 
