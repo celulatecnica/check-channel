@@ -925,7 +925,9 @@ function normalizarComparacao(valor) {
   return normalizarTexto(valor)
     .toLowerCase()
     .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, ''); // remove acentos
+    .replace(/[\u0300-\u036f]/g, '') // remove acento
+    .replace(/\s+/g, ' ')           // remove espaços duplicados
+    .trim();
 }
 
 function chaveCanal(item) {
@@ -1240,7 +1242,7 @@ const encontrados = dados.filter(d => {
 
   return (
     vc === termoBusca ||                  // busca por número exato
-    nomeCanal.includes(termoNormalizado) // busca por nome parcial
+    nomeCanal.indexOf(termoNormalizado) !== -1
   );
 });
 
