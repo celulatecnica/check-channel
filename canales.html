@@ -1302,6 +1302,7 @@ function consultarCanal() {
 
   if (!paisAtivo || !input || !input.value.trim()) {
     resultado.style.display = "none";
+    atualizarResumoBusca("Sin resultados", "0 canales", false);
     return;
   }
 
@@ -1323,6 +1324,7 @@ function consultarCanal() {
   });
 
   if (!encontrados.length) {
+    atualizarResumoBusca("Sin resultados", "0 canales", false);
     alert("Canal no encontrado");
     return;
   }
@@ -1359,6 +1361,17 @@ function consultarCanal() {
     return a.canal.localeCompare(b.canal, 'pt-BR');
   });
 
+  // ✅ Atualizar barra 3
+  const totalResultados = canaisUnicos.length;
+
+  let tituloResumo = `Resultados para "${termoBusca}"`;
+  if (totalResultados === 1) {
+    tituloResumo = canaisUnicos[0].canal;
+  }
+
+  const subtituloResumo = `${totalResultados} ${totalResultados === 1 ? 'canal' : 'canales'}`;
+  atualizarResumoBusca(tituloResumo, subtituloResumo, true);
+
   // ✅ LIMPAR RESULTADO
   resultado.innerHTML = '';
 
@@ -1378,7 +1391,14 @@ function consultarCanal() {
       <img src="logos/${normalizarArquivo(canal.canal)}.png" 
            alt="${canal.canal}" 
            class="logo-canal"
-           onerror="this.onerror=null; this.src='logos/directv.png'co.className = 'linha-resultado grid grid-canal-unico';
+           onerror="this.onerror=null; this.src='logos/directv.png'">
+    `;
+
+    resultado.appendChild(logoContainer);
+
+    // ===== BLOCO PRINCIPAL =====
+    const bloco = document.createElement('div');
+    bloco.className = 'linha-resultado grid grid-canal-unico';
 
     bloco.innerHTML = `
       <div class="canal">
@@ -1425,7 +1445,6 @@ function consultarCanal() {
   resultado.appendChild(topoFinal);
 
   resultado.style.display = "block";
-
   atualizarEstadoInicial();
 }
 
