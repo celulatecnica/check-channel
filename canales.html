@@ -362,6 +362,7 @@ select:focus {
   background: #333333;
 }
 
+
 .menu-header {
   display: flex;
   gap: 24px;
@@ -373,6 +374,8 @@ select:focus {
   color: #b5b5b8;
   cursor: pointer;
   position: relative;
+  text-decoration: none; /* remove sublinhado */
+  display: inline-block;
 }
 
 .menu-item.ativo {
@@ -675,10 +678,12 @@ html, body {
 <div class="top-bar top-bar-sub" id="topbarSub">
   <div class="top-bar-inner">
     <div class="titulo-pequeno">Check Channel</div>
-    <div class="menu-header">
-      <div class="menu-item ativo">Paquetes</div>
-      <div class="menu-item">Canales</div>
-    </div>
+
+<div class="menu-header">
+  <a href="index.html" class="menu-item">Paquetes</a>
+  <a href="canales.html" class="menu-item ativo">Canales</a>
+</div>
+
   </div>
 </div>
   
@@ -782,7 +787,7 @@ html, body {
     <div class="footer-inner">
       
       <p class="footer-text">
-        Esta herramienta fue desarrollada por la Célula Técnica con el objetivo de optimizar la consulta y comparación de canales incluidos en los diferentes paquetes comerciales. En caso de errores comuníquese con nuestro equipo <span class="footer-nowrap">a través de <a href="mailto:celulatecnica@directvla.com.co">celulatecnica@directvla.com.co</a></span>.
+        Esta herramienta fue desarrollada por la Célula Técnica con el objetivo de optimizar la consulta y comparación de canales incluidos en los diferentes paquetes comerciales. En caso de errores comuníquese con nuestro equipo a través de celulatecnica@directvla.com.co.
       </p>
 
       <div class="footer-divider"></div>
