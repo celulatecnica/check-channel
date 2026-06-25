@@ -182,9 +182,55 @@ body {
 }
 
 /* espaço pra scroll */
+/* espaço final com rodapé embutido */
 .fake-content {
-  height: 280px;
+  min-height: 280px;
   background: #0F0F0F;
+
+  display: flex;
+  align-items: flex-end; /* joga o conteúdo para o fim do bloco */
+  width: 100%;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.footer-inner {
+  width: 950px;
+  max-width: calc(100% - 32px);
+  margin: 0 auto;
+  padding-left: 16px;
+  padding-right: 16px;
+  text-align: left;
+}
+
+.footer-text {
+  margin: 0 0 14px 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: #a1a1a6;
+  max-width: 820px;
+}
+
+.footer-text a {
+  color: #d1d1d6;
+  text-decoration: none;
+}
+
+.footer-text a:hover {
+  text-decoration: underline;
+}
+
+.footer-divider {
+  width: 100%;
+  border-top: 1px solid #4D4D4D;
+  margin: 24px 0 18px 0;
+}
+
+.footer-copy {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #8e8e93;
 }
 
 /* ===== CONTAINER ===== */
@@ -727,9 +773,29 @@ html, body {
   <div class="espacador-topo"></div>
 </div>
 
-<div class="fake-content"></div>
+<footer class="footer-faixa">
+  <div class="footer-inner">
+    <p class="footer-text">
+      Esta herramienta fue desarrollada por la Célula Técnica con el objetivo de optimizar la consulta, comparación y validación de canales incluidos en los diferentes paquetes comerciales.
+    </p>
+
+    <p class="footer-text">
+      La información presentada está sujeta a revisión y actualización. En caso de errores, diferencias o necesidad de soporte, comuníquese con nuestro equipo a través de
+      <a href="mailto:celulatecnica@directvla.com.co">celulatecnica@directvla.com.co</a>,
+      <a href="mailto:celulatecnica@sky.com.br">celulatecnica@sky.com.br</a> o
+      <a href="mailto:celulatecnica@konecta.com">celulatecnica@konecta.com</a>.
+    </p>
+
+    <div class="footer-divider"></div>
+
+    <p class="footer-copy">
+      Check Channel © 2026 Célula Técnica, Ingeniería WAIKEN. Todos los derechos reservados.
+    </p>
+  </div>
+</footer>
 
 <script>
+  
 let dados = [];
 
 const HEADER_TOTAL = 50; // 45 + 55
@@ -1238,6 +1304,7 @@ fetch('pacotes.csv?v=' + Date.now())
 
 window.addEventListener('load', atualizarEstadoInicial);
 window.addEventListener('resize', atualizarEstadoInicial);
+  
 </script>
   
 </body>
