@@ -1007,7 +1007,6 @@ function atualizarEstadoCabecalho() {
 
   if (!resultadoVisivel()) {
     topbars.forEach(el => el.classList.remove('scrolled'));
-    if (barraPacotes) barraPacotes.classList.remove('visible');
     return;
   }
 
@@ -1045,7 +1044,6 @@ window.addEventListener('scroll', () => {
 
   if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
   if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
-  if (topPacotes) topPacotes.style.transform = `translateY(${movimento}px)`;
 
   atualizarEstadoCabecalho();
   clampScrollInicial();
