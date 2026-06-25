@@ -794,24 +794,26 @@ html, body {
   
 /* ===== BARRA 3 - RESUMO DA BUSCA ===== */
 .top-bar-pacotes {
-  position: fixed;
-  top: 100px; /* 45 + 55 */
-  left: 0;
-  width: 100%;
+  top: 100px; /* 45 da barra 1 + 55 da barra 2 */
   height: 80px;
 
-  background: rgba(15,15,15,0.96);
+  background: rgba(0,0,0,0.20);
   border-bottom: 1px solid #4D4D4D;
 
   opacity: 0;
+  transform: translateY(-12px);
   pointer-events: none;
-  z-index: 998;
 
-  transition: opacity 0.25s ease;
+  transition:
+    opacity 0.28s ease,
+    transform 0.28s ease,
+    background 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .top-bar-pacotes.visible {
   opacity: 1;
+  transform: translateY(0);
   pointer-events: auto;
 }
 
@@ -981,6 +983,7 @@ const HEADER_TOTAL = 168; // 45 + 55 + 68
 let limiteInicial = 0;
 let touchStartY = 0;
 let travando = false;
+let resumoBuscaAtivo = false;
 
 // ===== HELPERS =====
 function getResultado() {
@@ -1025,7 +1028,14 @@ function atualizarResumoBusca(titulo = "Sin resultados", subtitulo = "0 canales"
   tituloEl.textContent = titulo;
   subtituloEl.textContent = subtitulo;
 
-  barra.classList.toggle('visible', mostrar);
+  resumoBuscaAtivo = mostrar;
+
+  // NÃO mostra imediatamente; quem decide é o scroll
+  if (!mostrar) {
+    barra.classList.remove('visible');
+  }
+
+  atualizarEstadoCabecalho();
 }
   
 function criarCanal(match) {
@@ -1107,9 +1117,11 @@ function clampScrollInicial() {
 
 function atualizarEstadoCabecalho() {
   const topbars = document.querySelectorAll('.top-bar');
+  const barraPacotes = document.getElementById('topbarPacotes');
 
   if (!resultadoVisivel()) {
     topbars.forEach(el => el.classList.remove('scrolled'));
+    if (barraPacotes) barraPacotes.classList.remove('visible');
     return;
   }
 
@@ -1117,11 +1129,22 @@ function atualizarEstadoCabecalho() {
   const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
 
   const triggerClaro = resultado.offsetTop - 100;
+  const triggerPacotes = resultado.offsetTop - 55;
 
+  // header claro
   if (y >= triggerClaro) {
     topbars.forEach(el => el.classList.add('scrolled'));
   } else {
     topbars.forEach(el => el.classList.remove('scrolled'));
+  }
+
+  // barra 3 só aparece depois de ultrapassar a área preta
+  if (barraPacotes) {
+    if (resumoBuscaAtivo && y >= triggerPacotes) {
+      barraPacotes.classList.add('visible');
+    } else {
+      barraPacotes.classList.remove('visible');
+    }
   }
 }
 
@@ -1136,9 +1159,11 @@ window.addEventListener('scroll', () => {
   const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
 
 
+
 const topMain = document.getElementById('topbarMain');
 const topSub = document.getElementById('topbarSub');
 const topPacotes = document.getElementById('topbarPacotes');
+
 
 
   let progresso = scrollY / 70;
@@ -1147,9 +1172,11 @@ const topPacotes = document.getElementById('topbarPacotes');
   const movimento = -50 * progresso;
 
 
+
 if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
 if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
 if (topPacotes) topPacotes.style.transform = `translateY(${movimento}px)`;
+
 
 
   atualizarEstadoCabecalho();
