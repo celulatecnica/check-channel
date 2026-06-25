@@ -1251,32 +1251,87 @@ const encontrados = dados.filter(d => {
 
   const ehNumero = /^\d+$/.test(termoBusca);
 
-// ✅ se for texto → lista todos os canais
-if (!ehNumero) {
+resultado.innerHTML = '';
 
-  resultado.innerHTML = '';
+// ✅ AGRUPAR POR CANAL + VC
+const canaisMap = {};
 
-  const topoInicial = document.createElement('div');
-  topoInicial.className = 'topo-branco';
-  resultado.appendChild(topoInicial);
+encontrados.forEach(item => {
+  const chave = item.canal + '|' + item.vc;
 
-  encontrados
-    .sort((a, b) => a.canal.localeCompare(b.canal, 'pt-BR'))
-    .forEach(match => {
-      const linha = document.createElement('div');
-      linha.className = 'linha-resultado';
-      linha.appendChild(criarCanal(match));
-      resultado.appendChild(linha);
-    });
+  if (!canaisMap[chave]) {
+    canaisMap[chave] = {
+      ...item,
+      pacotes: new Set()
+    };
+  }
 
-  const topoFinal = document.createElement('div');
-  topoFinal.className = 'topo-branco';
-  resultado.appendChild(topoFinal);
+  canaisMap[chave].pacotes.add(item.pacote);
+});
 
-  resultado.style.display = "block";
-  atualizarEstadoInicial();
-  return;
-}
+const canaisUnicos = Object.values(canaisMap);
+
+// ✅ ORDENAR
+canaisUnicos.sort((a, b) =>
+  a.canal.localeCompare(b.canal, 'pt-BR')
+);
+
+// ===== TOPO
+const topoInicial = document.createElement('div');
+topoInicial.className = 'topo-branco';
+resultado.appendChild(topoInicial);
+
+// ✅ RENDERIZAR CADA CANAL COMPLETO
+canaisUnicos.forEach(canal => {
+
+  const pacotes = Array.from(canal.pacotes)
+    .sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
+  // ===== BLOCO PRINCIPAL
+  const bloco = document.createElement('div');
+  bloco.className = 'linha-resultado grid grid-canal-unico';
+
+  bloco.innerHTML = `
+    <div class="canal">
+      <div class="canal-vc">${canal.vc}</div>
+      <div class="canal-nome">${canal.canal}</div>
+      <div class="tags">
+        <div class="tag">${canal.categoria}</div>
+        <div class="tag">${canal.tecnologia}</div>
+      </div>
+    </div>
+  `;
+
+  resultado.appendChild(bloco);
+
+  // ===== LISTA DE PACOTES
+  const listaBloco = document.createElement('div');
+  listaBloco.className = 'linha-resultado grid grid-canal-unico';
+
+  const listaHTML = document.createElement('div');
+  listaHTML.style.textAlign = "center";
+
+  listaHTML.innerHTML = `
+    <h3 style="margin-bottom:12px;">
+      Paquetes que contienen este canal
+    </h3>
+    <ul style="list-style:none; padding:0; margin:10px 0;">
+      ${pacotes.map(p => `<li style="margin:6px 0;">${p}</li>`).join('')}
+    </ul>
+  `;
+
+  listaBloco.appendChild(listaHTML);
+  resultado.appendChild(listaBloco);
+});
+
+// ===== FINAL
+const topoFinal = document.createElement('div');
+topoFinal.className = 'topo-branco';
+resultado.appendChild(topoFinal);
+
+resultado.style.display = "block";
+atualizarEstadoInicial();
+return;
 
   // ✅ Pegar dados principais (primeiro registro)
   const canalBase = encontrados[0];
