@@ -1066,7 +1066,7 @@ atualizarEstadoInicial();
 }
 
 // ===== FETCH CSV =====
-fetch('pacotes.csv')
+fetch('pacotes.csv?v=' + new Date().getTime())
   .then(response => response.text())
   .then(texto => {
     const linhas = texto.split('\n');
