@@ -1139,7 +1139,6 @@ function carregarBandeiras() {
     img.alt = p;
     img.title = p;
 
-    // fallback se a imagem da bandeira não existir
     img.onerror = function () {
       div.innerHTML = `
         <div style="
@@ -1205,7 +1204,6 @@ function consultarCanal() {
   const termoNormalizado = normalizarComparacao(termoBusca);
   const ehNumero = /^\d+$/.test(termoBusca);
 
-  // Busca por número exato OU nome parcial
   const encontrados = dados.filter(d => {
     if (normalizarTexto(d.pais) !== normalizarTexto(pais)) return false;
 
@@ -1221,7 +1219,7 @@ function consultarCanal() {
     return;
   }
 
-  // Agrupar por canal + vc para remover duplicados
+  // Agrupar por canal + vc
   const canaisMap = {};
 
   encontrados.forEach(item => {
@@ -1314,7 +1312,6 @@ fetch('pacotes.csv?v=' + Date.now())
       .replace(/^\uFEFF/, '')
       .split(/\r?\n/);
 
-    // detecta delimitador automaticamente
     const primeiraLinhaValida = linhas.find(l => l.trim()) || '';
     const delimitador = primeiraLinhaValida.includes(';') ? ';' : ',';
 
@@ -1356,7 +1353,6 @@ fetch('pacotes.csv?v=' + Date.now())
 window.addEventListener('load', atualizarEstadoInicial);
 window.addEventListener('resize', atualizarEstadoInicial);
 </script>
-
   
 </body>
 </html>
