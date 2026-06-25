@@ -977,7 +977,7 @@ html, body {
 <script>
 let dados = [];
 
-const HEADER_TOTAL = 50; // mantém como estava na versão estável
+const HEADER_TOTAL = 168; // 45 + 55 + 68
 let limiteInicial = 0;
 let touchStartY = 0;
 let travando = false;
@@ -1015,6 +1015,19 @@ function chaveCanal(item) {
   return normalizarTexto(item.vc);
 }
 
+function atualizarResumoBusca(titulo = "Sin resultados", subtitulo = "0 canales", mostrar = false) {
+  const tituloEl = document.getElementById('resumoBuscaTitulo');
+  const subtituloEl = document.getElementById('resumoBuscaSubtitulo');
+  const barra = document.getElementById('topbarPacotes');
+
+  if (!tituloEl || !subtituloEl || !barra) return;
+
+  tituloEl.textContent = titulo;
+  subtituloEl.textContent = subtitulo;
+
+  barra.classList.toggle('visible', mostrar);
+}
+  
 function criarCanal(match) {
   const canal = document.createElement('div');
   canal.className = 'canal';
@@ -1122,16 +1135,22 @@ function atualizarEstadoInicial() {
 window.addEventListener('scroll', () => {
   const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
 
-  const topMain = document.getElementById('topbarMain');
-  const topSub = document.getElementById('topbarSub');
+
+const topMain = document.getElementById('topbarMain');
+const topSub = document.getElementById('topbarSub');
+const topPacotes = document.getElementById('topbarPacotes');
+
 
   let progresso = scrollY / 70;
   if (progresso > 1) progresso = 1;
 
   const movimento = -50 * progresso;
 
-  if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
-  if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
+
+if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
+if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
+if (topPacotes) topPacotes.style.transform = `translateY(${movimento}px)`;
+
 
   atualizarEstadoCabecalho();
   clampScrollInicial();
