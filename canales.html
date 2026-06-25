@@ -423,9 +423,19 @@ select:focus {
 
   width: 100%;
 
+  color: #1d1d1f; /* ✅ força cor padrão dentro da area branca */
+  
   position: relative;
   left: 50%;
   transform: translateX(-50%);
+}
+
+
+#resultado h3,
+#resultado li,
+#resultado p,
+#resultado div {
+  color: #1d1d1f;
 }
 
 /* ✅ FAIXA BRANCA REAL (FULL WIDTH) */
@@ -1262,7 +1272,9 @@ function consultarCanal() {
   const canalBase = encontrados[0];
 
   // ✅ Pacotes únicos
-  const pacotes = [...new Set(encontrados.map(d => d.pacote))];
+  const pacotes = [...new Set(encontrados.map(d => d.pacote))]
+    .sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
 
   // ✅ LIMPAR RESULTADO
   resultado.innerHTML = '';
