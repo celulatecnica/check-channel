@@ -1253,7 +1253,8 @@ logoContainer.className = 'logo-canal-container';
 logoContainer.innerHTML = `
   <img src="logos/${normalizarArquivo(canalBase.canal)}.png" 
        alt="${canalBase.canal}" 
-       class="logo-canal">
+       class="logo-canal"
+       onerror="this.onerror=null; this.src='logos/directv.png'">
 `;
 
 resultado.appendChild(logoContainer);
