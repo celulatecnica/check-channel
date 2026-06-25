@@ -184,24 +184,27 @@ body {
 /* espaço pra scroll */
 /* espaço final com rodapé embutido */
 .fake-content {
-  min-height: 280px;
+  height: 280px;
   background: #0F0F0F;
+  width: 100%;
 
   display: flex;
-  justify-content: center;   /* centraliza horizontalmente */
-  align-items: flex-end; /* joga o conteúdo para o fim do bloco */
-  width: 100%;
-  padding-top: 40px;
-  padding-bottom: 40px;
+  justify-content: center;   /* centraliza o rodapé na horizontal */
+  align-items: flex-end;     /* cola o rodapé no final da faixa */
+}
+
+.footer-faixa {
+  width: 950px;
+  max-width: calc(100% - 32px);
 }
 
 .footer-inner {
   width: 100%;
   padding-left: 16px;
   padding-right: 16px;
-  padding-bottom: 20px;
+  padding-bottom: 18px; /* respiro final: substitui a segunda linha */
   box-sizing: border-box;
-  text-align: left; /* só o conteúdo interno fica à esquerda */
+  text-align: left;
 }
 
 .footer-text {
@@ -232,11 +235,6 @@ body {
   font-size: 14px;
   line-height: 1.5;
   color: #8e8e93;
-}
-
-.footer-faixa {
-  width: 950px;
-  max-width: calc(100% - 32px);
 }
 
 /* ===== CONTAINER ===== */
@@ -792,8 +790,6 @@ html, body {
       <p class="footer-copy">
         Check Channel © 2026 Célula Técnica, Ingeniería WAIKEN. Todos los derechos reservados.
       </p>
-
-      <div class="footer-divider footer-divider-bottom"></div>
     </div>
   </footer>
 </div>
