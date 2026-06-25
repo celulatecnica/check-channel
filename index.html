@@ -1008,13 +1008,33 @@ atualizarEstadoInicial();
 
   const pais = paisAtivo.dataset.pais;
 
-  const base = dados
-    .filter(d =>
-      d.pais === pais &&
-      d.cliente === selecionados[0].cliente &&
-      d.pacote === selecionados[0].pacote
-    )
-    .sort((a, b) => (parseInt(a.vc) || 0) - (parseInt(b.vc) || 0));
+// pega TODOS os canais dos 3 pacotes
+let todosCanais = [];
+
+selecionados.forEach(sel => {
+  if (!sel.pacote) return;
+
+  const canais = dados.filter(d =>
+    d.pais === pais &&
+    d.cliente === sel.cliente &&
+    d.pacote === sel.pacote
+  );
+
+  todosCanais = todosCanais.concat(canais);
+});
+
+// cria lista única por VC
+const mapa = new Map();
+
+todosCanais.forEach(c => {
+  if (!mapa.has(c.vc)) {
+    mapa.set(c.vc, c);
+  }
+});
+
+// vira array ordenado
+const base = Array.from(mapa.values())
+  .sort((a, b) => (parseInt(a.vc) || 0) - (parseInt(b.vc) || 0));
 
   resultado.innerHTML = '<div class="topo-branco"></div>';
 
