@@ -828,7 +828,7 @@ html, body {
 <div id="bandeiras"></div>
 
 <div class="titulo-busca">
-  Informe el número del canal
+ Informe el nombre o número del canal
 </div>
   
 <div class="busca-canal-wrap">
@@ -846,14 +846,14 @@ html, body {
       </svg>
     </span>
 
-    <input
-      type="text"
-      id="buscaCanal"
-      class="input-canal"
-      placeholder="Ingresa el número del canal"
-      inputmode="numeric"
-      autocomplete="off"
-    >
+<input
+  type="text"
+  id="buscaCanal"
+  class="input-canal"
+  placeholder="Ingresa el nombre o número del canal"
+  inputmode="text"
+  autocomplete="off"
+>
   </div>
 
 
@@ -920,7 +920,14 @@ function normalizarArquivo(valor) {
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/\s+/g, '');
 }
-
+  
+function normalizarComparacao(valor) {
+  return normalizarTexto(valor)
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
+  
 function chaveCanal(item) {
   return normalizarTexto(item.vc);
 }
@@ -1215,31 +1222,64 @@ function consultarCanal() {
   const paisAtivo = document.querySelector('.bandeira.active');
   const input = document.getElementById('buscaCanal');
 
-  if (!paisAtivo || !input.value.trim()) {
+  if (!paisAtivo || !input || !input.value.trim()) {
     resultado.style.display = "none";
     return;
   }
 
   const pais = paisAtivo.dataset.pais;
-  const numeroBusca = input.value.trim();
+  const termoBusca = input.value.trim();
+  const termoNormalizado = normalizarComparacao(termoBusca);
 
-  // 🔎 Buscar canais do país com esse número
-  const encontrados = dados.filter(d =>
-    d.pais === pais && normalizarTexto(d.vc) === numeroBusca
-  );
+  // 🔎 Busca por número EXATO ou por nome PARCIAL
+  const encontrados = dados.filter(d => {
+    if (d.pais !== pais) return false;
+
+    const vc = normalizarTexto(d.vc);
+    const nomeCanal = normalizarComparacao(d.canal);
+
+    return (
+      vc === termoBusca ||
+      nomeCanal.includes(termoNormalizado)
+    );
+  });
 
   if (!encontrados.length) {
     alert("Canal no encontrado");
     return;
   }
 
-  // ✅ Pegar dados principais (primeiro registro)
-  const canalBase = encontrados[0];
+  // ✅ Agrupar por canal + vc para não repetir o mesmo canal por pacote
+  const canaisMap = {};
 
-  // ✅ Pacotes únicos
-  const pacotes = [...new Set(encontrados.map(d => d.pacote))]
-    .sort((a, b) => a.localeCompare(b, 'pt-BR'));
+  encontrados.forEach(item => {
+    const chave = `${normalizarTexto(item.vc)}|${normalizarComparacao(item.canal)}`;
 
+    if (!canaisMap[chave]) {
+      canaisMap[chave] = {
+        vc: normalizarTexto(item.vc),
+        canal: normalizarTexto(item.canal),
+        categoria: normalizarTexto(item.categoria),
+        tecnologia: normalizarTexto(item.tecnologia),
+        pacotes: new Set()
+      };
+    }
+
+    if (item.pacote) {
+      canaisMap[chave].pacotes.add(normalizarTexto(item.pacote));
+    }
+  });
+
+  const canaisUnicos = Object.values(canaisMap).sort((a, b) => {
+    const numA = parseInt(a.vc, 10);
+    const numB = parseInt(b.vc, 10);
+
+    const valA = Number.isNaN(numA) ? 999999 : numA;
+    const valB = Number.isNaN(numB) ? 999999 : numB;
+
+    if (valA !== valB) return valA - valB;
+    return a.canal.localeCompare(b.canal, 'pt-BR');
+  });
 
   // ✅ LIMPAR RESULTADO
   resultado.innerHTML = '';
@@ -1248,57 +1288,59 @@ function consultarCanal() {
   topoInicial.className = 'topo-branco';
   resultado.appendChild(topoInicial);
 
-// ===== CONTAINER DO LOGO =====
-const logoContainer = document.createElement('div');
-logoContainer.className = 'logo-canal-container';
+  canaisUnicos.forEach(canal => {
+    const pacotes = Array.from(canal.pacotes)
+      .sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
-logoContainer.innerHTML = `
-  <img src="logos/${normalizarArquivo(canalBase.canal)}.png" 
-       alt="${canalBase.canal}" 
-       class="logo-canal"
-       onerror="this.onerror=null; this.src='logos/directv.png'">
-`;
+    // ===== CONTAINER DO LOGO =====
+    const logoContainer = document.createElement('div');
+    logoContainer.className = 'logo-canal-container';
 
-resultado.appendChild(logoContainer);
-  
-  
-// ===== BLOCO PRINCIPAL =====
-const bloco = document.createElement('div');
+    logoContainer.innerHTML = `
+      <img src="logos/${normalizarArquivo(canal.canal)}.png" 
+           alt="${canal.canal}" 
+           class="logo-canal"
+           onerror="this.onerror=null; this.src='logos/directv.png'">
+    `;
 
-bloco.className = 'linha-resultado grid grid-canal-unico';
+    resultado.appendChild(logoContainer);
 
+    // ===== BLOCO PRINCIPAL =====
+    const bloco = document.createElement('div');
+    bloco.className = 'linha-resultado grid grid-canal-unico';
 
-  bloco.innerHTML = `
-    <div class="canal">
-      <div class="canal-vc">${normalizarTexto(canalBase.vc)}</div>
-      <div class="canal-nome">${normalizarTexto(canalBase.canal)}</div>
-      <div class="tags">
-        <div class="tag">${normalizarTexto(canalBase.categoria)}</div>
-        <div class="tag">${normalizarTexto(canalBase.tecnologia)}</div>
+    bloco.innerHTML = `
+      <div class="canal">
+        <div class="canal-vc">${canal.vc}</div>
+        <div class="canal-nome">${canal.canal}</div>
+        <div class="tags">
+          <div class="tag">${canal.categoria}</div>
+          <div class="tag">${canal.tecnologia}</div>
+        </div>
       </div>
-    </div>
-  `;
+    `;
 
-  resultado.appendChild(bloco);
+    resultado.appendChild(bloco);
 
-  // ===== LISTA DE PACOTES =====
-  const listaBloco = document.createElement('div');
-  listaBloco.className = 'linha-resultado grid grid-canal-unico';
+    // ===== LISTA DE PACOTES =====
+    const listaBloco = document.createElement('div');
+    listaBloco.className = 'linha-resultado grid grid-canal-unico';
 
-  const listaHTML = document.createElement('div');
-  listaHTML.style.textAlign = "center";
+    const listaHTML = document.createElement('div');
+    listaHTML.style.textAlign = "center";
 
-  listaHTML.innerHTML = `
-    <h3 style="color:#1d1d1f; margin-bottom:12px;">
-      Paquetes que contienen este canal
-    </h3>
-    <ul style="list-style:none; padding:0; margin:10px 0 0 0;">
-      ${pacotes.map(p => `<li style="margin:6px 0; font-weight:500;">${p}</li>`).join('')}
-    </ul>
-  `;
+    listaHTML.innerHTML = `
+      <h3 style="color:#1d1d1f; margin-bottom:12px;">
+        Paquetes que contienen este canal
+      </h3>
+      <ul style="list-style:none; padding:0; margin:10px 0 0 0;">
+        ${pacotes.map(p => `<li style="margin:6px 0; font-weight:500;">${p}</li>`).join('')}
+      </ul>
+    `;
 
-  listaBloco.appendChild(listaHTML);
-  resultado.appendChild(listaBloco);
+    listaBloco.appendChild(listaHTML);
+    resultado.appendChild(listaBloco);
+  });
 
   const topoFinal = document.createElement('div');
   topoFinal.className = 'topo-branco';
@@ -1403,6 +1445,14 @@ fetch('pacotes.csv?v=' + Date.now())
 
 window.addEventListener('load', atualizarEstadoInicial);
 window.addEventListener('resize', atualizarEstadoInicial);
+
+document.getElementById('buscaCanal')?.addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    consultarCanal();
+  }
+});
+
 </script>
   
 </body>
