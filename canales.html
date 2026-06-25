@@ -74,36 +74,10 @@ body {
 }
   
 /* ===== BARRA 3 (Pacotes selecionados) ===== */
-.top-bar-pacotes {
-  top: 100px; /* 45 da barra 1 + 55 da barra 2 */
-  height: 100px; /* ✅ agora com o dobro da altura */
-
-  background: rgba(0,0,0,0.20);
-  border-bottom: 1px solid #4D4D4D;
-
-  opacity: 0;
-  transform: translateY(-12px);
-  pointer-events: none;
-
-  transition:
-    opacity 0.28s ease,
-    transform 0.28s ease,
-    background 0.3s ease,
-    border-color 0.3s ease;
-}
-
 .top-bar-pacotes.visible {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
-}
-
-.top-bar-pacotes-inner {
-  height: 100%;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-  align-items: center;
 }
 
 .grid.grid-canal-unico {
@@ -138,19 +112,6 @@ body {
 
   text-align: center;
 }
-
-.pacote-resumo {
-  font-size: 21px;
-  font-weight: 600;
-  color: #f5f5f7;
-  line-height: 1.1;
-
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-}
-
 .pacote-total {
   font-size: 21px;
   font-weight: 400;
@@ -848,16 +809,6 @@ html, body {
   </div>
 </div>
   
-<!-- ✅ BARRA 3 -->
-<div class="top-bar top-bar-pacotes" id="topbarPacotes">
-  <div class="top-bar-inner top-bar-pacotes-inner">
-    <div class="pacote-resumo-bloco">
-      <div class="pacote-resumo vazio" id="pacoteHeader1">No seleccionado</div>
-      <div class="pacote-total vazio" id="pacoteTotal1">0 canales</div>
-    </div>
-  </div>
-</div>
-  
 <!-- ✅ BANNER -->
 <img id="banner" src="banner.png">
 
@@ -1053,7 +1004,6 @@ function clampScrollInicial() {
 
 function atualizarEstadoCabecalho() {
   const topbars = document.querySelectorAll('.top-bar');
-  const barraPacotes = document.getElementById('topbarPacotes');
 
   if (!resultadoVisivel()) {
     topbars.forEach(el => el.classList.remove('scrolled'));
@@ -1073,13 +1023,6 @@ function atualizarEstadoCabecalho() {
     topbars.forEach(el => el.classList.remove('scrolled'));
   }
 
-  if (barraPacotes) {
-    if (y >= triggerPacotes) {
-      barraPacotes.classList.add('visible');
-    } else {
-      barraPacotes.classList.remove('visible');
-    }
-  }
 }
 
 function atualizarEstadoInicial() {
@@ -1094,7 +1037,6 @@ window.addEventListener('scroll', () => {
 
   const topMain = document.getElementById('topbarMain');
   const topSub = document.getElementById('topbarSub');
-  const topPacotes = document.getElementById('topbarPacotes');
 
   let progresso = scrollY / 70;
   if (progresso > 1) progresso = 1;
