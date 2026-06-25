@@ -1157,7 +1157,7 @@ function selecionarPais(pais, elemento) {
   document.querySelectorAll('.bandeira').forEach(b => b.classList.remove('active'));
   elemento.classList.add('active');
 
-  document.getElementById('buscaCanal').value =
+  document.getElementById('buscaCanal').value = "";
       
   const resultado = getResultado();
   if (resultado) {
