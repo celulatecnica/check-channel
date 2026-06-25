@@ -532,7 +532,7 @@ html, body {
   
 /* ===== HEADER CLARO AO SCROLL ===== */
 .top-bar.scrolled {
-  background: rgba(255,255,255,0.95);
+  background: rgba(255,255,255,0.6);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
   border-bottom: 1px solid rgba(0,0,0,0.08);
@@ -851,7 +851,7 @@ html, body {
       id="buscaCanal"
       class="input-canal"
       placeholder="Ingresa el nombre o número del canal"
-      inputmode="numeric"
+      inputmode="text"
       autocomplete="off"
     >
   </div>
@@ -919,15 +919,6 @@ function normalizarArquivo(valor) {
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/\s+/g, '');
-}
-
-function normalizarComparacao(valor) {
-  return normalizarTexto(valor)
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '') // remove acento
-    .replace(/\s+/g, ' ')           // remove espaços duplicados
-    .trim();
 }
 
 function chaveCanal(item) {
@@ -1014,12 +1005,11 @@ function clampScrollInicial() {
 function atualizarEstadoCabecalho() {
   const topbars = document.querySelectorAll('.top-bar');
 
-
-if (!resultadoVisivel()) {
-  topbars.forEach(el => el.classList.remove('scrolled'));
-  return;
-}
-
+  if (!resultadoVisivel()) {
+    topbars.forEach(el => el.classList.remove('scrolled'));
+    if (barraPacotes) barraPacotes.classList.remove('visible');
+    return;
+  }
 
   const resultado = getResultado();
   const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
@@ -1055,8 +1045,7 @@ window.addEventListener('scroll', () => {
 
   if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
   if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
-// REMOVIDO: topPacotes (não existe nesta página)
-
+  if (topPacotes) topPacotes.style.transform = `translateY(${movimento}px)`;
 
   atualizarEstadoCabecalho();
   clampScrollInicial();
@@ -1232,29 +1221,37 @@ function consultarCanal() {
   const pais = paisAtivo.dataset.pais;
 const termoBusca = input.value.trim();
 
+// normaliza o texto (remove acento e caixa)
+function normalizarComparacao(valor) {
+  return normalizarTexto(valor)
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
+
 const termoNormalizado = normalizarComparacao(termoBusca);
 
+// 🔎 busca por número OU nome
 const encontrados = dados.filter(d => {
   if (d.pais !== pais) return false;
 
-  const vc = normalizarTexto(d.vc);               // número do canal
-  const nomeCanal = normalizarComparacao(d.canal); // nome tratado
+  const vc = normalizarTexto(d.vc);
+  const nome = normalizarComparacao(d.canal);
 
   return (
-    vc === termoBusca ||                  // busca por número exato
-    nomeCanal.indexOf(termoNormalizado) !== -1
+    vc === termoBusca ||          // busca por número
+    nome.includes(termoNormalizado) // busca por nome
   );
 });
 
-if (!encontrados.length) {
-  alert("Canal no encontrado por número o nombre");
-  return;
-}
+  if (!encontrados.length) {
+    alert("Canal no encontrado");
+    return;
+  }
 
-  // ✅ Pegar dados principais (primeiro registro)
   const ehNumero = /^\d+$/.test(termoBusca);
 
-// ✅ Se for busca por NOME → mostrar TODOS
+// ✅ se for texto → lista todos os canais
 if (!ehNumero) {
 
   resultado.innerHTML = '';
@@ -1281,6 +1278,7 @@ if (!ehNumero) {
   return;
 }
 
+  // ✅ Pegar dados principais (primeiro registro)
   const canalBase = encontrados[0];
 
   // ✅ Pacotes únicos
@@ -1302,8 +1300,7 @@ logoContainer.className = 'logo-canal-container';
 logoContainer.innerHTML = `
   <img src="logos/${normalizarArquivo(canalBase.canal)}.png" 
        alt="${canalBase.canal}" 
-       class="logo-canal"
-       onerror="this.onerror=null; this.src='logos/directv.png'">
+       class="logo-canal">
 `;
 
 resultado.appendChild(logoContainer);
