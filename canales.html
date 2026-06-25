@@ -977,7 +977,7 @@ html, body {
 <script>
 let dados = [];
 
-const HEADER_TOTAL = 50; // 45 + 55
+const HEADER_TOTAL = 50; // mantém como estava na versão estável
 let limiteInicial = 0;
 let touchStartY = 0;
 let travando = false;
@@ -1003,31 +1003,18 @@ function normalizarArquivo(valor) {
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/\s+/g, '');
 }
-  
+
 function normalizarComparacao(valor) {
   return normalizarTexto(valor)
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '');
 }
-  
+
 function chaveCanal(item) {
   return normalizarTexto(item.vc);
 }
-  
-function atualizarResumoBusca(titulo = "Sin resultados", subtitulo = "0 canales", mostrar = false) {
-  const tituloEl = document.getElementById('resumoBuscaTitulo');
-  const subtituloEl = document.getElementById('resumoBuscaSubtitulo');
-  const barra = document.getElementById('topbarPacotes');
 
-  if (!tituloEl || !subtituloEl || !barra) return;
-
-  tituloEl.textContent = titulo;
-  subtituloEl.textContent = subtitulo;
-
-  barra.classList.toggle('visible', mostrar);
-}
-  
 function criarCanal(match) {
   const canal = document.createElement('div');
   canal.className = 'canal';
@@ -1108,25 +1095,21 @@ function clampScrollInicial() {
 function atualizarEstadoCabecalho() {
   const topbars = document.querySelectorAll('.top-bar');
 
-
-if (!resultadoVisivel()) {
-  topbars.forEach(el => el.classList.remove('scrolled'));
-  return;
-}
-
+  if (!resultadoVisivel()) {
+    topbars.forEach(el => el.classList.remove('scrolled'));
+    return;
+  }
 
   const resultado = getResultado();
   const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
 
   const triggerClaro = resultado.offsetTop - 100;
-  const triggerPacotes = resultado.offsetTop - 55;
 
   if (y >= triggerClaro) {
     topbars.forEach(el => el.classList.add('scrolled'));
   } else {
     topbars.forEach(el => el.classList.remove('scrolled'));
   }
-
 }
 
 function atualizarEstadoInicial() {
@@ -1139,21 +1122,16 @@ function atualizarEstadoInicial() {
 window.addEventListener('scroll', () => {
   const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
 
-const topMain = document.getElementById('topbarMain');
-const topSub = document.getElementById('topbarSub');
-const topPacotes = document.getElementById('topbarPacotes');
+  const topMain = document.getElementById('topbarMain');
+  const topSub = document.getElementById('topbarSub');
 
   let progresso = scrollY / 70;
   if (progresso > 1) progresso = 1;
 
   const movimento = -50 * progresso;
 
-
-if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
-if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
-if (topPacotes) topPacotes.style.transform = `translateY(${movimento}px)`;
-
-
+  if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
+  if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
 
   atualizarEstadoCabecalho();
   clampScrollInicial();
@@ -1251,7 +1229,6 @@ function selecionarPais(pais, elemento) {
   document.querySelectorAll('.top-bar').forEach(el => el.classList.remove('scrolled'));
 
   atualizarEstadoInicial();
-  atualizarResumoBusca("Sin resultados", "0 canales", false);
 }
 
 // ===== GERAR RESULTADO =====
@@ -1314,7 +1291,8 @@ function gerarResultado() {
   atualizarBarraPacotes();
   atualizarEstadoInicial();
 }
-  
+
+// ===== BUSCA POR NÚMERO OU NOME =====
 function consultarCanal() {
   const resultado = getResultado();
   if (!resultado) return;
@@ -1322,13 +1300,10 @@ function consultarCanal() {
   const paisAtivo = document.querySelector('.bandeira.active');
   const input = document.getElementById('buscaCanal');
 
-
-if (!paisAtivo || !input || !input.value.trim()) {
-  resultado.style.display = "none";
-  atualizarResumoBusca("Sin resultados", "0 canales", false);
-  return;
-}
-
+  if (!paisAtivo || !input || !input.value.trim()) {
+    resultado.style.display = "none";
+    return;
+  }
 
   const pais = paisAtivo.dataset.pais;
   const termoBusca = input.value.trim();
@@ -1347,11 +1322,10 @@ if (!paisAtivo || !input || !input.value.trim()) {
     );
   });
 
-if (!encontrados.length) {
-  atualizarResumoBusca("Sin resultados", "0 canales", false);
-  alert("Canal no encontrado");
-  return;
-
+  if (!encontrados.length) {
+    alert("Canal no encontrado");
+    return;
+  }
 
   // ✅ Agrupar por canal + vc para não repetir o mesmo canal por pacote
   const canaisMap = {};
@@ -1383,18 +1357,7 @@ if (!encontrados.length) {
 
     if (valA !== valB) return valA - valB;
     return a.canal.localeCompare(b.canal, 'pt-BR');
-  }
- const totalResultados = canaisUnicos.length;
-
-let tituloResumo = `Resultados para "${termoBusca}"`;
-if (totalResultados === 1) {
-  tituloResumo = canaisUnicos[0].canal;
-}
-
-const subtituloResumo = `${totalResultados} ${totalResultados === 1 ? 'canal' : 'canales'}`;
-
-atualizarResumoBusca(tituloResumo, subtituloResumo, true);
-  );
+  });
 
   // ✅ LIMPAR RESULTADO
   resultado.innerHTML = '';
@@ -1403,7 +1366,7 @@ atualizarResumoBusca(tituloResumo, subtituloResumo, true);
   topoInicial.className = 'topo-branco';
   resultado.appendChild(topoInicial);
 
-canaisUnicos.forEach((canal, index) => {
+  canaisUnicos.forEach((canal, index) => {
     const pacotes = Array.from(canal.pacotes)
       .sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
@@ -1415,14 +1378,7 @@ canaisUnicos.forEach((canal, index) => {
       <img src="logos/${normalizarArquivo(canal.canal)}.png" 
            alt="${canal.canal}" 
            class="logo-canal"
-           onerror="this.onerror=null; this.src='logos/directv.png'">
-    `;
-
-    resultado.appendChild(logoContainer);
-
-    // ===== BLOCO PRINCIPAL =====
-    const bloco = document.createElement('div');
-    bloco.className = 'linha-resultado grid grid-canal-unico';
+           onerror="this.onerror=null; this.src='logos/directv.png'co.className = 'linha-resultado grid grid-canal-unico';
 
     bloco.innerHTML = `
       <div class="canal">
@@ -1438,8 +1394,8 @@ canaisUnicos.forEach((canal, index) => {
     resultado.appendChild(bloco);
 
     // ===== LISTA DE PACOTES =====
-const listaBloco = document.createElement('div');
-listaBloco.className = 'linha-resultado grid grid-canal-unico bloco-pacotes-canal';
+    const listaBloco = document.createElement('div');
+    listaBloco.className = 'linha-resultado grid grid-canal-unico bloco-pacotes-canal';
 
     const listaHTML = document.createElement('div');
     listaHTML.style.textAlign = "center";
@@ -1455,13 +1411,13 @@ listaBloco.className = 'linha-resultado grid grid-canal-unico bloco-pacotes-cana
 
     listaBloco.appendChild(listaHTML);
     resultado.appendChild(listaBloco);
-  
-if (index < canaisUnicos.length - 1) {
-  const separador = document.createElement('div');
-  separador.className = 'separador-resultado';
-  resultado.appendChild(separador);
-}
 
+    // ✅ ESPAÇO ENTRE RESULTADOS
+    if (index < canaisUnicos.length - 1) {
+      const separador = document.createElement('div');
+      separador.className = 'separador-resultado';
+      resultado.appendChild(separador);
+    }
   });
 
   const topoFinal = document.createElement('div');
@@ -1472,7 +1428,7 @@ if (index < canaisUnicos.length - 1) {
 
   atualizarEstadoInicial();
 }
-  
+
 // ===== EVENTOS DOS SELECTS =====
 function prepararEventosSelects() {
   const selectCliente = document.getElementById('cliente1');
@@ -1574,7 +1530,6 @@ document.getElementById('buscaCanal')?.addEventListener('keydown', function (e) 
     consultarCanal();
   }
 });
-
 </script>
   
 </body>
