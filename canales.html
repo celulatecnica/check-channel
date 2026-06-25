@@ -920,6 +920,13 @@ function normalizarArquivo(valor) {
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/\s+/g, '');
 }
+
+function normalizarComparacao(valor) {
+  return normalizarTexto(valor)
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
    
 function chaveCanal(item) {
   return normalizarTexto(item.vc);
@@ -1204,7 +1211,7 @@ function gerarResultado() {
   atualizarEstadoInicial();
 }
   
-function consultarCanal() {
+function consultarCanal() {function consultarCanal() {
   const resultado = getResultado();
   if (!resultado) return;
 
@@ -1217,192 +1224,131 @@ function consultarCanal() {
   }
 
   const pais = paisAtivo.dataset.pais;
-const termoBusca = input.value.trim();
+  const termoBusca = input.value.trim();
+  const termoNormalizado = normalizarComparacao(termoBusca);
+  const ehNumero = /^\d+$/.test(termoBusca);
 
-// normaliza o texto (remove acento e caixa)
-function normalizarComparacao(valor) {
-  return normalizarTexto(valor)
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
-}
+  // 🔎 busca por número OU nome
+  const encontrados = dados.filter(d => {
+    if (d.pais !== pais) return false;
 
-const termoNormalizado = normalizarComparacao(termoBusca);
+    const vc = normalizarTexto(d.vc);
+    const nome = normalizarComparacao(d.canal);
 
-// 🔎 busca por número OU nome
-const encontrados = dados.filter(d => {
-  if (d.pais !== pais) return false;
-
-  const vc = normalizarTexto(d.vc);
-  const nome = normalizarComparacao(d.canal);
-
-  return (
-    vc === termoBusca ||          // busca por número
-    nome.includes(termoNormalizado) // busca por nome
-  );
-});
+    return vc === termoBusca || nome.includes(termoNormalizado);
+  });
 
   if (!encontrados.length) {
     alert("Canal no encontrado");
     return;
   }
 
-  const ehNumero = /^\d+$/.test(termoBusca);
+  // ✅ agrupar por canal + vc para remover duplicados
+  const canaisMap = {};
 
-resultado.innerHTML = '';
+  encontrados.forEach(item => {
+    const chave = `${normalizarTexto(item.canal)}|${normalizarTexto(item.vc)}`;
 
-// ✅ AGRUPAR POR CANAL + VC
-const canaisMap = {};
+    if (!canaisMap[chave]) {
+      canaisMap[chave] = {
+        vc: normalizarTexto(item.vc),
+        canal: normalizarTexto(item.canal),
+        categoria: normalizarTexto(item.categoria),
+        tecnologia: normalizarTexto(item.tecnologia),
+        pacotes: new Set()
+      };
+    }
 
-encontrados.forEach(item => {
-  const chave = item.canal + '|' + item.vc;
+    if (item.pacote) {
+      canaisMap[chave].pacotes.add(normalizarTexto(item.pacote));
+    }
+  });
 
-  if (!canaisMap[chave]) {
-    canaisMap[chave] = {
-      ...item,
-      pacotes: new Set()
-    };
-  }
+  const canaisUnicos = Object.values(canaisMap);
 
-  canaisMap[chave].pacotes.add(item.pacote);
-});
+  // ✅ ordenar:
+  // se for número, ordena pelo vc
+  // se for nome, ordena alfabeticamente
+  canaisUnicos.sort((a, b) => {
+    if (ehNumero) {
+      const numA = parseInt(a.vc, 10);
+      const numB = parseInt(b.vc, 10);
+      const valA = Number.isNaN(numA) ? 999999 : numA;
+      const valB = Number.isNaN(numB) ? 999999 : numB;
 
-const canaisUnicos = Object.values(canaisMap);
+      if (valA !== valB) return valA - valB;
+      return a.canal.localeCompare(b.canal, 'pt-BR');
+    }
 
-// ✅ ORDENAR
-canaisUnicos.sort((a, b) =>
-  a.canal.localeCompare(b.canal, 'pt-BR')
-);
+    return a.canal.localeCompare(b.canal, 'pt-BR');
+  });
 
-// ===== TOPO
-const topoInicial = document.createElement('div');
-topoInicial.className = 'topo-branco';
-resultado.appendChild(topoInicial);
-
-// ✅ RENDERIZAR CADA CANAL COMPLETO
-canaisUnicos.forEach(canal => {
-
-  const pacotes = Array.from(canal.pacotes)
-    .sort((a, b) => a.localeCompare(b, 'pt-BR'));
-
-  // ===== BLOCO PRINCIPAL
-  const bloco = document.createElement('div');
-  bloco.className = 'linha-resultado grid grid-canal-unico';
-
-  bloco.innerHTML = `
-    <div class="canal">
-      <div class="canal-vc">${canal.vc}</div>
-      <div class="canal-nome">${canal.canal}</div>
-      <div class="tags">
-        <div class="tag">${canal.categoria}</div>
-        <div class="tag">${canal.tecnologia}</div>
-      </div>
-    </div>
-  `;
-
-  resultado.appendChild(bloco);
-
-  // ===== LISTA DE PACOTES
-  const listaBloco = document.createElement('div');
-  listaBloco.className = 'linha-resultado grid grid-canal-unico';
-
-  const listaHTML = document.createElement('div');
-  listaHTML.style.textAlign = "center";
-
-  listaHTML.innerHTML = `
-    <h3 style="margin-bottom:12px;">
-      Paquetes que contienen este canal
-    </h3>
-    <ul style="list-style:none; padding:0; margin:10px 0;">
-      ${pacotes.map(p => `<li style="margin:6px 0;">${p}</li>`).join('')}
-    </ul>
-  `;
-
-  listaBloco.appendChild(listaHTML);
-  resultado.appendChild(listaBloco);
-});
-
-// ===== FINAL
-const topoFinal = document.createElement('div');
-topoFinal.className = 'topo-branco';
-resultado.appendChild(topoFinal);
-
-resultado.style.display = "block";
-atualizarEstadoInicial();
-return;
-
-  // ✅ Pegar dados principais (primeiro registro)
-  const canalBase = encontrados[0];
-
-  // ✅ Pacotes únicos
-  const pacotes = [...new Set(encontrados.map(d => d.pacote))]
-    .sort((a, b) => a.localeCompare(b, 'pt-BR'));
-
-
-  // ✅ LIMPAR RESULTADO
+  // ✅ limpar resultado
   resultado.innerHTML = '';
 
   const topoInicial = document.createElement('div');
   topoInicial.className = 'topo-branco';
   resultado.appendChild(topoInicial);
 
-// ===== CONTAINER DO LOGO =====
-const logoContainer = document.createElement('div');
-logoContainer.className = 'logo-canal-container';
+  // ✅ renderizar 1 bloco completo por canal
+  canaisUnicos.forEach(canal => {
+    const pacotes = Array.from(canal.pacotes).sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
-logoContainer.innerHTML = `
-  <img src="logos/${normalizarArquivo(canalBase.canal)}.png" 
-       alt="${canalBase.canal}" 
-       class="logo-canal">
-`;
+    // ===== CONTAINER DO LOGO =====
+    const logoContainer = document.createElement('div');
+    logoContainer.className = 'logo-canal-container';
 
-resultado.appendChild(logoContainer);
-  
-  
-// ===== BLOCO PRINCIPAL =====
-const bloco = document.createElement('div');
+    logoContainer.innerHTML = `
+      <img src="logos/${normalizarArquivo(canal.canal)}.png" 
+           alt="${canal.canal}" 
+           class="logo-canal"
+           onerror="this.onerror=null; this.src='logos/directv.png'">
+    `;
 
-bloco.className = 'linha-resultado grid grid-canal-unico';
+    resultado.appendChild(logoContainer);
 
+    // ===== BLOCO PRINCIPAL =====
+    const bloco = document.createElement('div');
+    bloco.className = 'linha-resultado grid grid-canal-unico';
 
-  bloco.innerHTML = `
-    <div class="canal">
-      <div class="canal-vc">${normalizarTexto(canalBase.vc)}</div>
-      <div class="canal-nome">${normalizarTexto(canalBase.canal)}</div>
-      <div class="tags">
-        <div class="tag">${normalizarTexto(canalBase.categoria)}</div>
-        <div class="tag">${normalizarTexto(canalBase.tecnologia)}</div>
+    bloco.innerHTML = `
+      <div class="canal">
+        <div class="canal-vc">${canal.vc}</div>
+        <div class="canal-nome">${canal.canal}</div>
+        <div class="tags">
+          <div class="tag">${canal.categoria}</div>
+          <div class="tag">${canal.tecnologia}</div>
+        </div>
       </div>
-    </div>
-  `;
+    `;
 
-  resultado.appendChild(bloco);
+    resultado.appendChild(bloco);
 
-  // ===== LISTA DE PACOTES =====
-  const listaBloco = document.createElement('div');
-  listaBloco.className = 'linha-resultado grid grid-canal-unico';
+    // ===== LISTA DE PACOTES =====
+    const listaBloco = document.createElement('div');
+    listaBloco.className = 'linha-resultado grid grid-canal-unico';
 
-  const listaHTML = document.createElement('div');
-  listaHTML.style.textAlign = "center";
+    const listaHTML = document.createElement('div');
+    listaHTML.style.textAlign = "center";
 
-  listaHTML.innerHTML = `
-    <h3 style="color:#1d1d1f; margin-bottom:12px;">
-      Paquetes que contienen este canal
-    </h3>
-    <ul style="list-style:none; padding:0; margin:10px 0 0 0;">
-      ${pacotes.map(p => `<li style="margin:6px 0; font-weight:500;">${p}</li>`).join('')}
-    </ul>
-  `;
+    listaHTML.innerHTML = `
+      <h3 style="color:#1d1d1f; margin-bottom:12px;">
+        Paquetes que contienen este canal
+      </h3>
+      <ul style="list-style:none; padding:0; margin:10px 0 0 0;">
+        ${pacotes.map(p => `<li style="margin:6px 0; font-weight:500;">${p}</li>`).join('')}
+      </ul>
+    `;
 
-  listaBloco.appendChild(listaHTML);
-  resultado.appendChild(listaBloco);
+    listaBloco.appendChild(listaHTML);
+    resultado.appendChild(listaBloco);
+  });
 
   const topoFinal = document.createElement('div');
   topoFinal.className = 'topo-branco';
   resultado.appendChild(topoFinal);
 
   resultado.style.display = "block";
-
   atualizarEstadoInicial();
 }
   
