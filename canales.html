@@ -791,7 +791,69 @@ html, body {
   height: 36px;
   width: 100%;
 }
+  
+/* ===== BARRA 3 - RESUMO DA BUSCA ===== */
+.top-bar-pacotes {
+  position: fixed;
+  top: 100px; /* 45 + 55 */
+  left: 0;
+  width: 100%;
+  height: 68px;
 
+  background: rgba(15,15,15,0.96);
+  border-bottom: 1px solid #4D4D4D;
+
+  opacity: 0;
+  pointer-events: none;
+  z-index: 998;
+
+  transition: opacity 0.25s ease;
+}
+
+.top-bar-pacotes.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.top-bar-pacotes .top-bar-inner {
+  justify-content: center;
+}
+
+.resumo-busca-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.resumo-busca-bloco {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  min-width: 0;
+  gap: 4px;
+}
+
+.resumo-busca-titulo {
+  font-size: 18px;
+  font-weight: 600;
+  color: #f5f5f7;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 420px;
+}
+
+.resumo-busca-subtitulo {
+  font-size: 16px;
+  font-weight: 400;
+  color: #d1d1d6;
+}
+  
 </style>
 </head>
 
@@ -817,6 +879,18 @@ html, body {
 
   </div>
 </div>
+  
+<!-- ✅ BARRA 3 -->
+<div class="top-bar top-bar-pacotes" id="topbarPacotes">
+  <div class="top-bar-inner">
+    <div class="resumo-busca-wrap">
+      <div class="resumo-busca-bloco">
+        <div class="resumo-busca-titulo" id="resumoBuscaTitulo">Sin resultados</div>
+        <div class="resumo-busca-subtitulo" id="resumoBuscaSubtitulo">0 canales</div>
+      </div>
+    </div>
+  </div>
+</div>  
   
 <!-- ✅ BANNER -->
 <img id="banner" src="banner.png">
@@ -940,7 +1014,20 @@ function normalizarComparacao(valor) {
 function chaveCanal(item) {
   return normalizarTexto(item.vc);
 }
+  
+function atualizarResumoBusca(titulo = "Sin resultados", subtitulo = "0 canales", mostrar = false) {
+  const tituloEl = document.getElementById('resumoBuscaTitulo');
+  const subtituloEl = document.getElementById('resumoBuscaSubtitulo');
+  const barra = document.getElementById('topbarPacotes');
 
+  if (!tituloEl || !subtituloEl || !barra) return;
+
+  tituloEl.textContent = titulo;
+  subtituloEl.textContent = subtitulo;
+
+  barra.classList.toggle('visible', mostrar);
+}
+  
 function criarCanal(match) {
   const canal = document.createElement('div');
   canal.className = 'canal';
@@ -1052,17 +1139,20 @@ function atualizarEstadoInicial() {
 window.addEventListener('scroll', () => {
   const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
 
-  const topMain = document.getElementById('topbarMain');
-  const topSub = document.getElementById('topbarSub');
+const topMain = document.getElementById('topbarMain');
+const topSub = document.getElementById('topbarSub');
+const topPacotes = document.getElementById('topbarPacotes');
 
   let progresso = scrollY / 70;
   if (progresso > 1) progresso = 1;
 
   const movimento = -50 * progresso;
 
-  if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
-  if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
-// REMOVIDO: topPacotes (não existe nesta página)
+
+if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
+if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
+if (topPacotes) topPacotes.style.transform = `translateY(${movimento}px)`;
+
 
 
   atualizarEstadoCabecalho();
@@ -1161,6 +1251,7 @@ function selecionarPais(pais, elemento) {
   document.querySelectorAll('.top-bar').forEach(el => el.classList.remove('scrolled'));
 
   atualizarEstadoInicial();
+  atualizarResumoBusca("Sin resultados", "0 canales", false);
 }
 
 // ===== GERAR RESULTADO =====
@@ -1231,10 +1322,13 @@ function consultarCanal() {
   const paisAtivo = document.querySelector('.bandeira.active');
   const input = document.getElementById('buscaCanal');
 
-  if (!paisAtivo || !input || !input.value.trim()) {
-    resultado.style.display = "none";
-    return;
-  }
+
+if (!paisAtivo || !input || !input.value.trim()) {
+  resultado.style.display = "none";
+  atualizarResumoBusca("Sin resultados", "0 canales", false);
+  return;
+}
+
 
   const pais = paisAtivo.dataset.pais;
   const termoBusca = input.value.trim();
@@ -1253,10 +1347,11 @@ function consultarCanal() {
     );
   });
 
-  if (!encontrados.length) {
-    alert("Canal no encontrado");
-    return;
-  }
+if (!encontrados.length) {
+  atualizarResumoBusca("Sin resultados", "0 canales", false);
+  alert("Canal no encontrado");
+  return;
+
 
   // ✅ Agrupar por canal + vc para não repetir o mesmo canal por pacote
   const canaisMap = {};
@@ -1288,7 +1383,18 @@ function consultarCanal() {
 
     if (valA !== valB) return valA - valB;
     return a.canal.localeCompare(b.canal, 'pt-BR');
-  });
+  }
+ const totalResultados = canaisUnicos.length;
+
+let tituloResumo = `Resultados para "${termoBusca}"`;
+if (totalResultados === 1) {
+  tituloResumo = canaisUnicos[0].canal;
+}
+
+const subtituloResumo = `${totalResultados} ${totalResultados === 1 ? 'canal' : 'canales'}`;
+
+atualizarResumoBusca(tituloResumo, subtituloResumo, true);
+  );
 
   // ✅ LIMPAR RESULTADO
   resultado.innerHTML = '';
