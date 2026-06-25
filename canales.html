@@ -532,7 +532,7 @@ html, body {
   
 /* ===== HEADER CLARO AO SCROLL ===== */
 .top-bar.scrolled {
-  background: rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.95);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
   border-bottom: 1px solid rgba(0,0,0,0.08);
@@ -1005,11 +1005,12 @@ function clampScrollInicial() {
 function atualizarEstadoCabecalho() {
   const topbars = document.querySelectorAll('.top-bar');
 
-  if (!resultadoVisivel()) {
-    topbars.forEach(el => el.classList.remove('scrolled'));
-    if (barraPacotes) barraPacotes.classList.remove('visible');
-    return;
-  }
+
+if (!resultadoVisivel()) {
+  topbars.forEach(el => el.classList.remove('scrolled'));
+  return;
+}
+
 
   const resultado = getResultado();
   const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
@@ -1045,7 +1046,8 @@ window.addEventListener('scroll', () => {
 
   if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
   if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
-  if (topPacotes) topPacotes.style.transform = `translateY(${movimento}px)`;
+// REMOVIDO: topPacotes (não existe nesta página)
+
 
   atualizarEstadoCabecalho();
   clampScrollInicial();
