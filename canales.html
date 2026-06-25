@@ -1250,6 +1250,35 @@ if (!encontrados.length) {
 }
 
   // ✅ Pegar dados principais (primeiro registro)
+  const ehNumero = /^\d+$/.test(termoBusca);
+
+// ✅ Se for busca por NOME → mostrar TODOS
+if (!ehNumero) {
+
+  resultado.innerHTML = '';
+
+  const topoInicial = document.createElement('div');
+  topoInicial.className = 'topo-branco';
+  resultado.appendChild(topoInicial);
+
+  encontrados
+    .sort((a, b) => a.canal.localeCompare(b.canal, 'pt-BR'))
+    .forEach(match => {
+      const linha = document.createElement('div');
+      linha.className = 'linha-resultado';
+      linha.appendChild(criarCanal(match));
+      resultado.appendChild(linha);
+    });
+
+  const topoFinal = document.createElement('div');
+  topoFinal.className = 'topo-branco';
+  resultado.appendChild(topoFinal);
+
+  resultado.style.display = "block";
+  atualizarEstadoInicial();
+  return;
+}
+
   const canalBase = encontrados[0];
 
   // ✅ Pacotes únicos
