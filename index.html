@@ -188,6 +188,7 @@ body {
   background: #0F0F0F;
 
   display: flex;
+  justify-content: center;   /* centraliza horizontalmente */
   align-items: flex-end; /* joga o conteúdo para o fim do bloco */
   width: 100%;
   padding-top: 40px;
@@ -195,12 +196,12 @@ body {
 }
 
 .footer-inner {
-  width: 950px;
-  max-width: calc(100% - 32px);
-  margin: 0 auto;
+  width: 100%;
   padding-left: 16px;
   padding-right: 16px;
-  text-align: left;
+  padding-bottom: 20px;
+  box-sizing: border-box;
+  text-align: left; /* só o conteúdo interno fica à esquerda */
 }
 
 .footer-text {
@@ -231,6 +232,11 @@ body {
   font-size: 14px;
   line-height: 1.5;
   color: #8e8e93;
+}
+
+.footer-faixa {
+  width: 950px;
+  max-width: calc(100% - 32px);
 }
 
 /* ===== CONTAINER ===== */
