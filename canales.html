@@ -109,8 +109,7 @@ body {
 .grid.grid-canal-unico {
   grid-template-columns: 1fr;
   max-width: 420px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto; /* ✅ CENTRALIZA DE VERDADE */
 }
 
 .linha-resultado {
@@ -461,14 +460,16 @@ select:focus {
 .canal {
   text-align: center;
   padding-bottom: 16px;
+
   border-bottom: 1px solid #e5e5e5;
-  height: 90px;
-  max-width: 100%;
-  gap: 2px;
+
+  height: auto; /* ✅ importante */
+  gap: 6px;     /* ✅ melhora respiração */
 
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: center; /* ✅ centraliza vertical */
 }
 
 /* VC */
@@ -1271,7 +1272,7 @@ function consultarCanal() {
 
   // ===== BLOCO PRINCIPAL =====
   const bloco = document.createElement('div');
-  bloco.className = 'linha-resultado grid-canal-unico';
+  bloco.className = 'linha-resultado grid grid-canal-unico';
 
   bloco.innerHTML = `
     <div class="canal">
@@ -1288,7 +1289,7 @@ function consultarCanal() {
 
   // ===== LISTA DE PACOTES =====
   const listaBloco = document.createElement('div');
-  listaBloco.className = 'linha-resultado grid-canal-unico';
+  listaBloco.className = 'linha-resultado grid grid-canal-unico';
 
   const listaHTML = document.createElement('div');
   listaHTML.style.textAlign = "center";
@@ -1297,8 +1298,8 @@ function consultarCanal() {
     <h3 style="color:#1d1d1f; margin-bottom:12px;">
       Paquetes que contienen este canal
     </h3>
-    <ul style="list-style:none; padding:0; margin:0;">
-      ${pacotes.map(p => `<li style="margin:6px 0;">${p}</li>`).join('')}
+    <ul style="list-style:none; padding:0; margin:10px 0 0 0;">
+      ${pacotes.map(p => `<li style="margin:6px 0; font-weight:500;">${p}</li>`).join('')}
     </ul>
   `;
 
