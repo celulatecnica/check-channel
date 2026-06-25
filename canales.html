@@ -1316,7 +1316,12 @@ logoContainer.innerHTML = `
 
 resultado.appendChild(logoContainer);
   
-  bloco.className = 'linha-resultado grid grid-canal-unico';
+  
+// ===== BLOCO PRINCIPAL =====
+const bloco = document.createElement('div');
+
+bloco.className = 'linha-resultado grid grid-canal-unico';
+
 
   bloco.innerHTML = `
     <div class="canal">
