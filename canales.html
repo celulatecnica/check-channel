@@ -786,7 +786,12 @@ html, body {
 .bloco-pacotes-canal {
   margin-bottom: 36px;
 }
- 
+
+.separador-resultado {
+  height: 36px;
+  width: 100%;
+}
+
 </style>
 </head>
 
@@ -1292,7 +1297,7 @@ function consultarCanal() {
   topoInicial.className = 'topo-branco';
   resultado.appendChild(topoInicial);
 
-  canaisUnicos.forEach(canal => {
+canaisUnicos.forEach((canal, index) => {
     const pacotes = Array.from(canal.pacotes)
       .sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
@@ -1344,6 +1349,13 @@ listaBloco.className = 'linha-resultado grid grid-canal-unico bloco-pacotes-cana
 
     listaBloco.appendChild(listaHTML);
     resultado.appendChild(listaBloco);
+  
+if (index < canaisUnicos.length - 1) {
+  const separador = document.createElement('div');
+  separador.className = 'separador-resultado';
+  resultado.appendChild(separador);
+}
+
   });
 
   const topoFinal = document.createElement('div');
