@@ -362,6 +362,7 @@ select:focus {
   background: #333333;
 }
 
+
 .menu-header {
   display: flex;
   gap: 24px;
@@ -373,6 +374,8 @@ select:focus {
   color: #b5b5b8;
   cursor: pointer;
   position: relative;
+  text-decoration: none; /* remove sublinhado */
+  display: inline-block;
 }
 
 .menu-item.ativo {
@@ -675,10 +678,12 @@ html, body {
 <div class="top-bar top-bar-sub" id="topbarSub">
   <div class="top-bar-inner">
     <div class="titulo-pequeno">Check Channel</div>
-    <div class="menu-header">
-      <div class="menu-item ativo">Paquetes</div>
-      <div class="menu-item">Canales</div>
-    </div>
+
+<div class="menu-header">
+  <a href="index.html" class="menu-item ativo">Paquetes</a>
+  <a href="canales.html" class="menu-item">Canales</a>
+</div>
+
   </div>
 </div>
   
