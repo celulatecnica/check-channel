@@ -76,7 +76,7 @@ body {
 /* ===== BARRA 3 (Pacotes selecionados) ===== */
 .top-bar-pacotes {
   top: 100px; /* 45 da barra 1 + 55 da barra 2 */
-  height: 55px;
+  height: 110px; /* ✅ agora com o dobro da altura */
 
   background: rgba(0,0,0,0.20);
   border-bottom: 1px solid #4D4D4D;
@@ -99,12 +99,55 @@ body {
 }
 
 .top-bar-pacotes-inner {
+  height: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   align-items: center;
 }
 
+.pacote-resumo-bloco {
+  min-width: 0;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+
+  text-align: center;
+}
+
+.pacote-resumo {
+  font-size: 21px;
+  font-weight: 600;
+  color: #f5f5f7;
+  line-height: 1.1;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.pacote-total {
+  font-size: 16px;
+  font-weight: 400;
+  color: #f5f5f7;
+  line-height: 1.1;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.pacote-resumo.vazio,
+.pacote-total.vazio {
+  color: #d1d1d6;
+}
+  
 .pacote-resumo {
   font-size: 21px;
   font-weight: 600;
@@ -533,7 +576,12 @@ html, body {
   color: #1d1d1f;
 }
 
-.top-bar.scrolled .pacote-resumo.vazio {
+.top-bar.scrolled .pacote-total {
+  color: #1d1d1f;
+}
+
+.top-bar.scrolled .pacote-resumo.vazio,
+.top-bar.scrolled .pacote-total.vazio {
   color: #d1d1d6;
 }
   
@@ -564,9 +612,22 @@ html, body {
 <!-- ✅ BARRA 3 -->
 <div class="top-bar top-bar-pacotes" id="topbarPacotes">
   <div class="top-bar-inner top-bar-pacotes-inner">
-    <div class="pacote-resumo" id="pacoteHeader1">No seleccionado</div>
-    <div class="pacote-resumo vazio" id="pacoteHeader2">No seleccionado</div>
-    <div class="pacote-resumo vazio" id="pacoteHeader3">No seleccionado</div>
+
+    <div class="pacote-resumo-bloco">
+      <div class="pacote-resumo vazio" id="pacoteHeader1">No seleccionado</div>
+      <div class="pacote-total vazio" id="pacoteTotal1">&nbsp;</div>
+    </div>
+
+    <div class="pacote-resumo-bloco">
+      <div class="pacote-resumo vazio" id="pacoteHeader2">No seleccionado</div>
+      <div class="pacote-total vazio" id="pacoteTotal2">&nbsp;</div>
+    </div>
+
+    <div class="pacote-resumo-bloco">
+      <div class="pacote-resumo vazio" id="pacoteHeader3">No seleccionado</div>
+      <div class="pacote-total vazio" id="pacoteTotal3">&nbsp;</div>
+    </div>
+
   </div>
 </div>
   
@@ -664,16 +725,50 @@ function resultadoVisivel() {
 }
 
 function atualizarBarraPacotes() {
+  const paisAtivo = document.querySelector('.bandeira.active');
+  const pais = paisAtivo ? paisAtivo.dataset.pais : '';
+
   [1, 2, 3].forEach(i => {
-    const select = document.getElementById(`pacote${i}`);
+    const clienteSelect = document.getElementById(`cliente${i}`);
+    const pacoteSelect = document.getElementById(`pacote${i}`);
+
     const header = document.getElementById(`pacoteHeader${i}`);
+    const totalEl = document.getElementById(`pacoteTotal${i}`);
 
-    if (!select || !header) return;
+    if (!clienteSelect || !pacoteSelect || !header || !totalEl) return;
 
-    const texto = select.value ? select.value : 'No seleccionado';
+    const cliente = clienteSelect.value;
+    const pacote = pacoteSelect.value;
 
-    header.textContent = texto;
-    header.classList.toggle('vazio', !select.value);
+    // ✅ quando não houver seleção completa
+    if (!pais || !cliente || !pacote) {
+      header.textContent = 'No seleccionado';
+      header.classList.add('vazio');
+
+      totalEl.innerHTML = '&nbsp;';
+      totalEl.classList.add('vazio');
+      return;
+    }
+
+    // ✅ calcula total de canais do pacote selecionado
+    const canaisUnicos = new Set(
+      dados
+        .filter(d =>
+          d.pais === pais &&
+          d.cliente === cliente &&
+          d.pacote === pacote
+        )
+        .map(d => `${d.vc}||${d.canal}`)
+    );
+
+    const total = canaisUnicos.size;
+    const textoTotal = `${total} ${total === 1 ? 'canal' : 'canales'}`;
+
+    header.textContent = pacote;
+    header.classList.remove('vazio');
+
+    totalEl.textContent = textoTotal;
+    totalEl.classList.remove('vazio');
   });
 }
   
