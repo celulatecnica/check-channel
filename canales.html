@@ -872,9 +872,11 @@ html, body {
     >
   </div>
 
-  <button id="botaoConsultar" class="botao-consultar">
-    Consultar
-  </button>
+
+<button id="botaoConsultar" class="botao-consultar" onclick="consultarCanal()">
+  Consultar
+</button>
+
 </div>
 
   <div class="topo-preto"></div>
@@ -1155,6 +1157,8 @@ function selecionarPais(pais, elemento) {
   document.querySelectorAll('.bandeira').forEach(b => b.classList.remove('active'));
   elemento.classList.add('active');
 
+  document.getElementById('buscaCanal').value =
+      
   const resultado = getResultado();
   if (resultado) {
     resultado.style.display = "none";
@@ -1226,7 +1230,90 @@ function gerarResultado() {
   atualizarBarraPacotes();
   atualizarEstadoInicial();
 }
+  
+function consultarCanal() {
+  const resultado = getResultado();
+  if (!resultado) return;
 
+  const paisAtivo = document.querySelector('.bandeira.active');
+  const input = document.getElementById('buscaCanal');
+
+  if (!paisAtivo || !input.value.trim()) {
+    resultado.style.display = "none";
+    return;
+  }
+
+  const pais = paisAtivo.dataset.pais;
+  const numeroBusca = input.value.trim();
+
+  // 🔎 Buscar canais do país com esse número
+  const encontrados = dados.filter(d =>
+    d.pais === pais && normalizarTexto(d.vc) === numeroBusca
+  );
+
+  if (!encontrados.length) {
+    alert("Canal no encontrado");
+    return;
+  }
+
+  // ✅ Pegar dados principais (primeiro registro)
+  const canalBase = encontrados[0];
+
+  // ✅ Pacotes únicos
+  const pacotes = [...new Set(encontrados.map(d => d.pacote))];
+
+  // ✅ LIMPAR RESULTADO
+  resultado.innerHTML = '';
+
+  const topoInicial = document.createElement('div');
+  topoInicial.className = 'topo-branco';
+  resultado.appendChild(topoInicial);
+
+  // ===== BLOCO PRINCIPAL =====
+  const bloco = document.createElement('div');
+  bloco.className = 'linha-resultado grid-canal-unico';
+
+  bloco.innerHTML = `
+    <div class="canal">
+      <div class="canal-vc">${normalizarTexto(canalBase.vc)}</div>
+      <div class="canal-nome">${normalizarTexto(canalBase.canal)}</div>
+      <div class="tags">
+        <div class="tag">${normalizarTexto(canalBase.categoria)}</div>
+        <div class="tag">${normalizarTexto(canalBase.tecnologia)}</div>
+      </div>
+    </div>
+  `;
+
+  resultado.appendChild(bloco);
+
+  // ===== LISTA DE PACOTES =====
+  const listaBloco = document.createElement('div');
+  listaBloco.className = 'linha-resultado grid-canal-unico';
+
+  const listaHTML = document.createElement('div');
+  listaHTML.style.textAlign = "center";
+
+  listaHTML.innerHTML = `
+    <h3 style="color:#1d1d1f; margin-bottom:12px;">
+      Paquetes que contienen este canal
+    </h3>
+    <ul style="list-style:none; padding:0; margin:0;">
+      ${pacotes.map(p => `<li style="margin:6px 0;">${p}</li>`).join('')}
+    </ul>
+  `;
+
+  listaBloco.appendChild(listaHTML);
+  resultado.appendChild(listaBloco);
+
+  const topoFinal = document.createElement('div');
+  topoFinal.className = 'topo-branco';
+  resultado.appendChild(topoFinal);
+
+  resultado.style.display = "block";
+
+  atualizarEstadoInicial();
+}
+  
 // ===== EVENTOS DOS SELECTS =====
 function prepararEventosSelects() {
   const selectCliente = document.getElementById('cliente1');
