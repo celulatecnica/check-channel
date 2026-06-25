@@ -828,7 +828,7 @@ html, body {
 <div id="bandeiras"></div>
 
 <div class="titulo-busca">
-  Informe el nombre o número del canal
+  Informe el número del canal
 </div>
   
 <div class="busca-canal-wrap">
@@ -850,8 +850,8 @@ html, body {
       type="text"
       id="buscaCanal"
       class="input-canal"
-      placeholder="Ingresa el nombre o número del canal"
-      inputmode="text"
+      placeholder="Ingresa el número del canal"
+      inputmode="numeric"
       autocomplete="off"
     >
   </div>
@@ -899,9 +899,7 @@ let limiteInicial = 0;
 let touchStartY = 0;
 let travando = false;
 
-// =========================
-// HELPERS
-// =========================
+// ===== HELPERS =====
 function getResultado() {
   return document.getElementById('resultado');
 }
@@ -923,85 +921,67 @@ function normalizarArquivo(valor) {
     .replace(/\s+/g, '');
 }
 
-function normalizarComparacao(valor) {
-  return normalizarTexto(valor)
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/\s+/g, ' ')
-    .trim();
+function chaveCanal(item) {
+  return normalizarTexto(item.vc);
 }
 
-function mostrarMensagemBandeiras(msg) {
-  const container = document.getElementById('bandeiras');
-  if (!container) return;
-
-  container.innerHTML = `
-    <div style="
-      width: 100%;
-      text-align: center;
-      color: #8e8e93;
-      font-size: 14px;
-      margin-top: 8px;
-    ">
-      ${msg}
+function criarCanal(match) {
+  const canal = document.createElement('div');
+  canal.className = 'canal';
+  canal.innerHTML = `
+    <div class="canal-vc">${normalizarTexto(match.vc)}</div>
+    <div class="canal-nome">${normalizarTexto(match.canal)}</div>
+    <div class="tags">
+      <div class="tag">${normalizarTexto(match.categoria)}</div>
+      <div class="tag">${normalizarTexto(match.tecnologia)}</div>
     </div>
   `;
+  return canal;
 }
 
-function criarBlocoCanal(canal) {
-  const wrapper = document.createElement('div');
+function atualizarBarraPacotes() {
+  const paisAtivo = document.querySelector('.bandeira.active');
+  const pais = paisAtivo ? paisAtivo.dataset.pais : '';
 
-  const pacotes = Array.from(canal.pacotes).sort((a, b) =>
-    a.localeCompare(b, 'pt-BR')
+  const clienteSelect = document.getElementById('cliente1');
+  const pacoteSelect = document.getElementById('pacote1');
+  const header = document.getElementById('pacoteHeader1');
+  const totalEl = document.getElementById('pacoteTotal1');
+
+  if (!clienteSelect || !pacoteSelect || !header || !totalEl) return;
+
+  const cliente = clienteSelect.value;
+  const pacote = pacoteSelect.value;
+
+  if (!pais || !cliente || !pacote) {
+    header.textContent = 'No seleccionado';
+    header.classList.add('vazio');
+
+    totalEl.textContent = '0 canales';
+    totalEl.classList.add('vazio');
+    return;
+  }
+
+  const canaisUnicos = new Set(
+    dados
+      .filter(d =>
+        d.pais === pais &&
+        d.cliente === cliente &&
+        d.pacote === pacote
+      )
+      .map(d => chaveCanal(d))
   );
 
-  // ===== LOGO =====
-  const logoContainer = document.createElement('div');
-  logoContainer.className = 'logo-canal-container';
-  logoContainer.innerHTML = `
-    <img
-      src="logos/${normalizarArquivo(canal.canal)}.png"
-      alt="${canal.canal}"
-      class="logo-canal"
-      onerror="this.onerror=null; this.src='logos/directv.png';"
-   Name = 'linha-resultado grid grid-canal-unico';
-  bloco.innerHTML = `
-    <div class="canal">
-      <div class="canal-vc">${canal.vc}</div>
-      <div class="canal-nome">${canal.canal}</div>
-      <div class="tags">
-        <div class="tag">${canal.categoria}</div>
-        <div class="tag">${canal.tecnologia}</div>
-      </div>
-    </div>
-  `;
-  wrapper.appendChild(bloco);
+  const total = canaisUnicos.size;
+  const textoTotal = `${total} ${total === 1 ? 'canal' : 'canales'}`;
 
-  // ===== LISTA DE PACOTES =====
-  const listaBloco = document.createElement('div');
-  listaBloco.className = 'linha-resultado grid grid-canal-unico';
+  header.textContent = pacote;
+  header.classList.remove('vazio');
 
-  const listaHTML = document.createElement('div');
-  listaHTML.style.textAlign = 'center';
-  listaHTML.innerHTML = `
-    <h3 style="color:#1d1d1f; margin-bottom:12px;">
-      Paquetes que contienen este canal
-    </h3>
-    <ul style="list-style:none; padding:0; margin:10px 0 0 0;">
-      ${pacotes.map(p => `<li style="margin:6px 0; font-weight:500;">${p}</li>`).join('')}
-    </ul>
-  `;
-
-  listaBloco.appendChild(listaHTML);
-  wrapper.appendChild(listaBloco);
-
-  return wrapper;
+  totalEl.textContent = textoTotal;
+  totalEl.classList.remove('vazio');
 }
 
-// =========================
-// HEADER / SCROLL
-// =========================
 function calcularLimiteInicial() {
   const banner = document.getElementById('banner');
   if (!banner) return;
@@ -1027,18 +1007,22 @@ function atualizarEstadoCabecalho() {
 
   if (!resultadoVisivel()) {
     topbars.forEach(el => el.classList.remove('scrolled'));
+    if (barraPacotes) barraPacotes.classList.remove('visible');
     return;
   }
 
   const resultado = getResultado();
   const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+
   const triggerClaro = resultado.offsetTop - 100;
+  const triggerPacotes = resultado.offsetTop - 55;
 
   if (y >= triggerClaro) {
     topbars.forEach(el => el.classList.add('scrolled'));
   } else {
     topbars.forEach(el => el.classList.remove('scrolled'));
   }
+
 }
 
 function atualizarEstadoInicial() {
@@ -1047,6 +1031,7 @@ function atualizarEstadoInicial() {
   atualizarEstadoCabecalho();
 }
 
+// ===== SCROLL =====
 window.addEventListener('scroll', () => {
   const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
 
@@ -1060,11 +1045,13 @@ window.addEventListener('scroll', () => {
 
   if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
   if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
+  if (topPacotes) topPacotes.style.transform = `translateY(${movimento}px)`;
 
   atualizarEstadoCabecalho();
   clampScrollInicial();
 }, { passive: true });
 
+// ===== BLOQUEIO WHEEL =====
 window.addEventListener('wheel', (e) => {
   if (resultadoVisivel()) return;
 
@@ -1076,6 +1063,7 @@ window.addEventListener('wheel', (e) => {
   }
 }, { passive: false });
 
+// ===== BLOQUEIO TECLADO =====
 window.addEventListener('keydown', (e) => {
   if (resultadoVisivel()) return;
 
@@ -1090,6 +1078,7 @@ window.addEventListener('keydown', (e) => {
   }
 }, { passive: false });
 
+// ===== BLOQUEIO TOUCH =====
 window.addEventListener('touchstart', (e) => {
   if (!e.touches || !e.touches.length) return;
   touchStartY = e.touches[0].clientY;
@@ -1109,9 +1098,7 @@ window.addEventListener('touchmove', (e) => {
   }
 }, { passive: false });
 
-// =========================
-// BANDEIRAS
-// =========================
+// ===== BANDEIRAS =====
 function carregarBandeiras() {
   const container = document.getElementById('bandeiras');
   if (!container) return;
@@ -1122,61 +1109,35 @@ function carregarBandeiras() {
       .filter(Boolean)
   )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
-  if (!paises.length) {
-    mostrarMensagemBandeiras('Nenhum país encontrado no CSV.');
-    return;
-  }
-
-  container.innerHTML = '';
+  container.innerHTML = "";
 
   paises.forEach(p => {
     const div = document.createElement('div');
     div.className = 'bandeira';
-    div.dataset.pais = p;
 
     const img = document.createElement('img');
     img.src = `flags/${normalizarArquivo(p)}.png`;
     img.alt = p;
-    img.title = p;
-
-    img.onerror = function () {
-      div.innerHTML = `
-        <div style="
-          width:100%;
-          height:100%;
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          background:#2A2A2A;
-          color:#f5f5f7;
-          font-size:11px;
-          font-weight:600;
-          text-align:center;
-          padding:4px;
-        ">
-          ${p}
-        </div>
-      `;
-    };
 
     div.appendChild(img);
+    div.dataset.pais = p;
     div.onclick = () => selecionarPais(p, div);
 
     container.appendChild(div);
   });
 }
 
+// ===== SELECIONAR PAÍS =====
 function selecionarPais(pais, elemento) {
   document.querySelectorAll('.bandeira').forEach(b => b.classList.remove('active'));
   elemento.classList.add('active');
 
-  const input = document.getElementById('buscaCanal');
-  if (input) input.value = '';
-
+  document.getElementById('buscaCanal').value = "";
+      
   const resultado = getResultado();
   if (resultado) {
-    resultado.style.display = 'none';
-    resultado.innerHTML = '<div class="topo-branco"></div><div class="espacador-topo"></div>';
+    resultado.style.display = "none";
+    resultado.innerHTML = '<div class="espacador-topo"></div>';
   }
 
   document.querySelectorAll('.top-bar').forEach(el => el.classList.remove('scrolled'));
@@ -1184,85 +1145,43 @@ function selecionarPais(pais, elemento) {
   atualizarEstadoInicial();
 }
 
-// =========================
-// BUSCA
-// =========================
-function consultarCanal() {
+// ===== GERAR RESULTADO =====
+function gerarResultado() {
   const resultado = getResultado();
   if (!resultado) return;
 
+  const cliente = document.getElementById('cliente1')?.value || '';
+  const pacote = document.getElementById('pacote1')?.value || '';
   const paisAtivo = document.querySelector('.bandeira.active');
-  const input = document.getElementById('buscaCanal');
 
-  if (!paisAtivo || !input || !input.value.trim()) {
-    resultado.style.display = 'none';
+  atualizarBarraPacotes();
+
+  if (!paisAtivo || !cliente || !pacote) {
+    resultado.style.display = "none";
+    resultado.innerHTML = '<div class="espacador-topo"></div>';
+    atualizarEstadoInicial();
     return;
   }
 
   const pais = paisAtivo.dataset.pais;
-  const termoBusca = input.value.trim();
-  const termoNormalizado = normalizarComparacao(termoBusca);
-  const ehNumero = /^\d+$/.test(termoBusca);
 
-  const encontrados = dados.filter(d => {
-    if (normalizarTexto(d.pais) !== normalizarTexto(pais)) return false;
-
-    const vc = normalizarTexto(d.vc);
-    const nome = normalizarComparacao(d.canal);
-
-    return vc === termoBusca || nome.includes(termoNormalizado);
-  });
-
-  if (!encontrados.length) {
-    alert('Canal no encontrado');
-    resultado.style.display = 'none';
-    return;
-  }
-
-  // Agrupar por canal + vc
-  const canaisMap = {};
-
-  encontrados.forEach(item => {
-    const chave = `${normalizarComparacao(item.canal)}|${normalizarTexto(item.vc)}`;
-
-    if (!canaisMap[chave]) {
-      canaisMap[chave] = {
-        vc: normalizarTexto(item.vc),
-        canal: normalizarTexto(item.canal),
-        categoria: normalizarTexto(item.categoria),
-        tecnologia: normalizarTexto(item.tecnologia),
-        pacotes: new Set()
-      };
-    }
-
-    if (item.pacote) {
-      canaisMap[chave].pacotes.add(normalizarTexto(item.pacote));
-    }
-  });
-
-  const canaisUnicos = Object.values(canaisMap);
-
-  canaisUnicos.sort((a, b) => {
-    if (ehNumero) {
+  const canais = dados
+    .filter(d =>
+      d.pais === pais &&
+      d.cliente === cliente &&
+      d.pacote === pacote
+    )
+    .sort((a, b) => {
       const numA = parseInt(a.vc, 10);
       const numB = parseInt(b.vc, 10);
-      const valA = Number.isNaN(numA) ? 999999 : numA;
-      const valB = Number.isNaN(numB) ? 999999 : numB;
 
-      if (valA !== valB) return valA - valB;
-      return a.canal.localeCompare(b.canal, 'pt-BR');
-    }
+      const vcA = Number.isNaN(numA) ? 999999 : numA;
+      const vcB = Number.isNaN(numB) ? 999999 : numB;
 
-    const nomeComp = a.canal.localeCompare(b.canal, 'pt-BR');
-    if (nomeComp !== 0) return nomeComp;
+      if (vcA !== vcB) return vcA - vcB;
 
-    const numA = parseInt(a.vc, 10);
-    const numB = parseInt(b.vc, 10);
-    const valA = Number.isNaN(numA) ? 999999 : numA;
-    const valB = Number.isNaN(numB) ? 999999 : numB;
-
-    return valA - valB;
-  });
+      return normalizarTexto(a.canal).localeCompare(normalizarTexto(b.canal), 'pt-BR');
+    });
 
   resultado.innerHTML = '';
 
@@ -1270,34 +1189,173 @@ function consultarCanal() {
   topoInicial.className = 'topo-branco';
   resultado.appendChild(topoInicial);
 
-  canaisUnicos.forEach(canal => {
-    resultado.appendChild(criarBlocoCanal(canal));
+  canais.forEach(match => {
+    const linha = document.createElement('div');
+    linha.className = 'linha-resultado';
+    linha.appendChild(criarCanal(match));
+    resultado.appendChild(linha);
   });
 
   const topoFinal = document.createElement('div');
   topoFinal.className = 'topo-branco';
   resultado.appendChild(topoFinal);
 
-  resultado.style.display = 'block';
+  resultado.style.display = "block";
+
+  atualizarBarraPacotes();
   atualizarEstadoInicial();
 }
+  
+function consultarCanal() {
+  const resultado = getResultado();
+  if (!resultado) return;
 
-// Enter também consulta
-window.addEventListener('DOMContentLoaded', () => {
-  const inputBusca = document.getElementById('buscaCanal');
-  if (inputBusca) {
-    inputBusca.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        consultarCanal();
+  const paisAtivo = document.querySelector('.bandeira.active');
+  const input = document.getElementById('buscaCanal');
+
+  if (!paisAtivo || !input.value.trim()) {
+    resultado.style.display = "none";
+    return;
+  }
+
+  const pais = paisAtivo.dataset.pais;
+  const numeroBusca = input.value.trim();
+
+  // 🔎 Buscar canais do país com esse número
+  const encontrados = dados.filter(d =>
+    d.pais === pais && normalizarTexto(d.vc) === numeroBusca
+  );
+
+  if (!encontrados.length) {
+    alert("Canal no encontrado");
+    return;
+  }
+
+  // ✅ Pegar dados principais (primeiro registro)
+  const canalBase = encontrados[0];
+
+  // ✅ Pacotes únicos
+  const pacotes = [...new Set(encontrados.map(d => d.pacote))]
+    .sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
+
+  // ✅ LIMPAR RESULTADO
+  resultado.innerHTML = '';
+
+  const topoInicial = document.createElement('div');
+  topoInicial.className = 'topo-branco';
+  resultado.appendChild(topoInicial);
+
+// ===== CONTAINER DO LOGO =====
+const logoContainer = document.createElement('div');
+logoContainer.className = 'logo-canal-container';
+
+logoContainer.innerHTML = `
+  <img src="logos/${normalizarArquivo(canalBase.canal)}.png" 
+       alt="${canalBase.canal}" 
+       class="logo-canal">
+`;
+
+resultado.appendChild(logoContainer);
+  
+  
+// ===== BLOCO PRINCIPAL =====
+const bloco = document.createElement('div');
+
+bloco.className = 'linha-resultado grid grid-canal-unico';
+
+
+  bloco.innerHTML = `
+    <div class="canal">
+      <div class="canal-vc">${normalizarTexto(canalBase.vc)}</div>
+      <div class="canal-nome">${normalizarTexto(canalBase.canal)}</div>
+      <div class="tags">
+        <div class="tag">${normalizarTexto(canalBase.categoria)}</div>
+        <div class="tag">${normalizarTexto(canalBase.tecnologia)}</div>
+      </div>
+    </div>
+  `;
+
+  resultado.appendChild(bloco);
+
+  // ===== LISTA DE PACOTES =====
+  const listaBloco = document.createElement('div');
+  listaBloco.className = 'linha-resultado grid grid-canal-unico';
+
+  const listaHTML = document.createElement('div');
+  listaHTML.style.textAlign = "center";
+
+  listaHTML.innerHTML = `
+    <h3 style="color:#1d1d1f; margin-bottom:12px;">
+      Paquetes que contienen este canal
+    </h3>
+    <ul style="list-style:none; padding:0; margin:10px 0 0 0;">
+      ${pacotes.map(p => `<li style="margin:6px 0; font-weight:500;">${p}</li>`).join('')}
+    </ul>
+  `;
+
+  listaBloco.appendChild(listaHTML);
+  resultado.appendChild(listaBloco);
+
+  const topoFinal = document.createElement('div');
+  topoFinal.className = 'topo-branco';
+  resultado.appendChild(topoFinal);
+
+  resultado.style.display = "block";
+
+  atualizarEstadoInicial();
+}
+  
+// ===== EVENTOS DOS SELECTS =====
+function prepararEventosSelects() {
+  const selectCliente = document.getElementById('cliente1');
+  const selectPacote = document.getElementById('pacote1');
+
+  if (selectCliente) {
+    selectCliente.addEventListener('change', function () {
+      const cliente = this.value;
+      const ativo = document.querySelector('.bandeira.active');
+      if (!ativo) return;
+
+      const pais = ativo.dataset.pais;
+
+      const pacotes = [...new Set(
+        dados
+          .filter(d => d.pais === pais && d.cliente === cliente)
+          .map(d => d.pacote)
+          .filter(Boolean)
+      )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
+      if (selectPacote) {
+        selectPacote.innerHTML = '<option value="" disabled selected>Selecciona el paquete</option>';
+        selectPacote.classList.remove('ativo');
+
+        pacotes.forEach(p => {
+          selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
+        });
       }
+
+      this.classList.toggle('ativo', this.value !== "");
+      atualizarBarraPacotes();
+      gerarResultado();
     });
   }
-});
 
-// =========================
-// FETCH CSV
-// =========================
+  if (selectPacote) {
+    selectPacote.addEventListener('change', function () {
+      this.classList.toggle('ativo', this.value !== "");
+      gerarResultado();
+    });
+  }
+
+  document.querySelectorAll('select').forEach(select => {
+    select.addEventListener('change', function () {
+      this.classList.toggle('ativo', this.value !== "");
+    });
+  });
+}
+
+// ===== FETCH CSV =====
 fetch('pacotes.csv?v=' + Date.now())
   .then(response => {
     if (!response.ok) {
@@ -1312,14 +1370,11 @@ fetch('pacotes.csv?v=' + Date.now())
       .replace(/^\uFEFF/, '')
       .split(/\r?\n/);
 
-    const primeiraLinhaValida = linhas.find(l => l.trim()) || '';
-    const delimitador = primeiraLinhaValida.includes(';') ? ';' : ',';
-
     linhas.forEach((linha, i) => {
       if (i === 0) return;
       if (!linha.trim()) return;
 
-      const col = linha.split(delimitador).map(c => c.trim());
+      const col = linha.split(';').map(c => c.trim());
 
       if (col.length < 7 || !col[0]) return;
 
@@ -1334,20 +1389,13 @@ fetch('pacotes.csv?v=' + Date.now())
       });
     });
 
-    if (!dados.length) {
-      mostrarMensagemBandeiras('CSV carregado, mas nenhuma linha válida foi encontrada.');
-      return;
-    }
-
     carregarBandeiras();
+    prepararEventosSelects();
+    atualizarBarraPacotes();
     atualizarEstadoInicial();
-
-    console.log('Linhas carregadas:', dados.length);
-    console.log('Países encontrados:', [...new Set(dados.map(d => d.pais))]);
   })
   .catch(error => {
     console.error('Erro ao carregar os dados:', error);
-    mostrarMensagemBandeiras('Erro ao carregar o CSV. Verifique o arquivo pacotes.csv.');
   });
 
 window.addEventListener('load', atualizarEstadoInicial);
