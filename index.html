@@ -72,6 +72,50 @@ body {
   background: rgba(0,0,0,0.2);
   border-bottom: 1px solid #4D4D4D;
 }
+  
+/* ===== BARRA 3 (Pacotes selecionados) ===== */
+.top-bar-pacotes {
+  top: 100px; /* 45 da barra 1 + 55 da barra 2 */
+  height: 55px;
+
+  background: rgba(0,0,0,0.20);
+  border-bottom: 1px solid #4D4D4D;
+
+  opacity: 0;
+  pointer-events: none;
+
+  transition:
+    opacity 0.25s ease,
+    background 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.top-bar-pacotes.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.top-bar-pacotes-inner {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  align-items: center;
+}
+
+.pacote-resumo {
+  font-size: 21px;
+  font-weight: 600;
+  color: #f5f5f7;
+  text-align: center;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pacote-resumo.vazio {
+  color: #d1d1d6; /* cinza claro para "No seleccionado" */
+}
 
 /* ===== LOGO ===== */
 .logo {
@@ -481,6 +525,15 @@ html, body {
 .top-bar.scrolled .menu-item.ativo::after {
   background: #000000;
 }
+  
+.top-bar.scrolled .pacote-resumo {
+  color: #1d1d1f;
+}
+
+.top-bar.scrolled .pacote-resumo.vazio {
+  color: #d1d1d6;
+}
+  
 </style>
 </head>
 
@@ -504,7 +557,16 @@ html, body {
     </div>
   </div>
 </div>
-
+  
+<!-- ✅ BARRA 3 -->
+<div class="top-bar top-bar-pacotes" id="topbarPacotes">
+  <div class="top-bar-inner top-bar-pacotes-inner">
+    <div class="pacote-resumo" id="pacoteHeader1">No seleccionado</div>
+    <div class="pacote-resumo vazio" id="pacoteHeader2">No seleccionado</div>
+    <div class="pacote-resumo vazio" id="pacoteHeader3">No seleccionado</div>
+  </div>
+</div>
+  
 <!-- ✅ BANNER -->
 <img id="banner" src="banner.png">
 
@@ -598,6 +660,20 @@ function resultadoVisivel() {
   return resultado && getComputedStyle(resultado).display !== 'none';
 }
 
+function atualizarBarraPacotes() {
+  [1, 2, 3].forEach(i => {
+    const select = document.getElementById(`pacote${i}`);
+    const header = document.getElementById(`pacoteHeader${i}`);
+
+    if (!select || !header) return;
+
+    const texto = select.value ? select.value : 'No seleccionado';
+
+    header.textContent = texto;
+    header.classList.toggle('vazio', !select.value);
+  });
+}
+  
 function calcularLimiteInicial() {
   const banner = document.getElementById('banner');
   if (!banner) return;
@@ -620,20 +696,36 @@ function clampScrollInicial() {
 
 function atualizarEstadoCabecalho() {
   const topbars = document.querySelectorAll('.top-bar');
+  const barraPacotes = document.getElementById('topbarPacotes');
 
   if (!resultadoVisivel()) {
     topbars.forEach(el => el.classList.remove('scrolled'));
+    if (barraPacotes) barraPacotes.classList.remove('visible');
     return;
   }
 
   const resultado = getResultado();
-  const trigger = resultado.offsetTop - 100;
   const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
 
-  if (y >= trigger) {
+  // quando o cabeçalho claro deve entrar
+  const triggerClaro = resultado.offsetTop - 100;
+
+  // quando a barra de pacotes deve aparecer
+  // aqui usamos -55 para ela aparecer quando a área branca realmente encostar no cabeçalho
+  const triggerPacotes = resultado.offsetTop - 55;
+
+  if (y >= triggerClaro) {
     topbars.forEach(el => el.classList.add('scrolled'));
   } else {
     topbars.forEach(el => el.classList.remove('scrolled'));
+  }
+
+  if (barraPacotes) {
+    if (y >= triggerPacotes) {
+      barraPacotes.classList.add('visible');
+    } else {
+      barraPacotes.classList.remove('visible');
+    }
   }
 }
 
@@ -649,6 +741,7 @@ window.addEventListener('scroll', () => {
 
   const topMain = document.getElementById('topbarMain');
   const topSub = document.getElementById('topbarSub');
+  const topPacotes = document.getElementById('topbarPacotes');
 
   let progresso = scrollY / 70;
   if (progresso > 1) progresso = 1;
@@ -657,6 +750,7 @@ window.addEventListener('scroll', () => {
 
   if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
   if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
+  if (topPacotes) topPacotes.style.transform = `translateY(${movimento}px)`;
 
   atualizarEstadoCabecalho();
   clampScrollInicial();
@@ -764,7 +858,7 @@ function selecionarPais(pais, elemento) {
 
   document.querySelectorAll('.top-bar')
     .forEach(el => el.classList.remove('scrolled'));
-
+  atualizarBarraPacotes();
   atualizarEstadoInicial();
 }
 
@@ -776,13 +870,16 @@ function gerarResultado() {
     cliente: document.getElementById(`cliente${i}`).value,
     pacote: document.getElementById(`pacote${i}`).value
   }));
-
+    atualizarBarraPacotes();
   const paisAtivo = document.querySelector('.bandeira.active');
 
   if (!paisAtivo || !selecionados[0].pacote) {
     resultado.style.display = "none";
     resultado.innerHTML = '<div class="espacador-topo"></div>';
-    atualizarEstadoInicial();
+    
+atualizarBarraPacotes();
+atualizarEstadoInicial();
+
     return;
   }
 
@@ -839,7 +936,10 @@ function gerarResultado() {
   resultado.innerHTML += '<div class="topo-branco"></div>';
   
   resultado.style.display = "block";
-  atualizarEstadoInicial();
+  
+atualizarBarraPacotes();
+atualizarEstadoInicial();
+
 }
 
 // ===== FETCH CSV =====
@@ -869,28 +969,32 @@ fetch('pacotes.csv')
     carregarBandeiras();
 
     // cliente -> pacote
-    ['cliente1','cliente2','cliente3'].forEach((id,index) => {
-      document.getElementById(id).addEventListener('change', function() {
-        const cliente = this.value;
-        const ativo = document.querySelector('.bandeira.active');
-        if (!ativo) return;
+   ['cliente1','cliente2','cliente3'].forEach((id,index) => {
+  document.getElementById(id).addEventListener('change', function() {
+    const cliente = this.value;
+    const ativo = document.querySelector('.bandeira.active');
+    if (!ativo) return;
 
-        const pais = ativo.dataset.pais;
+    const pais = ativo.dataset.pais;
 
-        const pacotes = [...new Set(
-          dados
-            .filter(d => d.pais === pais && d.cliente === cliente)
-            .map(d => d.pacote)
-        )];
+    const pacotes = [...new Set(
+      dados
+        .filter(d => d.pais === pais && d.cliente === cliente)
+        .map(d => d.pacote)
+    )];
 
-        const selectPacote = document.getElementById(`pacote${index+1}`);
-        selectPacote.innerHTML = '<option value="" disabled selected>Selecciona el paquete</option>';
+    const selectPacote = document.getElementById(`pacote${index+1}`);
+    selectPacote.innerHTML = '<option value="" disabled selected>Selecciona el paquete</option>';
+    selectPacote.classList.remove('ativo');
 
-        pacotes.forEach(p => {
-          selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
-        });
-      });
+    pacotes.forEach(p => {
+      selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
     });
+
+    atualizarBarraPacotes();
+    gerarResultado();
+  });
+});
 
     // pacote -> resultado
     ['pacote1','pacote2','pacote3'].forEach(id => {
@@ -904,7 +1008,10 @@ fetch('pacotes.csv')
       });
     });
 
-    atualizarEstadoInicial();
+    
+atualizarBarraPacotes();
+atualizarEstadoInicial();
+
   });
 
 window.addEventListener('load', atualizarEstadoInicial);
