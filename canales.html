@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>DIRECTV - Check Channel</title>
+
+<style>
+
+/* ===== RESET ===== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+  background: #0F0F0F;
+  color: #f5f5f7;
+}
+
+/* ===== BASE ===== */
+.top-bar {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+}
+
+.top-bar-inner {
+  width: 950px;
+  max-width: calc(100% - 32px);
+  margin: auto;
+
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  position: relative;
+  z-index: 2;
+}
+
+/* ===== BARRA 1 (Fina - logo) ===== */
+.top-bar-main {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 45px;
+}
+
+/* ✅ camada de blur separada */
+.blur-layer {
+  position: absolute;
+  inset: 0;
+
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+
+  background: rgba(15,15,15);
+  z-index: 1;
+}
+
+/* ===== BARRA 2 (Grossa - título) ===== */
+.top-bar-sub {
+  top: 45px;
+  height: 55px;
+  background: rgba(0,0,0,0.2);
+  border-bottom: 1px solid #4D4D4D;
+}
+  
+/* ===== BARRA 3 (Pacotes selecionados) ===== */
+.top-bar-pacotes {
+  top: 100px; /* 45 da barra 1 + 55 da barra 2 */
+  height: 100px; /* ✅ agora com o dobro da altura */
+
+  background: rgba(0,0,0,0.20);
+  border-bottom: 1px solid #4D4D4D;
+
+  opacity: 0;
+  transform: translateY(-12px);
+  pointer-events: none;
+
+  transition:
+    opacity 0.28s ease,
+    transform 0.28s ease,
+    background 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.top-bar-pacotes.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.top-bar-pacotes-inner {
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  align-items: center;
+}
+
+.pacote-resumo-bloco {
+  min-width: 0;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+
+  text-align: center;
+}
+
+.pacote-resumo {
+  font-size: 21px;
+  font-weight: 600;
+  color: #f5f5f7;
+  line-height: 1.1;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.pacote-total {
+  font-size: 21px;
+  font-weight: 400;
+  color: #f5f5f7;
+  line-height: 1.1;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.pacote-resumo.vazio,
+.pacote-total.vazio {
+  color: #d1d1d6;
+}
+  
+.pacote-resumo {
+  font-size: 21px;
+  font-weight: 600;
+  color: #f5f5f7;
+  text-align: center;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pacote-resumo.vazio {
+  color: #d1d1d6; /* cinza claro para "No seleccionado" */
+}
+
+/* ===== LOGO ===== */
+.logo {
+  height: 20px;
+  display: block;
+}
+
+/* ===== TITULO ===== */
+.titulo-pequeno {
+  font-size: 21px;
+  font-weight: 600;
+}
+
+/* ===== BANNER ===== */
+#banner {
+  width: 100%;
+  display: block;
+}
+
+/* espaço pra scroll */
+/* espaço final com rodapé embutido */
+.fake-content {
+  height: 280px;
+  background: #0F0F0F;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;   /* centraliza o rodapé na horizontal */
+  align-items: flex-end;     /* cola o rodapé no final da faixa */
+}
+
+.footer-faixa {
+  width: 950px;
+  max-width: calc(100% - 32px);
+}
+
+.footer-inner {
+  width: 100%;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-bottom: 18px; /* respiro final: substitui a segunda linha */
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.footer-text {
+  margin: 0 0 14px 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: #a1a1a6;
+  max-width: 820px;
+}
+
+.footer-text a {
+  color: #d1d1d6;
+  text-decoration: none;
+}
+
+.footer-text a:hover {
+  text-decoration: underline;
+}
+
+.footer-divider {
+  width: 100%;
+  border-top: 1px solid #4D4D4D;
+  margin: 24px 0 18px 0;
+}
+
+.footer-copy {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #8e8e93;
+}
+
+/* ===== CONTAINER ===== */
+.container {
+  width: 950px;
+  max-width: calc(100% - 32px);
+  margin: auto;
+  text-align: center;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+/* ===== TÍTULO PRINCIPAL ===== */
+.titulo-principal {
+  font-size: 32px;
+  margin-top: 47px;
+  margin-bottom: 47px;
+  font-weight: 600;
+}
+  
+.linha {
+  width: 100%;
+  border-bottom: 1px solid #4D4D4D;
+  margin-bottom: 47px;
+}
+
+/* ===== TITULO DE SEÇÃO ===== */
+.titulo-secao {
+  width: 950px;
+  max-width: calc(100% - 32px);
+  margin: auto;
+
+  margin-top: 47px;
+  margin-bottom: 23px;
+
+  font-size: 24px;
+  font-weight: 600;
+
+  text-align: center;
+}
+
+#bandeiras {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 47px;
+}
+
+.bandeira {
+  width: 72px;
+  height: 48px;
+  margin: 6px;
+
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+
+  border: 2px solid transparent;
+  box-shadow: 0 0 0 4px transparent;
+
+  transition: all 0.25s ease;
+}
+
+.bandeira img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bandeira.active {
+  box-shadow:
+    0 0 0 3px #0F0F0F,
+    0 0 0 5px #0071e3;
+}
+  
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 24px;
+}
+
+/* título pacote */
+.titulo-pacote {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 23px;
+  color: #f5f5f7;
+}
+
+/* selects agrupados */
+.grupo-selects {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* estilo dos selects */
+select {
+  height: 60px;
+  padding: 0 20px;
+  border-radius: 12px;
+  border: none;
+
+  font-size: 18px;
+  background: #2A2A2A;
+
+  color: #8e8e93;
+  outline: none;
+  appearance: none;
+  transition: all 0.2s ease;
+}
+
+select.ativo {
+  color: #ffffff;
+}
+
+select:hover {
+  background: #333333;
+}
+
+select:focus {
+  outline: none;
+  box-shadow: none;
+  background: #333333;
+}
+
+.menu-header {
+  display: flex;
+  gap: 24px;
+}
+
+.menu-item {
+  font-size: 14px;
+  font-weight: 500;
+  color: #b5b5b8;
+  cursor: pointer;
+  position: relative;
+}
+
+.menu-item.ativo {
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.menu-item.ativo::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -16px;
+  height: 2px;
+  background: #ffffff;
+}
+
+/* ===== RESULTADO ===== */
+#resultado {
+  display: none;
+  margin-top: 0;
+  background: #ffffff;
+  padding: 0;
+
+  width: 100%;
+
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* ✅ FAIXA BRANCA REAL (FULL WIDTH) */
+#resultado::before {
+  content: "";
+  position: absolute;
+
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 100vw;
+  height: 100%;
+
+  background: #ffffff;
+  z-index: -1;
+}
+
+.linha-resultado {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+
+  width: 950px;
+  max-width: calc(100% - 32px);
+
+  margin-left: auto;
+  margin-right: auto;
+
+  margin-bottom: 12px;
+}
+
+/* bloco canal */
+.canal {
+  text-align: center;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e5e5;
+  height: 90px;
+  max-width: 100%;
+  gap: 2px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* VC */
+.canal-vc {
+  font-size: 16px;
+  color: #1d1d1f;
+
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* nome */
+.canal-nome {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1d1d1f;
+  margin: 4px 0;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* tags */
+.tags {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  height: 24px;
+  align-items: center;
+}
+
+.tag {
+  font-size: 14px;
+  padding: 4px 10px;
+  border-radius: 10px;
+  background: #f2f2f2;
+  color: #1d1d1f;
+}
+
+.linha-resultado:first-child {
+  margin-top: 47px;
+}
+
+.topo-branco {
+  height: 47px;
+  width: 100%;
+}
+
+.topo-preto {
+  height: 47px;
+  width: 100%;
+  background: #0F0F0F;
+}
+
+/* ===== SKELETON ===== */
+.skeleton {
+  background: #e5e5e5;
+  border-radius: 8px;
+  margin: 6px auto;
+}
+
+.skeleton.vc {
+  width: 40px;
+  height: 16px;
+}
+
+.skeleton.nome {
+  width: 120px;
+  height: 18px;
+}
+
+.skeleton.tags {
+  width: 90px;
+  height: 16px;
+}
+
+html, body {
+  overflow-x: hidden;
+}
+  
+/* ===== HEADER CLARO AO SCROLL ===== */
+.top-bar.scrolled {
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.top-bar.scrolled .titulo-pequeno {
+  color: #1d1d1f;
+}
+
+.top-bar.scrolled .menu-item {
+  color: #6e6e73;
+}
+
+.top-bar.scrolled .menu-item.ativo {
+  color: #000000;
+}
+
+.top-bar.scrolled .menu-item.ativo::after {
+  background: #000000;
+}
+
+.top-bar.scrolled .blur-layer {
+  background: rgba(255,255,255,0.4);
+}
+
+.top-bar {
+  transition: all 0.3s ease;
+}
+
+.titulo-pequeno, .menu-item {
+  transition: color 0.3s ease;
+}
+/* ===== ESTADO PADRÃO (ESCURO) ===== */
+.top-bar-main .blur-layer {
+  background: rgba(15,15,15,0.55);
+}
+
+.top-bar-sub {
+  background: rgba(0,0,0,0.20);
+  border-bottom: 1px solid #4D4D4D;
+}
+
+.titulo-pequeno {
+  color: #f5f5f7;
+}
+
+.menu-item {
+  color: #b5b5b8;
+}
+
+.menu-item.ativo {
+  color: #ffffff;
+}
+
+.menu-item.ativo::after {
+  background: #ffffff;
+}
+
+/* ===== HEADER CLARO ===== */
+.top-bar.scrolled {
+  background: rgba(255,255,255,0.60);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.top-bar.scrolled .blur-layer {
+  background: rgba(255,255,255,0.40);
+}
+
+.top-bar.scrolled .titulo-pequeno {
+  color: #1d1d1f;
+}
+
+.top-bar.scrolled .menu-item {
+  color: #6e6e73;
+}
+
+.top-bar.scrolled .menu-item.ativo {
+  color: #000000;
+}
+
+.top-bar.scrolled .menu-item.ativo::after {
+  background: #000000;
+}
+  
+.top-bar-pacotes {
+  background: rgba(15,15,15);
+  border-bottom: 1px solid #4D4D4D;
+}
+
+.top-bar-pacotes .pacote-resumo {
+  color: #f5f5f7;
+}
+
+.top-bar-pacotes .pacote-total {
+  color: #f5f5f7;
+}
+
+.top-bar-pacotes .pacote-resumo.vazio,
+.top-bar-pacotes .pacote-total.vazio {
+  color: #8e8e93;
+}
+
+.top-bar-pacotes.scrolled {
+  background: rgba(15,15,15);
+  border-bottom: 1px solid #4D4D4D;
+}
+
+.top-bar-pacotes.scrolled .pacote-resumo {
+  color: #f5f5f7;
+}
+
+.top-bar-pacotes.scrolled .pacote-total {
+  color: #f5f5f7;
+}
+
+.top-bar-pacotes.scrolled .pacote-resumo.vazio,
+.top-bar-pacotes.scrolled .pacote-total.vazio {
+  color: #8e8e93;
+}
+  
+</style>
+</head>
+
+<body>
+
+<!-- ✅ BARRA 1 -->
+<div class="top-bar top-bar-main" id="topbarMain">
+  <div class="blur-layer"></div>
+  <div class="top-bar-inner">
+    <img src="icon_gpt_branco.png" class="logo">
+  </div>
+</div>
+
+<!-- ✅ BARRA 2 -->
+<div class="top-bar top-bar-sub" id="topbarSub">
+  <div class="top-bar-inner">
+    <div class="titulo-pequeno">Check Channel</div>
+    <div class="menu-header">
+      <div class="menu-item ativo">Paquetes</div>
+      <div class="menu-item">Canales</div>
+    </div>
+  </div>
+</div>
+  
+<!-- ✅ BARRA 3 -->
+<div class="top-bar top-bar-pacotes" id="topbarPacotes">
+  <div class="top-bar-inner top-bar-pacotes-inner">
+
+    <div class="pacote-resumo-bloco">
+      <div class="pacote-resumo vazio" id="pacoteHeader1">No seleccionado</div>
+      <div class="pacote-total vazio" id="pacoteTotal1">0 canales</div>
+    </div>
+
+    <div class="pacote-resumo-bloco">
+      <div class="pacote-resumo vazio" id="pacoteHeader2">No seleccionado</div>
+      <div class="pacote-total vazio" id="pacoteTotal2">0 canales</div>
+    </div>
+
+    <div class="pacote-resumo-bloco">
+      <div class="pacote-resumo vazio" id="pacoteHeader3">No seleccionado</div>
+      <div class="pacote-total vazio" id="pacoteTotal3">0 canales</div>
+    </div>
+
+  </div>
+</div>
+  
+<!-- ✅ BANNER -->
+<img id="banner" src="banner.png">
+
+<div class="container" id="topo">
+
+  <h1 class="titulo-principal">
+    Consulte los planes de programación
+  </h1>
+
+  <div class="linha"></div>
+
+  <div class="titulo-secao">
+    Seleccione el país
+  </div>
+
+  <div id="bandeiras"></div>
+
+  <div class="grid">
+
+    <!-- PACOTE 1 -->
+    <div class="pacote">
+      <div class="titulo-pacote">Paquete principal</div>
+      <div class="grupo-selects">
+        <select id="cliente1">
+          <option value="" disabled selected>Selecciona el tipo de cliente</option>
+        </select>
+
+        <select id="pacote1">
+          <option value="" disabled selected>Selecciona el paquete</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- PACOTE 2 -->
+    <div class="pacote">
+      <div class="titulo-pacote">Comparación 1</div>
+      <div class="grupo-selects">
+        <select id="cliente2">
+          <option value="" disabled selected>Selecciona el tipo de cliente</option>
+        </select>
+
+        <select id="pacote2">
+          <option value="" disabled selected>Selecciona el paquete</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- PACOTE 3 -->
+    <div class="pacote">
+      <div class="titulo-pacote">Comparación 2</div>
+      <div class="grupo-selects">
+        <select id="cliente3">
+          <option value="" disabled selected>Selecciona el tipo de cliente</option>
+        </select>
+
+        <select id="pacote3">
+          <option value="" disabled selected>Selecciona el paquete</option>
+        </select>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="topo-preto"></div>
+
+</div> <!-- ✅ FECHAMENTO CORRETO DO CONTAINER -->
+
+<!-- ✅ RESULTADO -->
+<div id="resultado">
+  <div class="topo-branco"></div>
+  <div class="espacador-topo"></div>
+</div>
+
+<div class="fake-content">
+  <footer class="footer-faixa">
+    <div class="footer-inner">
+      
+      <p class="footer-text">
+        Esta herramienta fue desarrollada por la Célula Técnica con el objetivo de optimizar la consulta y comparación de canales incluidos en los diferentes paquetes comerciales. En caso de errores comuníquese con nuestro equipo <span class="footer-nowrap">a través de <a href="mailto:celulatecnica@directvla.com.co">celulatecnica@directvla.com.co</a></span>.
+      </p>
+
+      <div class="footer-divider"></div>
+
+      <p class="footer-copy">
+        Check Channel © 2026 Célula Técnica, Ingeniería WAIKEN. Todos los derechos reservados.
+      </p>
+    </div>
+  </footer>
+</div>
+
+<script>
+  
+let dados = [];
+
+const HEADER_TOTAL = 50; // 45 + 55
+let limiteInicial = 0;
+let touchStartY = 0;
+let travando = false;
+
+// ===== HELPERS =====
+function getResultado() {
+  return document.getElementById('resultado');
+}
+
+function resultadoVisivel() {
+  const resultado = getResultado();
+  return resultado && getComputedStyle(resultado).display !== 'none';
+}
+
+function normalizarTexto(valor) {
+  return String(valor || '').trim();
+}
+
+function normalizarArquivo(valor) {
+  return normalizarTexto(valor)
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // remove acentos
+    .replace(/\s+/g, ''); // remove espaços
+}
+
+// comparação por VC (posição do canal)
+// isso mantém a grade coerente entre pacotes
+function chaveCanal(item) {
+  return normalizarTexto(item.vc);
+}
+
+function criarSkeletonCanal() {
+  const canal = document.createElement('div');
+  canal.className = 'canal';
+  canal.innerHTML = `
+    <div class="skeleton vc"></div>
+    <div class="skeleton nome"></div>
+    <div class="skeleton tags"></div>
+  `;
+  return canal;
+}
+
+function criarCanal(match) {
+  const canal = document.createElement('div');
+  canal.className = 'canal';
+  canal.innerHTML = `
+    <div class="canal-vc">${normalizarTexto(match.vc)}</div>
+    <div class="canal-nome">${normalizarTexto(match.canal)}</div>
+    <div class="tags">
+      <div class="tag">${normalizarTexto(match.categoria)}</div>
+      <div class="tag">${normalizarTexto(match.tecnologia)}</div>
+    </div>
+  `;
+  return canal;
+}
+
+function atualizarBarraPacotes() {
+  const paisAtivo = document.querySelector('.bandeira.active');
+  const pais = paisAtivo ? paisAtivo.dataset.pais : '';
+
+  [1, 2, 3].forEach(i => {
+    const clienteSelect = document.getElementById(`cliente${i}`);
+    const pacoteSelect = document.getElementById(`pacote${i}`);
+    const header = document.getElementById(`pacoteHeader${i}`);
+    const totalEl = document.getElementById(`pacoteTotal${i}`);
+
+    if (!clienteSelect || !pacoteSelect || !header || !totalEl) return;
+
+    const cliente = clienteSelect.value;
+    const pacote = pacoteSelect.value;
+
+    if (!pais || !cliente || !pacote) {
+      header.textContent = 'No seleccionado';
+      header.classList.add('vazio');
+
+      totalEl.textContent = '0 canales';
+      totalEl.classList.add('vazio');
+      return;
+    }
+
+    const canaisUnicos = new Set(
+      dados
+        .filter(d =>
+          d.pais === pais &&
+          d.cliente === cliente &&
+          d.pacote === pacote
+        )
+        .map(d => chaveCanal(d))
+    );
+
+    const total = canaisUnicos.size;
+    const textoTotal = `${total} ${total === 1 ? 'canal' : 'canales'}`;
+
+    header.textContent = pacote;
+    header.classList.remove('vazio');
+
+    totalEl.textContent = textoTotal;
+    totalEl.classList.remove('vazio');
+  });
+}
+
+function calcularLimiteInicial() {
+  const banner = document.getElementById('banner');
+  if (!banner) return;
+  limiteInicial = Math.max(0, banner.offsetHeight - HEADER_TOTAL);
+}
+
+function clampScrollInicial() {
+  if (resultadoVisivel()) return;
+
+  const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+
+  if (y > limiteInicial && !travando) {
+    travando = true;
+    requestAnimationFrame(() => {
+      window.scrollTo(0, limiteInicial);
+      travando = false;
+    });
+  }
+}
+
+function atualizarEstadoCabecalho() {
+  const topbars = document.querySelectorAll('.top-bar');
+  const barraPacotes = document.getElementById('topbarPacotes');
+
+  if (!resultadoVisivel()) {
+    topbars.forEach(el => el.classList.remove('scrolled'));
+    if (barraPacotes) barraPacotes.classList.remove('visible');
+    return;
+  }
+
+  const resultado = getResultado();
+  const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+
+  const triggerClaro = resultado.offsetTop - 100;
+  const triggerPacotes = resultado.offsetTop - 55;
+
+  if (y >= triggerClaro) {
+    topbars.forEach(el => el.classList.add('scrolled'));
+  } else {
+    topbars.forEach(el => el.classList.remove('scrolled'));
+  }
+
+  if (barraPacotes) {
+    if (y >= triggerPacotes) {
+      barraPacotes.classList.add('visible');
+    } else {
+      barraPacotes.classList.remove('visible');
+    }
+  }
+}
+
+function atualizarEstadoInicial() {
+  calcularLimiteInicial();
+  clampScrollInicial();
+  atualizarEstadoCabecalho();
+}
+
+// ===== SCROLL =====
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+
+  const topMain = document.getElementById('topbarMain');
+  const topSub = document.getElementById('topbarSub');
+  const topPacotes = document.getElementById('topbarPacotes');
+
+  let progresso = scrollY / 70;
+  if (progresso > 1) progresso = 1;
+
+  const movimento = -50 * progresso;
+
+  if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
+  if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
+  if (topPacotes) topPacotes.style.transform = `translateY(${movimento}px)`;
+
+  atualizarEstadoCabecalho();
+  clampScrollInicial();
+}, { passive: true });
+
+// ===== BLOQUEIO WHEEL =====
+window.addEventListener('wheel', (e) => {
+  if (resultadoVisivel()) return;
+
+  const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+
+  if (e.deltaY > 0 && y >= limiteInicial) {
+    e.preventDefault();
+    window.scrollTo(0, limiteInicial);
+  }
+}, { passive: false });
+
+// ===== BLOQUEIO TECLADO =====
+window.addEventListener('keydown', (e) => {
+  if (resultadoVisivel()) return;
+
+  const teclas = ['ArrowDown', 'PageDown', ' ', 'End'];
+  if (!teclas.includes(e.key)) return;
+
+  const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+
+  if (y >= limiteInicial) {
+    e.preventDefault();
+    window.scrollTo(0, limiteInicial);
+  }
+}, { passive: false });
+
+// ===== BLOQUEIO TOUCH =====
+window.addEventListener('touchstart', (e) => {
+  if (!e.touches || !e.touches.length) return;
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+
+window.addEventListener('touchmove', (e) => {
+  if (resultadoVisivel()) return;
+  if (!e.touches || !e.touches.length) return;
+
+  const currentY = e.touches[0].clientY;
+  const descendo = touchStartY > currentY;
+  const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+
+  if (descendo && y >= limiteInicial) {
+    e.preventDefault();
+    window.scrollTo(0, limiteInicial);
+  }
+}, { passive: false });
+
+// ===== BANDEIRAS =====
+function carregarBandeiras() {
+  const container = document.getElementById('bandeiras');
+  if (!container) return;
+
+  const paises = [...new Set(
+    dados
+      .map(d => normalizarTexto(d.pais))
+      .filter(Boolean)
+  )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
+  container.innerHTML = "";
+
+  paises.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'bandeira';
+
+    const img = document.createElement('img');
+    img.src = `flags/${normalizarArquivo(p)}.png`;
+    img.alt = p;
+
+    div.appendChild(img);
+    div.dataset.pais = p;
+    div.onclick = () => selecionarPais(p, div);
+
+    container.appendChild(div);
+  });
+}
+
+// ===== SELECIONAR PAÍS =====
+function selecionarPais(pais, elemento) {
+  document.querySelectorAll('.bandeira').forEach(b => b.classList.remove('active'));
+  elemento.classList.add('active');
+
+  ['cliente1', 'cliente2', 'cliente3'].forEach((clienteId, index) => {
+    const clienteSelect = document.getElementById(clienteId);
+    const pacoteSelect = document.getElementById(`pacote${index + 1}`);
+
+    if (clienteSelect) {
+      clienteSelect.innerHTML = '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
+      clienteSelect.classList.remove('ativo');
+    }
+
+    if (pacoteSelect) {
+      pacoteSelect.innerHTML = '<option value="" disabled selected>Selecciona el paquete</option>';
+      pacoteSelect.classList.remove('ativo');
+    }
+  });
+
+  const clientes = [...new Set(
+    dados
+      .filter(d => d.pais === pais)
+      .map(d => d.cliente)
+      .filter(Boolean)
+  )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
+  ['cliente1', 'cliente2', 'cliente3'].forEach(id => {
+    const select = document.getElementById(id);
+    if (!select) return;
+
+    select.innerHTML = '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
+
+    clientes.forEach(c => {
+      select.innerHTML += `<option value="${c}">${c}</option>`;
+    });
+  });
+
+  const resultado = getResultado();
+  if (resultado) {
+    resultado.style.display = "none";
+    resultado.innerHTML = '<div class="espacador-topo"></div>';
+  }
+
+  document.querySelectorAll('.top-bar').forEach(el => el.classList.remove('scrolled'));
+
+  atualizarBarraPacotes();
+  atualizarEstadoInicial();
+}
+
+// ===== GERAR RESULTADO =====
+function gerarResultado() {
+  const resultado = getResultado();
+  if (!resultado) return;
+
+  const selecionados = [1, 2, 3].map(i => ({
+    cliente: document.getElementById(`cliente${i}`)?.value || '',
+    pacote: document.getElementById(`pacote${i}`)?.value || ''
+  }));
+
+  atualizarBarraPacotes();
+
+  const paisAtivo = document.querySelector('.bandeira.active');
+
+  // só mostra resultado se houver país e pelo menos 1 pacote completo selecionado
+  if (!paisAtivo || !selecionados.some(s => s.cliente && s.pacote)) {
+    resultado.style.display = "none";
+    resultado.innerHTML = '<div class="espacador-topo"></div>';
+    atualizarEstadoInicial();
+    return;
+  }
+
+  const pais = paisAtivo.dataset.pais;
+
+  // mapa individual por coluna/pacote
+  const mapasPacotes = selecionados.map(sel => {
+    const mapa = new Map();
+
+    if (!sel.cliente || !sel.pacote) return mapa;
+
+    dados
+      .filter(d =>
+        d.pais === pais &&
+        d.cliente === sel.cliente &&
+        d.pacote === sel.pacote
+      )
+      .forEach(item => {
+        mapa.set(chaveCanal(item), item);
+      });
+
+    return mapa;
+  });
+
+  // união total dos canais de todos os pacotes selecionados
+  const mapaBase = new Map();
+
+  mapasPacotes.forEach(mapa => {
+    mapa.forEach((item, chave) => {
+      if (!mapaBase.has(chave)) {
+        mapaBase.set(chave, item);
+      }
+    });
+  });
+
+  const base = Array.from(mapaBase.entries())
+    .sort((a, b) => {
+      const numA = parseInt(a[0], 10);
+      const numB = parseInt(b[0], 10);
+
+      const vcA = Number.isNaN(numA) ? 999999 : numA;
+      const vcB = Number.isNaN(numB) ? 999999 : numB;
+
+      if (vcA !== vcB) return vcA - vcB;
+
+      return normalizarTexto(a[1].canal).localeCompare(normalizarTexto(b[1].canal), 'pt-BR');
+    })
+    .map(entry => entry[1]);
+
+  resultado.innerHTML = '';
+
+  const topoInicial = document.createElement('div');
+  topoInicial.className = 'topo-branco';
+  resultado.appendChild(topoInicial);
+
+  base.forEach(ref => {
+    const linha = document.createElement('div');
+    linha.className = 'linha-resultado';
+
+    const chaveRef = chaveCanal(ref);
+
+    mapasPacotes.forEach(mapa => {
+      const match = mapa.get(chaveRef);
+
+      if (match) {
+        linha.appendChild(criarCanal(match));
+      } else {
+        linha.appendChild(criarSkeletonCanal());
+      }
+    });
+
+    resultado.appendChild(linha);
+  });
+
+  const topoFinal = document.createElement('div');
+  topoFinal.className = 'topo-branco';
+  resultado.appendChild(topoFinal);
+
+  resultado.style.display = "block";
+
+  atualizarBarraPacotes();
+  atualizarEstadoInicial();
+}
+
+// ===== EVENTOS DOS SELECTS =====
+function prepararEventosSelects() {
+  ['cliente1', 'cliente2', 'cliente3'].forEach((id, index) => {
+    const selectCliente = document.getElementById(id);
+    const selectPacote = document.getElementById(`pacote${index + 1}`);
+
+    if (selectCliente) {
+      selectCliente.addEventListener('change', function () {
+        const cliente = this.value;
+        const ativo = document.querySelector('.bandeira.active');
+        if (!ativo) return;
+
+        const pais = ativo.dataset.pais;
+
+        const pacotes = [...new Set(
+          dados
+            .filter(d => d.pais === pais && d.cliente === cliente)
+            .map(d => d.pacote)
+            .filter(Boolean)
+        )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
+        if (selectPacote) {
+          selectPacote.innerHTML = '<option value="" disabled selected>Selecciona el paquete</option>';
+          selectPacote.classList.remove('ativo');
+
+          pacotes.forEach(p => {
+            selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
+          });
+        }
+
+        this.classList.toggle('ativo', this.value !== "");
+        atualizarBarraPacotes();
+        gerarResultado();
+      });
+    }
+
+    if (selectPacote) {
+      selectPacote.addEventListener('change', function () {
+        this.classList.toggle('ativo', this.value !== "");
+        gerarResultado();
+      });
+    }
+  });
+
+  document.querySelectorAll('select').forEach(select => {
+    select.addEventListener('change', function () {
+      this.classList.toggle('ativo', this.value !== "");
+    });
+  });
+}
+
+// ===== FETCH CSV =====
+fetch('pacotes.csv?v=' + Date.now())
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`Erro ao carregar CSV: ${response.status}`);
+    }
+    return response.text();
+  })
+  .then(texto => {
+    dados = [];
+
+    const linhas = texto
+      .replace(/^\uFEFF/, '')
+      .split(/\r?\n/);
+
+    linhas.forEach((linha, i) => {
+      if (i === 0) return;
+      if (!linha.trim()) return;
+
+      const col = linha.split(';').map(c => c.trim());
+
+      if (col.length < 7 || !col[0]) return;
+
+      dados.push({
+        pais: col[0],
+        cliente: col[1],
+        pacote: col[2],
+        vc: col[3],
+        canal: col[4],
+        tecnologia: col[5],
+        categoria: col[6]
+      });
+    });
+
+    carregarBandeiras();
+    prepararEventosSelects();
+    atualizarBarraPacotes();
+    atualizarEstadoInicial();
+  })
+  .catch(error => {
+    console.error('Erro ao carregar os dados:', error);
+  });
+
+window.addEventListener('load', atualizarEstadoInicial);
+window.addEventListener('resize', atualizarEstadoInicial);
+  
+</script>
+  
+</body>
+</html>
