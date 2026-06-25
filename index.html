@@ -986,103 +986,128 @@ function selecionarPais(pais, elemento) {
 }
 
 // ===== GERAR RESULTADO =====
+<script>
+function chaveCanal(item) {
+  // chave única do canal para comparação
+  // vc + canal evita colisão quando houver mesmo VC com nome diferente
+  return `${String(item.vc).trim()}||${String(item.canal).trim()}`;
+}
+
 function gerarResultado() {
   const resultado = getResultado();
 
-  const selecionados = [1,2,3].map(i => ({
+  const selecionados = [1, 2, 3].map(i => ({
     cliente: document.getElementById(`cliente${i}`).value,
     pacote: document.getElementById(`pacote${i}`).value
   }));
-    atualizarBarraPacotes();
+
+  atualizarBarraPacotes();
+
   const paisAtivo = document.querySelector('.bandeira.active');
 
-  if (!paisAtivo || !selecionados[0].pacote) {
+  // se não houver país ou nenhum pacote selecionado, esconde
+  if (!paisAtivo || !selecionados.some(s => s.cliente && s.pacote)) {
     resultado.style.display = "none";
     resultado.innerHTML = '<div class="espacador-topo"></div>';
-    
-atualizarBarraPacotes();
-atualizarEstadoInicial();
-
+    atualizarEstadoInicial();
     return;
   }
 
   const pais = paisAtivo.dataset.pais;
 
-// pega TODOS os canais dos 3 pacotes
-let todosCanais = [];
+  // 1) monta um mapa por pacote selecionado
+  const mapasPacotes = selecionados.map(sel => {
+    const mapa = new Map();
 
-selecionados.forEach(sel => {
-  if (!sel.pacote) return;
+    if (!sel.cliente || !sel.pacote) return mapa;
 
-  const canais = dados.filter(d =>
-    d.pais === pais &&
-    d.cliente === sel.cliente &&
-    d.pacote === sel.pacote
-  );
+    const canaisDoPacote = dados.filter(d =>
+      d.pais === pais &&
+      d.cliente === sel.cliente &&
+      d.pacote === sel.pacote
+    );
 
-  todosCanais = todosCanais.concat(canais);
-});
+    canaisDoPacote.forEach(item => {
+      mapa.set(chaveCanal(item), item);
+    });
 
-// cria lista única por VC
-const mapa = new Map();
+    return mapa;
+  });
 
-todosCanais.forEach(c => {
-  if (!mapa.has(c.vc)) {
-    mapa.set(c.vc, c);
-  }
-});
+  // 2) cria base unificada com TODOS os canais dos pacotes selecionados
+  const mapaBase = new Map();
 
-// vira array ordenado
-const base = Array.from(mapa.values())
-  .sort((a, b) => (parseInt(a.vc) || 0) - (parseInt(b.vc) || 0));
+  mapasPacotes.forEach(mapa => {
+    mapa.forEach((item, chave) => {
+      if (!mapaBase.has(chave)) {
+        mapaBase.set(chave, item);
+      }
+    });
+  });
 
-  resultado.innerHTML = '<div class="topo-branco"></div>';
+  const base = Array.from(mapaBase.values()).sort((a, b) => {
+    const vcA = parseInt(a.vc, 10) || 0;
+    const vcB = parseInt(b.vc, 10) || 0;
 
+    if (vcA !== vcB) return vcA - vcB;
+
+    // desempate por nome do canal
+    return String(a.canal).localeCompare(String(b.canal), 'pt-BR');
+  });
+
+  // 3) limpa e prepara o container
+  resultado.innerHTML = '';
+  
+  const topoInicial = document.createElement('div');
+  topoInicial.className = 'topo-branco';
+  resultado.appendChild(topoInicial);
+
+  // 4) renderiza linha a linha
   base.forEach(ref => {
     const linha = document.createElement('div');
     linha.className = 'linha-resultado';
 
-    [0,1,2].forEach(i => {
-      const match = dados.find(d =>
-        d.pais === pais &&
-        d.cliente === selecionados[i].cliente &&
-        d.pacote === selecionados[i].pacote &&
-        d.vc === ref.vc
-      );
+    const chaveRef = chaveCanal(ref);
+
+    mapasPacotes.forEach(mapa => {
+      const match = mapa.get(chaveRef);
 
       if (match) {
-        linha.innerHTML += `
-          <div class="canal">
-            <div class="canal-vc">${match.vc}</div>
-            <div class="canal-nome">${match.canal}</div>
-            <div class="tags">
-              <div class="tag">${match.categoria}</div>
-              <div class="tag">${match.tecnologia}</div>
-            </div>
+        const canal = document.createElement('div');
+        canal.className = 'canal';
+        canal.innerHTML = `
+          <div class="canal-vc">${match.vc}</div>
+          <div class="canal-nome">${match.canal}</div>
+          <div class="tags">
+            <div class="tag">${match.categoria}</div>
+            <div class="tag">${match.tecnologia}</div>
           </div>
         `;
+        linha.appendChild(canal);
       } else {
-        linha.innerHTML += `
-          <div class="canal">
-            <div class="skeleton vc"></div>
-            <div class="skeleton nome"></div>
-            <div class="skeleton tags"></div>
-          </div>
+        const canal = document.createElement('div');
+        canal.className = 'canal';
+        canal.innerHTML = `
+          <div class="skeleton vc"></div>
+          <div class="skeleton nome"></div>
+          <div class="skeleton tags"></div>
         `;
+        linha.appendChild(canal);
       }
     });
 
     resultado.appendChild(linha);
   });
-               
-  // ✅ ESPAÇO FINAL (IGUAL AO TOPO)
-  resultado.innerHTML += '<div class="topo-branco"></div>';
-  
-  resultado.style.display = "block";
-  
-atualizarBarraPacotes();
-atualizarEstadoInicial();
 
+  // 5) espaço final
+  const topoFinal = document.createElement('div');
+  topoFinal.className = 'topo-branco';
+  resultado.appendChild(topoFinal);
+
+  resultado.style.display = "block";
+
+  atualizarBarraPacotes();
+  atualizarEstadoInicial();
 }
 
 // ===== FETCH CSV =====
