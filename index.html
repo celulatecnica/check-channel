@@ -834,7 +834,10 @@ function gerarResultado() {
 
     resultado.appendChild(linha);
   });
-
+               
+  // ✅ ESPAÇO FINAL (IGUAL AO TOPO)
+  resultado.innerHTML += '<div class="topo-branco"></div>';
+  
   resultado.style.display = "block";
   atualizarEstadoInicial();
 }
