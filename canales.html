@@ -682,7 +682,6 @@ html, body {
 }
 
 /* ===== BUSCA DE CANAL ===== */
-
 .busca-canal-wrap {
   width: 100%;
   max-width: 420px;
@@ -693,50 +692,38 @@ html, body {
   gap: 12px;
 }
 
-.input-canal {
+.input-canal-wrap {
+  position: relative;
   width: 100%;
-  height: 60px;
-  padding: 0 20px 0 52px;
-  border-radius: 12px;
-  border: none;
-
-  font-size: 18px;
-  background: #2A2A2A;
-  color: #ffffff;
-
-  outline: none;
-  appearance: none;
-  transition: all 0.2s ease;
 }
 
-.input-canal::placeholder {
+.input-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
   color: #8e8e93;
-}
-
-.input-canal:hover {
-  background: #333333;
-}
-
-.input-canal:focus {
-  background: #333333;
-  outline: none;
-  box-shadow: none;
-}
-/* ===== BUSCA DE CANAL ===== */
-.busca-canal-wrap {
-  width: 100%;
-  max-width: 420px;
-  margin: 47px auto 0 auto;
+  pointer-events: none;
 
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 2; /* garante que a lupa fique visível */
+}
+
+.input-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .input-canal {
   width: 100%;
   height: 60px;
-  padding: 0 20px;
+  padding: 0 20px 0 52px; /* espaço para a lupa */
   border-radius: 12px;
   border: none;
 
@@ -768,9 +755,8 @@ html, body {
   height: 40px;
   border: none;
   border-radius: 16px;
-  
-  align-self: center; /* centraliza o botão */
-  
+  align-self: center;
+
   font-size: 16px;
   font-weight: 500;
   color: #ffffff;
@@ -792,31 +778,6 @@ html, body {
 .botao-consultar:focus {
   outline: none;
   box-shadow: none;
-}
-
-.input-canal-wrap {
-  position: relative;
-  width: 100%;
-}
-
-.input-icon {
-  position: absolute;
-  left: 18px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 22px;
-  height: 22px;
-  color: #8e8e93;
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.input-icon svg {
-  width: 100%;
-  height: 100%;
-  display: block;
 }
   
 </style>
