@@ -101,11 +101,31 @@ body {
 .top-bar-pacotes-inner {
   height: 100%;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr;
   gap: 24px;
   align-items: center;
 }
 
+.grid.grid-canal-unico {
+  grid-template-columns: 1fr;
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.linha-resultado {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+
+  width: 950px;
+  max-width: calc(100% - 32px);
+
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 12px;
+}
+  
 .pacote-resumo-bloco {
   min-width: 0;
   height: 100%;
@@ -690,22 +710,10 @@ html, body {
 <!-- ✅ BARRA 3 -->
 <div class="top-bar top-bar-pacotes" id="topbarPacotes">
   <div class="top-bar-inner top-bar-pacotes-inner">
-
     <div class="pacote-resumo-bloco">
       <div class="pacote-resumo vazio" id="pacoteHeader1">No seleccionado</div>
       <div class="pacote-total vazio" id="pacoteTotal1">0 canales</div>
     </div>
-
-    <div class="pacote-resumo-bloco">
-      <div class="pacote-resumo vazio" id="pacoteHeader2">No seleccionado</div>
-      <div class="pacote-total vazio" id="pacoteTotal2">0 canales</div>
-    </div>
-
-    <div class="pacote-resumo-bloco">
-      <div class="pacote-resumo vazio" id="pacoteHeader3">No seleccionado</div>
-      <div class="pacote-total vazio" id="pacoteTotal3">0 canales</div>
-    </div>
-
   </div>
 </div>
   
@@ -726,51 +734,22 @@ html, body {
 
   <div id="bandeiras"></div>
 
-  <div class="grid">
+<div class="grid grid-canal-unico">
 
-    <!-- PACOTE 1 -->
-    <div class="pacote">
-      <div class="titulo-pacote">Paquete principal</div>
-      <div class="grupo-selects">
-        <select id="cliente1">
-          <option value="" disabled selected>Selecciona el tipo de cliente</option>
-        </select>
+  <div class="pacote">
+    <div class="titulo-pacote">Selecciona el paquete</div>
+    <div class="grupo-selects">
+      <select id="cliente1">
+        <option value="" disabled selected>Selecciona el tipo de cliente</option>
+      </select>
 
-        <select id="pacote1">
-          <option value="" disabled selected>Selecciona el paquete</option>
-        </select>
-      </div>
+      <select id="pacote1">
+        <option value="" disabled selected>Selecciona el paquete</option>
+      </select>
     </div>
-
-    <!-- PACOTE 2 -->
-    <div class="pacote">
-      <div class="titulo-pacote">Comparación 1</div>
-      <div class="grupo-selects">
-        <select id="cliente2">
-          <option value="" disabled selected>Selecciona el tipo de cliente</option>
-        </select>
-
-        <select id="pacote2">
-          <option value="" disabled selected>Selecciona el paquete</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- PACOTE 3 -->
-    <div class="pacote">
-      <div class="titulo-pacote">Comparación 2</div>
-      <div class="grupo-selects">
-        <select id="cliente3">
-          <option value="" disabled selected>Selecciona el tipo de cliente</option>
-        </select>
-
-        <select id="pacote3">
-          <option value="" disabled selected>Selecciona el paquete</option>
-        </select>
-      </div>
-    </div>
-
   </div>
+
+</div>
 
   <div class="topo-preto"></div>
 
@@ -801,7 +780,6 @@ html, body {
 </div>
 
 <script>
-  
 let dados = [];
 
 const HEADER_TOTAL = 50; // 45 + 55
@@ -827,25 +805,12 @@ function normalizarArquivo(valor) {
   return normalizarTexto(valor)
     .toLowerCase()
     .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '') // remove acentos
-    .replace(/\s+/g, ''); // remove espaços
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, '');
 }
 
-// comparação por VC (posição do canal)
-// isso mantém a grade coerente entre pacotes
 function chaveCanal(item) {
   return normalizarTexto(item.vc);
-}
-
-function criarSkeletonCanal() {
-  const canal = document.createElement('div');
-  canal.className = 'canal';
-  canal.innerHTML = `
-    <div class="skeleton vc"></div>
-    <div class="skeleton nome"></div>
-    <div class="skeleton tags"></div>
-  `;
-  return canal;
 }
 
 function criarCanal(match) {
@@ -866,45 +831,43 @@ function atualizarBarraPacotes() {
   const paisAtivo = document.querySelector('.bandeira.active');
   const pais = paisAtivo ? paisAtivo.dataset.pais : '';
 
-  [1, 2, 3].forEach(i => {
-    const clienteSelect = document.getElementById(`cliente${i}`);
-    const pacoteSelect = document.getElementById(`pacote${i}`);
-    const header = document.getElementById(`pacoteHeader${i}`);
-    const totalEl = document.getElementById(`pacoteTotal${i}`);
+  const clienteSelect = document.getElementById('cliente1');
+  const pacoteSelect = document.getElementById('pacote1');
+  const header = document.getElementById('pacoteHeader1');
+  const totalEl = document.getElementById('pacoteTotal1');
 
-    if (!clienteSelect || !pacoteSelect || !header || !totalEl) return;
+  if (!clienteSelect || !pacoteSelect || !header || !totalEl) return;
 
-    const cliente = clienteSelect.value;
-    const pacote = pacoteSelect.value;
+  const cliente = clienteSelect.value;
+  const pacote = pacoteSelect.value;
 
-    if (!pais || !cliente || !pacote) {
-      header.textContent = 'No seleccionado';
-      header.classList.add('vazio');
+  if (!pais || !cliente || !pacote) {
+    header.textContent = 'No seleccionado';
+    header.classList.add('vazio');
 
-      totalEl.textContent = '0 canales';
-      totalEl.classList.add('vazio');
-      return;
-    }
+    totalEl.textContent = '0 canales';
+    totalEl.classList.add('vazio');
+    return;
+  }
 
-    const canaisUnicos = new Set(
-      dados
-        .filter(d =>
-          d.pais === pais &&
-          d.cliente === cliente &&
-          d.pacote === pacote
-        )
-        .map(d => chaveCanal(d))
-    );
+  const canaisUnicos = new Set(
+    dados
+      .filter(d =>
+        d.pais === pais &&
+        d.cliente === cliente &&
+        d.pacote === pacote
+      )
+      .map(d => chaveCanal(d))
+  );
 
-    const total = canaisUnicos.size;
-    const textoTotal = `${total} ${total === 1 ? 'canal' : 'canales'}`;
+  const total = canaisUnicos.size;
+  const textoTotal = `${total} ${total === 1 ? 'canal' : 'canales'}`;
 
-    header.textContent = pacote;
-    header.classList.remove('vazio');
+  header.textContent = pacote;
+  header.classList.remove('vazio');
 
-    totalEl.textContent = textoTotal;
-    totalEl.classList.remove('vazio');
-  });
+  totalEl.textContent = textoTotal;
+  totalEl.classList.remove('vazio');
 }
 
 function calcularLimiteInicial() {
@@ -1066,20 +1029,18 @@ function selecionarPais(pais, elemento) {
   document.querySelectorAll('.bandeira').forEach(b => b.classList.remove('active'));
   elemento.classList.add('active');
 
-  ['cliente1', 'cliente2', 'cliente3'].forEach((clienteId, index) => {
-    const clienteSelect = document.getElementById(clienteId);
-    const pacoteSelect = document.getElementById(`pacote${index + 1}`);
+  const clienteSelect = document.getElementById('cliente1');
+  const pacoteSelect = document.getElementById('pacote1');
 
-    if (clienteSelect) {
-      clienteSelect.innerHTML = '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
-      clienteSelect.classList.remove('ativo');
-    }
+  if (clienteSelect) {
+    clienteSelect.innerHTML = '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
+    clienteSelect.classList.remove('ativo');
+  }
 
-    if (pacoteSelect) {
-      pacoteSelect.innerHTML = '<option value="" disabled selected>Selecciona el paquete</option>';
-      pacoteSelect.classList.remove('ativo');
-    }
-  });
+  if (pacoteSelect) {
+    pacoteSelect.innerHTML = '<option value="" disabled selected>Selecciona el paquete</option>';
+    pacoteSelect.classList.remove('ativo');
+  }
 
   const clientes = [...new Set(
     dados
@@ -1088,16 +1049,13 @@ function selecionarPais(pais, elemento) {
       .filter(Boolean)
   )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
-  ['cliente1', 'cliente2', 'cliente3'].forEach(id => {
-    const select = document.getElementById(id);
-    if (!select) return;
-
-    select.innerHTML = '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
+  if (clienteSelect) {
+    clienteSelect.innerHTML = '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
 
     clientes.forEach(c => {
-      select.innerHTML += `<option value="${c}">${c}</option>`;
+      clienteSelect.innerHTML += `<option value="${c}">${c}</option>`;
     });
-  });
+  }
 
   const resultado = getResultado();
   if (resultado) {
@@ -1116,17 +1074,13 @@ function gerarResultado() {
   const resultado = getResultado();
   if (!resultado) return;
 
-  const selecionados = [1, 2, 3].map(i => ({
-    cliente: document.getElementById(`cliente${i}`)?.value || '',
-    pacote: document.getElementById(`pacote${i}`)?.value || ''
-  }));
+  const cliente = document.getElementById('cliente1')?.value || '';
+  const pacote = document.getElementById('pacote1')?.value || '';
+  const paisAtivo = document.querySelector('.bandeira.active');
 
   atualizarBarraPacotes();
 
-  const paisAtivo = document.querySelector('.bandeira.active');
-
-  // só mostra resultado se houver país e pelo menos 1 pacote completo selecionado
-  if (!paisAtivo || !selecionados.some(s => s.cliente && s.pacote)) {
+  if (!paisAtivo || !cliente || !pacote) {
     resultado.style.display = "none";
     resultado.innerHTML = '<div class="espacador-topo"></div>';
     atualizarEstadoInicial();
@@ -1135,49 +1089,23 @@ function gerarResultado() {
 
   const pais = paisAtivo.dataset.pais;
 
-  // mapa individual por coluna/pacote
-  const mapasPacotes = selecionados.map(sel => {
-    const mapa = new Map();
-
-    if (!sel.cliente || !sel.pacote) return mapa;
-
-    dados
-      .filter(d =>
-        d.pais === pais &&
-        d.cliente === sel.cliente &&
-        d.pacote === sel.pacote
-      )
-      .forEach(item => {
-        mapa.set(chaveCanal(item), item);
-      });
-
-    return mapa;
-  });
-
-  // união total dos canais de todos os pacotes selecionados
-  const mapaBase = new Map();
-
-  mapasPacotes.forEach(mapa => {
-    mapa.forEach((item, chave) => {
-      if (!mapaBase.has(chave)) {
-        mapaBase.set(chave, item);
-      }
-    });
-  });
-
-  const base = Array.from(mapaBase.entries())
+  const canais = dados
+    .filter(d =>
+      d.pais === pais &&
+      d.cliente === cliente &&
+      d.pacote === pacote
+    )
     .sort((a, b) => {
-      const numA = parseInt(a[0], 10);
-      const numB = parseInt(b[0], 10);
+      const numA = parseInt(a.vc, 10);
+      const numB = parseInt(b.vc, 10);
 
       const vcA = Number.isNaN(numA) ? 999999 : numA;
       const vcB = Number.isNaN(numB) ? 999999 : numB;
 
       if (vcA !== vcB) return vcA - vcB;
 
-      return normalizarTexto(a[1].canal).localeCompare(normalizarTexto(b[1].canal), 'pt-BR');
-    })
-    .map(entry => entry[1]);
+      return normalizarTexto(a.canal).localeCompare(normalizarTexto(b.canal), 'pt-BR');
+    });
 
   resultado.innerHTML = '';
 
@@ -1185,22 +1113,10 @@ function gerarResultado() {
   topoInicial.className = 'topo-branco';
   resultado.appendChild(topoInicial);
 
-  base.forEach(ref => {
+  canais.forEach(match => {
     const linha = document.createElement('div');
     linha.className = 'linha-resultado';
-
-    const chaveRef = chaveCanal(ref);
-
-    mapasPacotes.forEach(mapa => {
-      const match = mapa.get(chaveRef);
-
-      if (match) {
-        linha.appendChild(criarCanal(match));
-      } else {
-        linha.appendChild(criarSkeletonCanal());
-      }
-    });
-
+    linha.appendChild(criarCanal(match));
     resultado.appendChild(linha);
   });
 
@@ -1216,47 +1132,45 @@ function gerarResultado() {
 
 // ===== EVENTOS DOS SELECTS =====
 function prepararEventosSelects() {
-  ['cliente1', 'cliente2', 'cliente3'].forEach((id, index) => {
-    const selectCliente = document.getElementById(id);
-    const selectPacote = document.getElementById(`pacote${index + 1}`);
+  const selectCliente = document.getElementById('cliente1');
+  const selectPacote = document.getElementById('pacote1');
 
-    if (selectCliente) {
-      selectCliente.addEventListener('change', function () {
-        const cliente = this.value;
-        const ativo = document.querySelector('.bandeira.active');
-        if (!ativo) return;
+  if (selectCliente) {
+    selectCliente.addEventListener('change', function () {
+      const cliente = this.value;
+      const ativo = document.querySelector('.bandeira.active');
+      if (!ativo) return;
 
-        const pais = ativo.dataset.pais;
+      const pais = ativo.dataset.pais;
 
-        const pacotes = [...new Set(
-          dados
-            .filter(d => d.pais === pais && d.cliente === cliente)
-            .map(d => d.pacote)
-            .filter(Boolean)
-        )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+      const pacotes = [...new Set(
+        dados
+          .filter(d => d.pais === pais && d.cliente === cliente)
+          .map(d => d.pacote)
+          .filter(Boolean)
+      )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
-        if (selectPacote) {
-          selectPacote.innerHTML = '<option value="" disabled selected>Selecciona el paquete</option>';
-          selectPacote.classList.remove('ativo');
+      if (selectPacote) {
+        selectPacote.innerHTML = '<option value="" disabled selected>Selecciona el paquete</option>';
+        selectPacote.classList.remove('ativo');
 
-          pacotes.forEach(p => {
-            selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
-          });
-        }
+        pacotes.forEach(p => {
+          selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
+        });
+      }
 
-        this.classList.toggle('ativo', this.value !== "");
-        atualizarBarraPacotes();
-        gerarResultado();
-      });
-    }
+      this.classList.toggle('ativo', this.value !== "");
+      atualizarBarraPacotes();
+      gerarResultado();
+    });
+  }
 
-    if (selectPacote) {
-      selectPacote.addEventListener('change', function () {
-        this.classList.toggle('ativo', this.value !== "");
-        gerarResultado();
-      });
-    }
-  });
+  if (selectPacote) {
+    selectPacote.addEventListener('change', function () {
+      this.classList.toggle('ativo', this.value !== "");
+      gerarResultado();
+    });
+  }
 
   document.querySelectorAll('select').forEach(select => {
     select.addEventListener('change', function () {
@@ -1310,7 +1224,6 @@ fetch('pacotes.csv?v=' + Date.now())
 
 window.addEventListener('load', atualizarEstadoInicial);
 window.addEventListener('resize', atualizarEstadoInicial);
-  
 </script>
   
 </body>
