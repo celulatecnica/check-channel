@@ -638,17 +638,17 @@ html, body {
 
     <div class="pacote-resumo-bloco">
       <div class="pacote-resumo vazio" id="pacoteHeader1">No seleccionado</div>
-      <div class="pacote-total vazio" id="pacoteTotal1">&nbsp;</div>
+      <div class="pacote-total vazio" id="pacoteTotal1">0 canales</div>
     </div>
 
     <div class="pacote-resumo-bloco">
       <div class="pacote-resumo vazio" id="pacoteHeader2">No seleccionado</div>
-      <div class="pacote-total vazio" id="pacoteTotal2">&nbsp;</div>
+      <div class="pacote-total vazio" id="pacoteTotal2">0 canales</div>
     </div>
 
     <div class="pacote-resumo-bloco">
       <div class="pacote-resumo vazio" id="pacoteHeader3">No seleccionado</div>
-      <div class="pacote-total vazio" id="pacoteTotal3">&nbsp;</div>
+      <div class="pacote-total vazio" id="pacoteTotal3">0 canales</div>
     </div>
 
   </div>
@@ -764,14 +764,16 @@ function atualizarBarraPacotes() {
     const pacote = pacoteSelect.value;
 
     // ✅ quando não houver seleção completa
+    
     if (!pais || !cliente || !pacote) {
       header.textContent = 'No seleccionado';
       header.classList.add('vazio');
 
-      totalEl.innerHTML = '&nbsp;';
+      totalEl.textContent = '0 canales';
       totalEl.classList.add('vazio');
       return;
     }
+
 
     // ✅ calcula total de canais do pacote selecionado
     const canaisUnicos = new Set(
