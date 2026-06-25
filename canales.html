@@ -782,7 +782,11 @@ html, body {
   max-width: 200px;
   object-fit: contain;
 }
-  
+
+.bloco-pacotes-canal {
+  margin-bottom: 36px;
+}
+ 
 </style>
 </head>
 
@@ -1323,8 +1327,8 @@ function consultarCanal() {
     resultado.appendChild(bloco);
 
     // ===== LISTA DE PACOTES =====
-    const listaBloco = document.createElement('div');
-    listaBloco.className = 'linha-resultado grid grid-canal-unico';
+const listaBloco = document.createElement('div');
+listaBloco.className = 'linha-resultado grid grid-canal-unico bloco-pacotes-canal';
 
     const listaHTML = document.createElement('div');
     listaHTML.style.textAlign = "center";
