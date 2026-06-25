@@ -828,7 +828,7 @@ html, body {
 <div id="bandeiras"></div>
 
 <div class="titulo-busca">
-  Informe el número del canal
+  Informe el nombre o número del canal
 </div>
   
 <div class="busca-canal-wrap">
@@ -850,7 +850,7 @@ html, body {
       type="text"
       id="buscaCanal"
       class="input-canal"
-      placeholder="Ingresa el número del canal"
+      placeholder="Ingresa el nombre o número del canal"
       inputmode="numeric"
       autocomplete="off"
     >
@@ -919,6 +919,13 @@ function normalizarArquivo(valor) {
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/\s+/g, '');
+}
+
+function normalizarComparacao(valor) {
+  return normalizarTexto(valor)
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, ''); // remove acentos
 }
 
 function chaveCanal(item) {
@@ -1221,17 +1228,26 @@ function consultarCanal() {
   }
 
   const pais = paisAtivo.dataset.pais;
-  const numeroBusca = input.value.trim();
+const termoBusca = input.value.trim();
 
-  // 🔎 Buscar canais do país com esse número
-  const encontrados = dados.filter(d =>
-    d.pais === pais && normalizarTexto(d.vc) === numeroBusca
+const termoNormalizado = normalizarComparacao(termoBusca);
+
+const encontrados = dados.filter(d => {
+  if (d.pais !== pais) return false;
+
+  const vc = normalizarTexto(d.vc);               // número do canal
+  const nomeCanal = normalizarComparacao(d.canal); // nome tratado
+
+  return (
+    vc === termoBusca ||                  // busca por número exato
+    nomeCanal.includes(termoNormalizado) // busca por nome parcial
   );
+});
 
-  if (!encontrados.length) {
-    alert("Canal no encontrado");
-    return;
-  }
+if (!encontrados.length) {
+  alert("Canal no encontrado por número o nombre");
+  return;
+}
 
   // ✅ Pegar dados principais (primeiro registro)
   const canalBase = encontrados[0];
