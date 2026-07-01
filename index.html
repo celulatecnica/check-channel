@@ -691,10 +691,7 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
-
-  padding: 4px 12px;
-  border-radius: 999px;
+  gap: 9px;
 
   font-size: 21px;
   font-weight: 600;
@@ -703,17 +700,9 @@ html, body {
 
   cursor: pointer;
   user-select: none;
-
-  transition:
-    background 0.25s ease,
-    color 0.25s ease;
 }
 
-.grupo-paises-titulo:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: #ffffff;
-}
-
+/* Círculo somente na seta */
 .grupo-seta {
   width: 18px;
   height: 18px;
@@ -722,10 +711,12 @@ html, body {
   align-items: center;
   justify-content: center;
 
+  flex-shrink: 0;
+
   border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
 
   color: #f5f5f7;
-  background: rgba(255, 255, 255, 0.06);
 
   transition:
     background 0.25s ease,
@@ -733,11 +724,12 @@ html, body {
     transform 0.25s ease;
 }
 
+/* Desenha o chevron */
 .grupo-seta::before {
   content: "";
 
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
 
   border-right: 2px solid currentColor;
   border-bottom: 2px solid currentColor;
@@ -748,11 +740,17 @@ html, body {
   transition: transform 0.25s ease;
 }
 
-/* Quando o grupo está fechado, seta aponta para a direita */
+/* Estado fechado: aponta para a direita */
 .grupo-paises.fechado .grupo-seta::before {
   transform: rotate(-45deg);
   margin-top: 0;
   margin-left: -2px;
+}
+
+/* Hover somente na seta */
+.grupo-paises-titulo:hover .grupo-seta {
+  background: rgba(0, 113, 227, 0.25);
+  color: #ffffff;
 }
 
 /* Hover refinado */
