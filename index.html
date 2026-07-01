@@ -776,6 +776,7 @@ html, body {
 .grupo-paises.fechado .grupo-bandeiras {
   max-height: 0;
   opacity: 0;
+  pointer-events: none;
 }
 
 .bandeira {
@@ -1256,7 +1257,15 @@ function carregarBandeiras() {
     wrapper.classList.add('fechado');
 
 titulo.addEventListener('click', () => {
-  wrapper.classList.toggle('fechado');
+  const estavaFechado = wrapper.classList.contains('fechado');
+
+  document
+    .querySelectorAll('.grupo-paises')
+    .forEach(grupo => grupo.classList.add('fechado'));
+
+  if (estavaFechado) {
+    wrapper.classList.remove('fechado');
+  }
 });
     
     grupo.paises.forEach(p => {
