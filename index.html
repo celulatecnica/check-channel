@@ -1058,45 +1058,42 @@ window.addEventListener('touchmove', (e) => {
 }, { passive: false });
 
 // ===== BANDEIRAS =====
-function carregarBandeiras() {
+function carregarBandeiras() {function carregarBandeiras() {
 
   const container = document.getElementById('bandeiras');
   if (!container) return;
 
   container.innerHTML = '';
 
-  const americaLatina = new Set([
-  'Argentina',
-  'Chile',
-  'Colombia',
-  'Ecuador',
-  'Mexico',
-  'México',
-  'Peru',
-  'Perú',
-  'Uruguay'
-]);
+  const americaLatina = [
+    'ARGENTINA',
+    'CHILE',
+    'COLOMBIA',
+    'ECUADOR',
+    'MEXICO',
+    'PERU',
+    'URUGUAY'
+  ];
 
-  const paises = [...new Set(
-    dados
-      .map(d => normalizarTexto(d.pais))
-      .filter(Boolean)
-  )];
-
-
-const caribe = paises.filter(
-  p => !americaLatina.has(p)
-);
-
+  const caribe = [
+    'TRINIDAD Y TOBAGO',
+    'CURAZAO',
+    'BARBADOS',
+    'OTHER ISLANDS',
+    'GUYANA',
+    'SURINAME',
+    'PUERTO RICO',
+    'US VIRGIN ISLANDS'
+  ];
 
   const grupos = [
     {
       titulo: 'América Latina',
-      paises: paises.filter(p => americaLatina.has(p))
+      paises: americaLatina
     },
     {
       titulo: 'Caribe',
-      paises: caribe.sort((a, b) => a.localeCompare(b, 'pt-BR'))
+      paises: caribe
     }
   ];
 
@@ -1113,6 +1110,10 @@ const caribe = paises.filter(
     linha.className = 'grupo-bandeiras';
 
     grupo.paises.forEach(p => {
+
+      const existe = dados.some(d => d.pais === p);
+
+      if (!existe) return;
 
       const div = document.createElement('div');
       div.className = 'bandeira';
@@ -1134,6 +1135,7 @@ const caribe = paises.filter(
     wrapper.appendChild(linha);
 
     container.appendChild(wrapper);
+
   });
 }
 
