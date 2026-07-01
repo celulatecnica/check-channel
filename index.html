@@ -685,28 +685,80 @@ html, body {
 }  
 
 .grupo-paises-titulo {
-  font-size: 21px;
-  font-weight: 600;
-  color: #f5f5f7;
+  width: fit-content;
+  margin: 0 auto;
 
-  text-align: center;
-}
-.grupo-paises-titulo {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
 
+  padding: 4px 12px;
+  border-radius: 999px;
+
+  font-size: 21px;
+  font-weight: 600;
+  color: #f5f5f7;
+  text-align: center;
+
   cursor: pointer;
   user-select: none;
+
+  transition:
+    background 0.25s ease,
+    color 0.25s ease;
+}
+
+.grupo-paises-titulo:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
 }
 
 .grupo-seta {
+  width: 18px;
+  height: 18px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  color: #f5f5f7;
+  background: rgba(255, 255, 255, 0.06);
+
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.grupo-seta::before {
+  content: "";
+
+  width: 7px;
+  height: 7px;
+
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+
+  transform: rotate(45deg);
+  margin-top: -3px;
+
   transition: transform 0.25s ease;
 }
 
-.grupo-paises.fechado .grupo-seta {
-  transform: rotate(-90deg);
+/* Quando o grupo está fechado, seta aponta para a direita */
+.grupo-paises.fechado .grupo-seta::before {
+  transform: rotate(-45deg);
+  margin-top: 0;
+  margin-left: -2px;
+}
+
+/* Hover refinado */
+.grupo-paises-titulo:hover .grup*-seta {
+  color: #ffffff;
+  background: rgba(0, 113, 227, 0.22);
 }
 
 .grupo-bandeiras {
@@ -732,8 +784,6 @@ html, body {
   position: relative;
 }
 
-
-
 .tooltip-pais {
   position: absolute;
   top: calc(100% + 10px);
@@ -757,7 +807,6 @@ html, body {
 
   z-index: 99999;
 }
-
   
 .tooltip-pais::before {
   content: "";
@@ -772,7 +821,6 @@ html, body {
   border-right: 5px solid transparent;
   border-bottom: 5px solid rgba(28,28,30,.95);
 }
-
   
 .bandeira:hover .tooltip-pais {
   opacity: 1;
@@ -1201,7 +1249,7 @@ function carregarBandeiras() {
     titulo.className = 'grupo-paises-titulo';
     titulo.innerHTML = `
   <span>${grupo.titulo}</span>
-  <span class="grupo-seta">▼</span>
+  <span class="grupo-seta" aria-hidden="true"></span>
 `;
 
     const linha = document.createElement('div');
