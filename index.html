@@ -714,8 +714,8 @@ html, body {
   flex-shrink: 0;
 
   border-radius: 50%;
-  background: #ffffff;
 
+  background: #ffffff;
   color: #0F0F0F;
 
   transition:
@@ -726,7 +726,7 @@ html, body {
 
 /* Desenha o chevron */
 .grupo-seta::before {
-  content: "";
+  content:*"";
 
   width: 6px;
   height: 6px;
@@ -740,31 +740,39 @@ html, body {
   transition: transform 0.25s ease;
 }
 
-/* Estado fechado: aponta para a direita */
-.grupo-paises.fechado .grupo-seta::before {
-  transform: rotate(-45deg);
+/* Estado fechado: seta aponta para a direita */
+.grupo-paises.fechado .*rupo-seta::before {
+  transform: r*tate(-45deg);
   margin-top: 0;
   margin-left: -2px;
 }
 
-/* Estado aberto/selecionado do grupo */
-.grupo-paises:not(.fechado) .grupo-seta {
+/* Estado fechado */
+.grupo-paises.fechado .grupo-seta {
+  background: #ffffff;
+  color: #0F0F0F;
+}
+
+/* Estado aberto / selecionado */
+.grupo-paises:not(.fechado) .gru*o-seta {
   background: #0F0F0F;
   color: #ffffff;
 }
 
-/* Hover somente na seta */
-.grupo-paises-titulo:hover .grupo-seta {
-  background: rgba(0, 113, 227, 0.25);
-  color: #ffffff;
+/* Hover no grupo fechado */
+.grupo-paises.fechado .grupo-pai*es-titulo:hover .grupo-seta {
+  ba*kground: #ffffff;
+  color: #0F0F0F;
+  transform: scale(1.08);
 }
 
-/* Hover refinado */
-.grupo-paises-titulo:hover .grupo-seta {
-  background: rgba(0, 113, 227, 0.25);
-  color: #ffffff;
+/* Hover no grupo aberto */
+.grupo-paises:not(.fechado) .gru*o-paises-titulo:hover .grupo-seta *
+  background: #0F0F0F;
+  color: #*fffff;
+  transform: scale(1.08);
 }
-
+  
 .grupo-bandeiras {
   display: flex;
   justify-content: center;
