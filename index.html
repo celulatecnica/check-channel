@@ -1165,7 +1165,7 @@ titulo.addEventListener('click', () => {
       const img = document.createElement('img');
       img.src = `flags/${normalizarArquivo(p)}.png`;
       img.alt = p;
-
+      img.title = p;
       div.appendChild(img);
 
       div.dataset.pais = p;
