@@ -760,22 +760,33 @@ html, body {
 }
 
 .grupo-bandeiras {
-  overflow: visible;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  overflow: hidden;
+
+  max-height: 140px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  opacity: 1;
+
+  transform: translateY(0);
 
   transition:
-    max-height 0.35s ease,
-    opacity 0.35s ease;
-
-  max-height: 500px;
-      margin-top: 5px;
-
-    margin-bottom: 5px;
-  opacity: 1;
+    max-height 0.32s ease,
+    opacity 0.22s ease,
+    transform 0.32s ease,
+    margin 0.32s ease;
 }
 
 .grupo-paises.fechado .grupo-bandeiras {
   max-height: 0;
+  margin-top: 0;
+  margin-bottom: 0;
   opacity: 0;
+  transform: translateY(-6px);
   pointer-events: none;
 }
 
@@ -1257,7 +1268,28 @@ function carregarBandeiras() {
     wrapper.classList.add('fechado');
 
 titulo.addEventListener('click', () => {
-  const estavaFechado = wrapper.classList.contains('fechado');
+  const grupoAberto = document.querySelector('.grupo-paises:not(.fechado)');
+  const esteGrupoEstaAberto = !wrapper.classList.contains('fechado');
+
+  // Se clicar no grupo já aberto, apenas fecha
+  if (esteGrupoEstaAberto) {
+    wrapper.classList.add('fechado');
+    return;
+  }
+
+  // Se existir outro grupo aberto, fecha primeiro
+  if (grupoAberto) {
+    grupoAberto.classList.add('fechado');
+
+    setTimeout(() => {
+      wrapper.classList.remove('fechado');
+    }, 260);
+
+    return;
+  }
+
+  // Se nenhum grupo estiver aberto, abre direto
+  wrapper.classList.remove('fechado');
 
   document
     .querySelectorAll('.grupo-paises')
