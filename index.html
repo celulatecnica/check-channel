@@ -685,7 +685,40 @@ html, body {
   text-align: center;
   margin-bottom: 18px;
 }
+.grupo-paises-titulo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 
+  cursor: pointer;
+  user-select: none;
+}
+
+.grupo-seta {
+  transition: transform 0.25s ease;
+}
+
+.grupo-paises.fechado .grupo-seta {
+  transform: rotate(-90deg);
+}
+
+.grupo-bandeiras {
+  overflow: hidden;
+
+  transition:
+    max-height 0.35s ease,
+    opacity 0.35s ease;
+
+  max-height: 500px;
+  opacity: 1;
+}
+
+.grupo-paises.fechado .grupo-bandeiras {
+  max-height: 0;
+  opacity: 0;
+}
+  
 </style>
 </head>
 
@@ -1106,11 +1139,20 @@ function carregarBandeiras() {
 
     const titulo = document.createElement('div');
     titulo.className = 'grupo-paises-titulo';
-    titulo.textContent = grupo.titulo;
+    titulo.innerHTML = `
+  <span>${grupo.titulo}</span>
+  <span class="grupo-seta">▼</span>
+`;
 
     const linha = document.createElement('div');
     linha.className = 'grupo-bandeiras';
 
+    wrapper.classList.add('fechado');
+
+titulo.addEventListener('click', () => {
+  wrapper.classList.toggle('fechado');
+});
+    
     grupo.paises.forEach(p => {
 
       const existe = dados.some(d => d.pais === p);
