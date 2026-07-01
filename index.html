@@ -669,20 +669,15 @@ html, body {
   color: #8e8e93;
 }
   
+/* ===== GRUPOS DE PAÍSES ===== */
+
 .grupo-paises {
   width: 100%;
 }
 
 .grupo-paises + .grupo-paises {
-  margin-top: 0px;
+  margin-top: 0;
 }
-
-.grupo-bandeiras {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 12px;
-}  
 
 .grupo-paises-titulo {
   width: fit-content;
@@ -702,7 +697,8 @@ html, body {
   user-select: none;
 }
 
-/* Círculo somente na seta */
+/* ===== SETA DOS GRUPOS ===== */
+
 .grupo-seta {
   width: 18px;
   height: 18px;
@@ -712,67 +708,61 @@ html, body {
   justify-content: center;
 
   flex-shrink: 0;
-
   border-radius: 50%;
 
-  background: #ffffff;
-  color: #0F0F0F;
-
   transition:
-    background 0.25s ease,
-    color 0.25s ease,
+    background-color 0.25s ease,
     transform 0.25s ease;
 }
 
-/* Desenha o chevron */
+/* Desenho da seta */
 .grupo-seta::before {
-  content:*"";
+  content: "";
 
   width: 6px;
   height: 6px;
 
-  border-right: 2px solid currentColor;
-  border-bottom: 2px solid currentColor;
+  border-right: 2px solid;
+  border-bottom: 2px solid;
 
-  transform: rotate(45deg);
-  margin-top: -3px;
-
-  transition: transform 0.25s ease;
+  transition:
+    border-color 0.25s ease,
+    transform 0.25s ease;
 }
 
-/* Estado fechado: seta aponta para a direita */
-.grupo-paises.fechado .*rupo-seta::before {
-  transform: r*tate(-45deg);
+/* NÃO SELECIONADO / FECHADO:
+   círculo branco e seta #0F0F0F */
+.grupo-paises.fechado .grupo-seta {
+  background-color: #ffffff;
+}
+
+.grupo-paises.fechado .grupo-seta::before {
+  border-color: #0F0F0F;
+  transform: rotate(-45deg);
   margin-top: 0;
   margin-left: -2px;
 }
 
-/* Estado fechado */
-.grupo-paises.fechado .grupo-seta {
-  background: #ffffff;
-  color: #0F0F0F;
+/* SELECIONADO / ABERTO:
+   círculo #0F0F0F e seta branca */
+.grupo-paises:not(.fechado) .grupo-seta {
+  background-color: #0F0F0F;
 }
 
-/* Estado aberto / selecionado */
-.grupo-paises:not(.fechado) .gru*o-seta {
-  background: #0F0F0F;
-  color: #ffffff;
+.grupo-paises:not(.fechado) .grupo-seta::before {
+  border-color: #ffffff;
+  transform: rotate(45deg);
+  margin-top: -3px;
+  margin-left: 0;
 }
 
-/* Hover no grupo fechado */
-.grupo-paises.fechado .grupo-pai*es-titulo:hover .grupo-seta {
-  ba*kground: #ffffff;
-  color: #0F0F0F;
+/* Hover: mantém as cores corretas e só aumenta levemente */
+.grupo-paises-titulo:hover .grupo-seta {
   transform: scale(1.08);
 }
 
-/* Hover no grupo aberto */
-.grupo-paises:not(.fechado) .gru*o-paises-titulo:hover .grupo-seta *
-  background: #0F0F0F;
-  color: #*fffff;
-  transform: scale(1.08);
-}
-  
+/* ===== BANDEIRAS DOS GRUPOS ===== */
+
 .grupo-bandeiras {
   display: flex;
   justify-content: center;
@@ -849,6 +839,70 @@ html, body {
 .bandeira:hover .tooltip-pais {
   opacity: 1;
   visibility: visible;
+}
+/* ===== SETA DOS GRUPOS - ESTADO FINAL CORRIGIDO ===== */
+
+/* Base da bolinha */
+.grupo-paises .grupo-seta {
+  width: 18px;
+  height: 18px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+  border-radius: 50%;
+
+  transition:
+    background-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+/* Desenho real da seta */
+.grupo-paises .grupo-seta::before {
+  content: "";
+
+  width: 6px;
+  height: 6px;
+
+  border-right: 2px solid;
+  border-bottom: 2px solid;
+
+  transition:
+    border-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+/* FECHADO / NÃO SELECIONADO:
+   círculo branco e seta #0F0F0F */
+.grupo-paises.fechado .grupo-seta {
+  background-color: #ffffff !important;
+}
+
+.grupo-paises.fechado .grupo-seta::before {
+  border-color: #0F0F0F !important;
+  transform: rotate(-45deg);
+  margin-top: 0;
+  margin-left: -2px;
+}
+
+/* ABERTO / SELECIONADO:
+   círculo #0F0F0F e seta branca */
+.grupo-paises:not(.fechado) .grupo-seta {
+  background-color: #0F0F0F !important;
+}
+
+.grupo-paises:not(.fechado) .grupo-seta::before {
+  border-color: #ffffff !important;
+  transform: rotate(45deg);
+  margin-top: -3px;
+  margin-left: 0;
+}
+
+/* Hover: mantém as cores corretas, só aumenta levemente */
+.grupo-paises-titulo:hover .grupo-seta {
+  transform: scale(1.08);
 }
   
 </style>
