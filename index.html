@@ -754,9 +754,9 @@ html, body {
 }
 
 /* Hover refinado */
-.grupo-paises-titulo:hover .grup*-seta {
+.grupo-paises-titulo:hover .grupo-seta {
+  background: rgba(0, 113, 227, 0.25);
   color: #ffffff;
-  background: rgba(0, 113, 227, 0.22);
 }
 
 .grupo-bandeiras {
@@ -1277,7 +1277,7 @@ titulo.addEventListener('click', () => {
     return;
   }
 
-  // Se existir outro grupo aberto, fecha primeiro
+  // Se existir outro grupo aberto, fecha primeiro e depois abre o novo
   if (grupoAberto) {
     grupoAberto.classList.add('fechado');
 
@@ -1290,16 +1290,7 @@ titulo.addEventListener('click', () => {
 
   // Se nenhum grupo estiver aberto, abre direto
   wrapper.classList.remove('fechado');
-
-  document
-    .querySelectorAll('.grupo-paises')
-    .forEach(grupo => grupo.classList.add('fechado'));
-
-  if (estavaFechado) {
-    wrapper.classList.remove('fechado');
-  }
-});
-    
+});    
     grupo.paises.forEach(p => {
 
       const existe = dados.some(d => d.pais === p);
