@@ -665,6 +665,26 @@ html, body {
   color: #8e8e93;
 }
   
+.grupo-paises {
+  margin-bottom: 32px;
+}
+
+.grupo-paises-titulo {
+  font-size: 18px;
+  font-weight: 600;
+  color: #f5f5f7;
+
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.grupo-bandeiras {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}  
+  
 </style>
 </head>
 
@@ -1038,30 +1058,77 @@ window.addEventListener('touchmove', (e) => {
 
 // ===== BANDEIRAS =====
 function carregarBandeiras() {
+
   const container = document.getElementById('bandeiras');
   if (!container) return;
+
+  container.innerHTML = '';
+
+  const americaLatina = [
+    'Argentina',
+    'Chile',
+    'Colombia',
+    'Ecuador',
+    'Mexico',
+    'Peru',
+    'Uruguay'
+  ];
 
   const paises = [...new Set(
     dados
       .map(d => normalizarTexto(d.pais))
       .filter(Boolean)
-  )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+  )];
 
-  container.innerHTML = "";
+  const caribe = paises.filter(
+    p => !americaLatina.includes(p)
+  );
 
-  paises.forEach(p => {
-    const div = document.createElement('div');
-    div.className = 'bandeira';
+  const grupos = [
+    {
+      titulo: 'América Latina',
+      paises: americaLatina.filter(p => paises.includes(p))
+    },
+    {
+      titulo: 'Caribe',
+      paises: caribe.sort((a, b) => a.localeCompare(b, 'pt-BR'))
+    }
+  ];
 
-    const img = document.createElement('img');
-    img.src = `flags/${normalizarArquivo(p)}.png`;
-    img.alt = p;
+  grupos.forEach(grupo => {
 
-    div.appendChild(img);
-    div.dataset.pais = p;
-    div.onclick = () => selecionarPais(p, div);
+    const wrapper = document.createElement('div');
+    wrapper.className = 'grupo-paises';
 
-    container.appendChild(div);
+    const titulo = document.createElement('div');
+    titulo.className = 'grupo-paises-titulo';
+    titulo.textContent = grupo.titulo;
+
+    const linha = document.createElement('div');
+    linha.className = 'grupo-bandeiras';
+
+    grupo.paises.forEach(p => {
+
+      const div = document.createElement('div');
+      div.className = 'bandeira';
+
+      const img = document.createElement('img');
+      img.src = `flags/${normalizarArquivo(p)}.png`;
+      img.alt = p;
+
+      div.appendChild(img);
+
+      div.dataset.pais = p;
+      div.onclick = () => selecionarPais(p, div);
+
+      linha.appendChild(div);
+
+    });
+
+    wrapper.appendChild(titulo);
+    wrapper.appendChild(linha);
+
+    container.appendChild(wrapper);
   });
 }
 
