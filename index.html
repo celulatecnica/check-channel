@@ -1337,7 +1337,6 @@ function carregarBandeiras() {
     wrapper.classList.add('fechado');
 
 titulo.addEventListener('click', () => {
-  const grupoAberto = document.querySelector('.grupo-paises:not(.fechado)');
   const esteGrupoEstaAberto = !wrapper.classList.contains('fechado');
 
   // Se clicar no grupo já aberto, apenas fecha
@@ -1346,20 +1345,16 @@ titulo.addEventListener('click', () => {
     return;
   }
 
-  // Se existir outro grupo aberto, fecha primeiro e depois abre o novo
-  if (grupoAberto) {
-    grupoAberto.classList.add('fechado');
+  // Fecha todos os outros grupos
+  document
+    .querySelectorAll('.grupo-paises')
+    .forEach(grupoPais => {
+      grupoPais.classList.add('fechado');
+    });
 
-    setTimeout(() => {
-      wrapper.classList.remove('fechado');
-    }, 260);
-
-    return;
-  }
-
-  // Se nenhum grupo estiver aberto, abre direto
+  // Abre o grupo clicado ao mesmo tempo
   wrapper.classList.remove('fechado');
-});    
+});
     grupo.paises.forEach(p => {
 
       const existe = dados.some(d => d.pais === p);
