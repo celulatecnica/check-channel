@@ -1065,15 +1065,17 @@ function carregarBandeiras() {
 
   container.innerHTML = '';
 
-  const americaLatina = [
-    'Argentina',
-    'Chile',
-    'Colombia',
-    'Ecuador',
-    'Mexico',
-    'Peru',
-    'Uruguay'
-  ];
+  const americaLatina = new Set([
+  'Argentina',
+  'Chile',
+  'Colombia',
+  'Ecuador',
+  'Mexico',
+  'México',
+  'Peru',
+  'Perú',
+  'Uruguay'
+]);
 
   const paises = [...new Set(
     dados
@@ -1081,14 +1083,16 @@ function carregarBandeiras() {
       .filter(Boolean)
   )];
 
-  const caribe = paises.filter(
-    p => !americaLatina.includes(p)
-  );
+
+const caribe = paises.filter(
+  p => !americaLatina.has(p)
+);
+
 
   const grupos = [
     {
       titulo: 'América Latina',
-      paises: americaLatina.filter(p => paises.includes(p))
+      paises: paises.filter(p => americaLatina.has(p))
     },
     {
       titulo: 'Caribe',
