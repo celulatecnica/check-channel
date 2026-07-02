@@ -1276,17 +1276,7 @@ function calcularLimiteInicial() {
 }
 
 function clampScrollInicial() {
-  if (resultadoVisivel()) return;
-
-  const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-
-  if (y > limiteInicial && !travando) {
-    travando = true;
-    requestAnimationFrame(() => {
-      window.scrollTo(0, limiteInicial);
-      travando = false;
-    });
-  }
+  // trava de scroll removida
 }
 
 function atualizarEstadoCabecalho() {
@@ -1324,7 +1314,6 @@ function atualizarEstadoCabecalho() {
 
 function atualizarEstadoInicial() {
   calcularLimiteInicial();
-  clampScrollInicial();
   atualizarEstadoCabecalho();
 }
 
@@ -1332,32 +1321,23 @@ function atualizarEstadoInicial() {
 window.addEventListener('scroll', () => {
   const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
 
-
-
-const topMain = document.getElementById('topbarMain');
-const topSub = document.getElementById('topbarSub');
-const topPacotes = document.getElementById('topbarPacotes');
-
-
+  const topMain = document.getElementById('topbarMain');
+  const topSub = document.getElementById('topbarSub');
+  const topPacotes = document.getElementById('topbarPacotes');
 
   let progresso = scrollY / 70;
   if (progresso > 1) progresso = 1;
 
   const movimento = -50 * progresso;
 
-
-
-if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
-if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
-if (topPacotes) topPacotes.style.transform = `translateY(${movimento}px)`;
-
-
+  if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
+  if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
+  if (topPacotes) topPacotes.style.transform = `translateY(${movimento}px)`;
 
   atualizarEstadoCabecalho();
-  clampScrollInicial();
 }, { passive: true });
 
-// ===== BLOQUEIO WHEEL =====
+/*
 window.addEventListener('wheel', (e) => {
   if (resultadoVisivel()) return;
 
@@ -1368,6 +1348,7 @@ window.addEventListener('wheel', (e) => {
     window.scrollTo(0, limiteInicial);
   }
 }, { passive: false });
+*/
 
 // ===== BLOQUEIO TECLADO =====
 window.addEventListener('keydown', (e) => {
@@ -1384,7 +1365,7 @@ window.addEventListener('keydown', (e) => {
   }
 }, { passive: false });
 
-// ===== BLOQUEIO TOUCH =====
+/*
 window.addEventListener('touchstart', (e) => {
   if (!e.touches || !e.touches.length) return;
   touchStartY = e.touches[0].clientY;
@@ -1403,6 +1384,7 @@ window.addEventListener('touchmove', (e) => {
     window.scrollTo(0, limiteInicial);
   }
 }, { passive: false });
+*/
 
 // ===== BANDEIRAS =====
 function carregarBandeiras() {
