@@ -302,7 +302,8 @@ body {
   flex-shrink: 0;
   border-radius: 50%;
 
-  transition: background-color 0.25s ease;
+  transition:
+    background-color 0.25s ease;
 }
 
 /* Desenho da seta */
@@ -418,46 +419,46 @@ body {
 /* ===== TOOLTIP PAÍS ===== */
 
 .tooltip-pais {
-  position: abs*lute;
+  position: absolute;
   top: calc(100% + 10px);
-  *eft: 50%;
-
-  transform: translateX*-50%);
-
-  background: rgba(28,28,3*,.95);
-  color: #fff;
-
-  padding: *px 10px;
-  border-radius: 8px;
-
-  *ont-size: 12px;
-  white-space: now*ap;
-
-  opacity: 0;
-  visibility: h*dden;
-
-  transition: .2s ease;
-
-  *-index: 99999;
-}
-
-.tooltip-pais::b*fore {
-  content: "";
-  position: *bsolute;
-
-  top: -5px;
-  left: 50%*
+  left: 50%;
 
   transform: translateX(-50%);
 
-* border-left: 5px solid transparen*;
-  border-right: 5px solid transp*rent;
-  border-bottom: 5px solid r*ba(28,28,30,.95);
+  background: rgba(28,28,30,.95);
+  color: #fff;
+
+  padding: 6px 10px;
+  border-radius: 8px;
+
+  font-size: 12px;
+  white-space: nowrap;
+
+  opacity: 0;
+  visibility: hidden;
+
+  transition: .2s ease;
+
+  z-index: 99999;
 }
 
-.bandeira:hov*r .tooltip-pais {
+.tooltip-pais::before {
+  content: "";
+  position: absolute;
+
+  top: -5px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid rgba(28,28,30,.95);
+}
+
+.bandeira:hover .tooltip-pais {
   opacity: 1;
-  *isibility: visible;
+  visibility: visible;
 }
   
 .grid {
@@ -1404,13 +1405,13 @@ window.addEventListener('touchmove', (e) => {
 }, { passive: false });
 
 // ===== BANDEIRAS =====
-function carr*garBandeiras() {
-  const container*= document.getElementById('bandeir*s');
+function carregarBandeiras() {
+  const container = document.getElementById('bandeiras');
   if (!container) return;
 
-  *ontainer.innerHTML = '';
+  container.innerHTML = '';
 
-  const *mericaLatina = [
+  const americaLatina = [
     'ARGENTINA',
     'CHILE',
     'COLOMBIA',
@@ -1420,7 +1421,7 @@ function carr*garBandeiras() {
     'URUGUAY'
   ];
 
-  const caribe * [
+  const caribe = [
     'TRINIDAD Y TOBAGO',
     'CURAZAO',
     'BARBADOS',
@@ -1431,7 +1432,7 @@ function carr*garBandeiras() {
     'OTHER ISLANDS'
   ];
 
-  const grupos * [
+  const grupos = [
     {
       titulo: 'América Latina',
       paises: americaLatina
@@ -1442,37 +1443,68 @@ function carr*garBandeiras() {
     }
   ];
 
-* grupos.forEach(grupo => {
-    con*t wrapper = document.createElement*'div');
-    wrapper.className = 'g*upo-paises fechado';
+  grupos.forEach(grupo => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'grupo-paises fechado';
 
-    const ti*ulo = document.createElement('div'*;
-    titulo.className = 'grupo-pa*ses-titulo';
+    const titulo = document.createElement('div');
+    titulo.className = 'grupo-paises-titulo';
 
-    titulo.innerHTML*= `
-      <span>${grupo.titulo}</s*an>
-      <span class="grupo-seta"*aria-hidden="true"></span>
+    titulo.innerHTML = `
+      <span>${grupo.titulo}</span>
+      <span class="grupo-seta" aria-hidden="true"></span>
     `;
-*    const linha = document.createE*ement('div');
-    linha.className * 'grupo-bandeiras';
 
-    titulo.ad*EventListener('click', () => {
-   *  const esteGrupoEstaAberto = !wra*per.classList.contains('fechado');*
-      // Se clicar no grupo já ab*rto, apenas fecha
-      if (esteGr*poEstaAberto) {
-        wrapper.cl*ssList.add('fechado');
-        ret*rn;
+    const linha = document.createElement('div');
+    linha.className = 'grupo-bandeiras';
+
+    titulo.addEventListener('click', () => {
+      const esteGrupoEstaAberto = !wrapper.classList.contains('fechado');
+
+      if (esteGrupoEstaAberto) {
+        wrapper.classList.add('fechado');
+        return;
       }
 
-      // Fecha todos *s outros grupos
       document
-   *    .querySelectorAll('.grupo-pais*s')
-        .forEach(grupoPais => *
-          grupoPais.classList.add*'fechado');
+        .querySelectorAll('.grupo-paises')
+        .forEach(grupoPais => {
+          grupoPais.classList.add('fechado');
         });
 
-      // *bre o grupo clicado ao mesmo tempo*      wrapper.classList.remove('fe*hado');
+      wrapper.classList.remove('fechado');
     });
+
+    grupo.paises.forEach(p => {
+      const existe = dados.some(d => d.pais === p);
+
+      if (!existe) return;
+
+      const div = document.createElement('div');
+      div.className = 'bandeira';
+
+      div.innerHTML = `
+        <span class="tooltip-pais">${p}</span>
+      `;
+
+      const img = document.createElement('img');
+      img.src = `flags/${normalizarArquivo(p)}.png`;
+      img.alt = p;
+
+      div.appendChild(img);
+
+      div.dataset.pais = p;
+      div.onclick = () => selecionarPais(p, div);
+
+      linha.appendChild(div);
+    });
+
+    wrapper.appendChild(titulo);
+    wrapper.appendChild(linha);
+
+    container.appendChild(wrapper);
+  });
+}
 
     grupo.paises.*orEach(p => {
       const existe =*dados.some(d => d.pais === p);
