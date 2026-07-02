@@ -1051,8 +1051,6 @@ let dados = [];
 
 const HEADER_TOTAL = 50; // 45 + 55
 let limiteInicial = 0;
-let touchStartY = 0;
-let travando = false;
 
 // ===== HELPERS =====
 function getResultado() {
@@ -1159,17 +1157,7 @@ function calcularLimiteInicial() {
 }
 
 function clampScrollInicial() {
-  if (resultadoVisivel()) return;
-
-  const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-
-  if (y > limiteInicial && !travando) {
-    travando = true;
-    requestAnimationFrame(() => {
-      window.scrollTo(0, limiteInicial);
-      travando = false;
-    });
-  }
+  // trava de scroll removida
 }
 
 function atualizarEstadoCabecalho() {
@@ -1205,7 +1193,6 @@ function atualizarEstadoCabecalho() {
 
 function atualizarEstadoInicial() {
   calcularLimiteInicial();
-  clampScrollInicial();
   atualizarEstadoCabecalho();
 }
 
@@ -1227,56 +1214,7 @@ window.addEventListener('scroll', () => {
   if (topPacotes) topPacotes.style.transform = `translateY(${movimento}px)`;
 
   atualizarEstadoCabecalho();
-  clampScrollInicial();
 }, { passive: true });
-
-// ===== BLOQUEIO WHEEL =====
-window.addEventListener('wheel', (e) => {
-  if (resultadoVisivel()) return;
-
-  const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-
-  if (e.deltaY > 0 && y >= limiteInicial) {
-    e.preventDefault();
-    window.scrollTo(0, limiteInicial);
-  }
-}, { passive: false });
-
-// ===== BLOQUEIO TECLADO =====
-window.addEventListener('keydown', (e) => {
-  if (resultadoVisivel()) return;
-
-  const teclas = ['ArrowDown', 'PageDown', ' ', 'End'];
-  if (!teclas.includes(e.key)) return;
-
-  const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-
-  if (y >= limiteInicial) {
-    e.preventDefault();
-    window.scrollTo(0, limiteInicial);
-  }
-}, { passive: false });
-
-// ===== BLOQUEIO TOUCH =====
-window.addEventListener('touchstart', (e) => {
-  if (!e.touches || !e.touches.length) return;
-  touchStartY = e.touches[0].clientY;
-}, { passive: true });
-
-window.addEventListener('touchmove', (e) => {
-  if (resultadoVisivel()) return;
-  if (!e.touches || !e.touches.length) return;
-
-  const currentY = e.touches[0].clientY;
-  const descendo = touchStartY > currentY;
-  const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-
-  if (descendo && y >= limiteInicial) {
-    e.preventDefault();
-    window.scrollTo(0, limiteInicial);
-  }
-}, { passive: false });
-
 
 // ===== BANDEIRAS =====
 function carregarBandeiras() {
