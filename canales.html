@@ -1506,35 +1506,6 @@ function carregarBandeiras() {
   });
 }
 
-    grupo.paises.*orEach(p => {
-      const existe =*dados.some(d => d.pais === p);
-
-  *   if (!existe) return;
-
-      con*t div = document.createElement('di*');
-      div.className = 'bandeir*';
-
-      div.innerHTML = `
-      * <span class="tooltip-pais">${p}</*pan>
-      `;
-
-      const img = d*cument.createElement('img');
-     *img.src = `flags/${normalizarArqui*o(p)}.png`;
-      img.alt = p;
-
-  *   div.appendChild(img);
-
-      di*.dataset.pais = p;
-      div.oncli*k = () => selecionarPais(p, div);
-*      linha.appendChild(div);
-    *);
-
-    wrapper.appendChild(titulo*;
-    wrapper.appendChild(linha);
-*    container.appendChild(wrapper)*
-  });
-}
-
 // ===== SELECIONAR PAÍS =====
 function selecionarPais(pais, elemento) {
   document
