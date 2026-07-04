@@ -1111,10 +1111,10 @@ function atualizarBarraPacotes() {
 
   [1, 2, 3].forEach(i => {
     const clienteSelect = document.getElementById(`cliente${i}`);
-    const pacoteSelect = document.getElementById(`pacote${i}`);
-    const header = document.getElementById(`pacoteHeader${i}`);
-    const totalEl = document.getElementById(`pacoteTotal${i}`);
-
+    const pacoteSelect  = document.getElementById(`pacote${i}`);
+    const header        = document.getElementById(`pacoteHeader${i}`);
+    const totalEl       = document.getElementById(`pacoteTotal${i}`);
+    
     if (!clienteSelect || !pacoteSelect || !header || !totalEl) return;
 
     const cliente = clienteSelect.value;
@@ -1534,48 +1534,88 @@ function prepararEventosSelects() {
   });
 }
 
-// ===== FETCH CSV =====
-fetch('pacotes.csv?v=' + Date.now())
-  .then(response => {
-    if (!response.ok) {
-      throw new Error(`Erro ao carregar CSV: ${response.status}`);
-    }
-    return response.text();
-  })
-  .then(texto => {
-    dados = [];
+// ===== PARSE CSV GENÉRICO =====
+function parseCsvTextoParaDados(texto) {
+  const registros = [];
+  const linhas = texto
+    .replace(/^\uFEFF/, '') // remove BOM
+    .split(/\r?\n/);
 
-    const linhas = texto
-      .replace(/^\uFEFF/, '')
-      .split(/\r?\n/);
+  linhas.forEach((linha, i) => {
+    if (i === 0) return;           // pula cabeçalho
+    if (!linha.trim()) return;     // linha vazia
 
-    linhas.forEach((linha, i) => {
-      if (i === 0) return;
-      if (!linha.trim()) return;
+    const col = linha.split(';').map(c => c.trim());
+    if (col.length < 7 || !col[0]) return;
 
-      const col = linha.split(';').map(c => c.trim());
-
-      if (col.length < 7 || !col[0]) return;
-
-      dados.push({
-        pais: col[0],
-        cliente: col[1],
-        pacote: col[2],
-        vc: col[3],
-        canal: col[4],
-        tecnologia: col[5],
-        categoria: col[6]
-      });
+    registros.push({
+      pais: col[0],
+      cliente: col[1],
+      pacote: col[2],
+      vc: col[3],
+      canal: col[4],
+      tecnologia: col[5],
+      categoria: col[6]
     });
-
-    carregarBandeiras();
-    prepararEventosSelects();
-    atualizarBarraPacotes();
-    atualizarEstadoInicial();
-  })
-  .catch(error => {
-    console.error('Erro ao carregar os dados:', error);
   });
+
+  return registros;
+}
+
+// ===== MAPEAMENTO PAÍS → ARQUIVO =====
+const mapaArquivosPorPais = {
+  // América Latina
+  'ARGENTINA': 'paquetes_argentina.csv',
+  'CHILE'    : 'paquetes_chile.csv',
+  'COLOMBIA' : 'paquetes_colombia.csv',
+  'ECUADOR'  : 'paquetes_ecuador.csv',
+  'MEXICO'   : 'paquetes_mexico.csv',
+  'PERU'     : 'paquetes_peru.csv',
+  'URUGUAY'  : 'paquetes_uruguay.csv',
+
+  // Caribe — todos vêm do mesmo arquivo
+  'BARBADOS'           : 'paquetes_caribe.csv',
+  'CURAZAO'            : 'paquetes_caribe.csv',
+  'GUYANA'             : 'paquetes_caribe.csv',
+  'PUERTO RICO'        : 'paquetes_puertorico_usvi.csv', // se estiver em outro arquivo, ajuste
+  'SURINAME'           : 'paquetes_caribe.csv',
+  'TRINIDAD Y TOBAGO'  : 'paquetes_caribe.csv',
+  'US VIRGIN ISLANDS'  : 'paquetes_puertorico_usvi.csv', // ou paquetes_caribe.csv, conforme seu caso
+  'OTHER ISLANDS'      : 'paquetes_caribe.csv'
+};
+
+// ===== CARREGAR TODOS OS CSV =====
+async function carregarTodosOsCsv() {
+  dados = [];
+
+  // pega apenas os nomes de arquivos únicos
+  const arquivosUnicos = new Set(Object.values(mapaArquivosPorPais));
+
+  for (const nomeArquivo of arquivosUnicos) {
+    const url = 'paquetes/' + nomeArquivo + '?v=' + Date.now();
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        console.error('Erro ao carregar CSV:', url, response.status);
+        continue;
+      }
+      const texto = await response.text();
+      const registros = parseCsvTextoParaDados(texto);
+      dados.push(...registros);
+    } catch (e) {
+      console.error('Falha ao buscar CSV:', url, e);
+    }
+  }
+
+  // Depois de ter todos os registros:
+  carregarBandeiras();
+  prepararEventosSelects();
+  atualizarBarraPacotes();
+  atualizarEstadoInicial();
+}
+
+// dispara o carregamento assim que o script carrega
+carregarTodosOsCsv();
 
 window.addEventListener('load', atualizarEstadoInicial);
 window.addEventListener('resize', atualizarEstadoInicial);
