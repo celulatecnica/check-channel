@@ -1153,10 +1153,8 @@ html, body {
 <script>
 let dados = [];
 
-const HEADER_TOTAL = 168; // 45 + 55 + 68
+const HEADER_TOTAL = 168;
 let limiteInicial = 0;
-let touchStartY = 0;
-let travando = false;
 let resumoBuscaAtivo = false;
 
 // ===== HELPERS =====
@@ -1218,6 +1216,7 @@ function chaveCanal(item) {
   return `SEM_VC|${normalizarChave(item.canal)}|${normalizarChave(item.tecnologia)}`;
 }
 
+// ===== RESUMO SUPERIOR =====
 function atualizarResumoBusca(titulo = "Sin resultados", subtitulo = "0 canales", mostrar = false) {
   const tituloEl = document.getElementById('resumoBuscaTitulo');
   const subtituloEl = document.getElementById('resumoBuscaSubtitulo');
@@ -1230,79 +1229,18 @@ function atualizarResumoBusca(titulo = "Sin resultados", subtitulo = "0 canales"
 
   resumoBuscaAtivo = mostrar;
 
-  // NÃO mostra imediatamente; quem decide é o scroll
   if (!mostrar) {
     barra.classList.remove('visible');
   }
 
   atualizarEstadoCabecalho();
 }
-  
-function criarCanal(match) {
-  const canal = document.createElement('div');
-  canal.className = 'canal';
-  canal.innerHTML = `
-    <div class="canal-vc">${normalizarTexto(match.vc)}</div>
-    <div class="canal-nome">${normalizarTexto(match.canal)}</div>
-    <div class="tags">
-      <div class="tag">${normalizarTexto(match.categoria)}</div>
-      <div class="tag">${normalizarTexto(match.tecnologia)}</div>
-    </div>
-  `;
-  return canal;
-}
 
-function atualizarBarraPacotes() {
-  const paisAtivo = document.querySelector('.bandeira.active');
-  const pais = paisAtivo ? paisAtivo.dataset.pais : '';
-
-  const clienteSelect = document.getElementById('cliente1');
-  const pacoteSelect = document.getElementById('pacote1');
-  const header = document.getElementById('pacoteHeader1');
-  const totalEl = document.getElementById('pacoteTotal1');
-
-  if (!clienteSelect || !pacoteSelect || !header || !totalEl) return;
-
-  const cliente = clienteSelect.value;
-  const pacote = pacoteSelect.value;
-
-  if (!pais || !cliente || !pacote) {
-    header.textContent = 'No seleccionado';
-    header.classList.add('vazio');
-
-    totalEl.textContent = '0 canales';
-    totalEl.classList.add('vazio');
-    return;
-  }
-
-  const canaisUnicos = new Set(
-    dados
-      .filter(d =>
-        d.pais === pais &&
-        d.cliente === cliente &&
-        d.pacote === pacote
-      )
-      .map(d => chaveCanal(d))
-  );
-
-  const total = canaisUnicos.size;
-  const textoTotal = `${total} ${total === 1 ? 'canal' : 'canales'}`;
-
-  header.textContent = pacote;
-  header.classList.remove('vazio');
-
-  totalEl.textContent = textoTotal;
-  totalEl.classList.remove('vazio');
-}
-
+// ===== CABEÇALHO / SCROLL =====
 function calcularLimiteInicial() {
   const banner = document.getElementById('banner');
   if (!banner) return;
   limiteInicial = Math.max(0, banner.offsetHeight - HEADER_TOTAL);
-}
-
-function clampScrollInicial() {
-  // trava de scroll removida
 }
 
 function atualizarEstadoCabecalho() {
@@ -1321,14 +1259,12 @@ function atualizarEstadoCabecalho() {
   const triggerClaro = resultado.offsetTop - 100;
   const triggerPacotes = resultado.offsetTop - 55;
 
-  // header claro
   if (y >= triggerClaro) {
     topbars.forEach(el => el.classList.add('scrolled'));
   } else {
     topbars.forEach(el => el.classList.remove('scrolled'));
   }
 
-  // barra 3 só aparece depois de ultrapassar a área preta
   if (barraPacotes) {
     if (resumoBuscaAtivo && y >= triggerPacotes) {
       barraPacotes.classList.add('visible');
@@ -1343,7 +1279,6 @@ function atualizarEstadoInicial() {
   atualizarEstadoCabecalho();
 }
 
-// ===== SCROLL =====
 window.addEventListener('scroll', () => {
   const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
 
@@ -1363,91 +1298,6 @@ window.addEventListener('scroll', () => {
   atualizarEstadoCabecalho();
 }, { passive: true });
 
-/*
-window.addEventListener('wheel', (e) => {
-  if (resultadoVisivel()) return;
-
-  const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-
-  if (e.deltaY > 0 && y >= limiteInicial) {
-    e.preventDefault();
-    window.scrollTo(0, limiteInicial);
-  }
-}, { passive: false });
-*/
-
-// ===== BLOQUEIO TECLADO =====
-window.addEventListener('keydown', (e) => {
-  if (resultadoVisivel()) return;
-
-  const teclas = ['ArrowDown', 'PageDown', ' ', 'End'];
-  if (!teclas.includes(e.key)) return;
-
-  const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-
-  if (y >= limiteInicial) {
-    e.preventDefault();
-    window.scrollTo(0, limiteInicial);
-  }
-}, { passive: false });
-
-/*
-window.addEventListener('touchstart', (e) => {
-  if (!e.touches || !e.touches.length) return;
-  touchStartY = e.touches[0].clientY;
-}, { passive: true });
-
-window.addEventListener('touchmove', (e) => {
-  if (resultadoVisivel()) return;
-  if (!e.touches || !e.touches.length) return;
-
-  const currentY = e.touches[0].clientY;
-  const descendo = touchStartY > currentY;
-  const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-
-  if (descendo && y >= limiteInicial) {
-    e.preventDefault();
-    window.scrollTo(0, limiteInicial);
-  }
-}, { passive: false });
-*/
-
-// ===== CARREGAR TODOS OS CSV =====
-async function carregarTodosOsCsv() {
-  dados = [];
-
-  const arquivosUnicos = new Set(Object.values(mapaArquivosPorPais));
-
-  console.log('Arquivos CSV que serão carregados:', Array.from(arquivosUnicos));
-
-  for (const nomeArquivo of arquivosUnicos) {
-    const url = 'paquetes/' + nomeArquivo + '?v=' + Date.now();
-
-    try {
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        console.error('Erro ao carregar CSV:', url, response.status);
-        continue;
-      }
-
-      const texto = await response.text();
-      const registros = parseCsvTextoParaDados(texto);
-
-      console.log(nomeArquivo, registros.length, 'registros carregados');
-
-      dados.push(...registros);
-    } catch (e) {
-      console.error('Falha ao buscar CSV:', url, e);
-    }
-  }
-
-  console.log('Total de registros carregados:', dados.length);
-
-  carregarBandeiras();
-  atualizarEstadoInicial();
-}
-  
 // ===== BANDEIRAS =====
 function carregarBandeiras() {
   const container = document.getElementById('bandeiras');
@@ -1545,6 +1395,7 @@ function carregarBandeiras() {
     container.appendChild(wrapper);
   });
 }
+
 // ===== SELECIONAR PAÍS =====
 function selecionarPais(pais, elemento) {
   document
@@ -1556,7 +1407,8 @@ function selecionarPais(pais, elemento) {
   const input = document.getElementById('buscaCanal');
 
   if (input) {
-    input.value = "";
+    input.value = '';
+    input.focus();
   }
 
   atualizarResumoBusca("Sin resultados", "0 canales", false);
@@ -1575,67 +1427,6 @@ function selecionarPais(pais, elemento) {
   atualizarEstadoInicial();
 }
 
-// ===== GERAR RESULTADO =====
-function gerarResultado() {
-  const resultado = getResultado();
-  if (!resultado) return;
-
-  const cliente = document.getElementById('cliente1')?.value || '';
-  const pacote = document.getElementById('pacote1')?.value || '';
-  const paisAtivo = document.querySelector('.bandeira.active');
-
-  atualizarBarraPacotes();
-
-  if (!paisAtivo || !cliente || !pacote) {
-    resultado.style.display = "none";
-    resultado.innerHTML = '<div class="espacador-topo"></div>';
-    atualizarEstadoInicial();
-    return;
-  }
-
-  const pais = paisAtivo.dataset.pais;
-
-  const canais = dados
-    .filter(d =>
-      d.pais === pais &&
-      d.cliente === cliente &&
-      d.pacote === pacote
-    )
-    .sort((a, b) => {
-      const numA = parseInt(a.vc, 10);
-      const numB = parseInt(b.vc, 10);
-
-      const vcA = Number.isNaN(numA) ? 999999 : numA;
-      const vcB = Number.isNaN(numB) ? 999999 : numB;
-
-      if (vcA !== vcB) return vcA - vcB;
-
-      return normalizarTexto(a.canal).localeCompare(normalizarTexto(b.canal), 'pt-BR');
-    });
-
-  resultado.innerHTML = '';
-
-  const topoInicial = document.createElement('div');
-  topoInicial.className = 'topo-branco';
-  resultado.appendChild(topoInicial);
-
-  canais.forEach(match => {
-    const linha = document.createElement('div');
-    linha.className = 'linha-resultado';
-    linha.appendChild(criarCanal(match));
-    resultado.appendChild(linha);
-  });
-
-  const topoFinal = document.createElement('div');
-  topoFinal.className = 'topo-branco';
-  resultado.appendChild(topoFinal);
-
-  resultado.style.display = "block";
-
-  atualizarBarraPacotes();
-  atualizarEstadoInicial();
-}
-
 // ===== BUSCA POR NÚMERO OU NOME =====
 function consultarCanal() {
   const resultado = getResultado();
@@ -1644,9 +1435,19 @@ function consultarCanal() {
   const paisAtivo = document.querySelector('.bandeira.active');
   const input = document.getElementById('buscaCanal');
 
-  if (!paisAtivo || !input || !input.value.trim()) {
+  if (!paisAtivo) {
+    alert("Seleccione el país");
+    return;
+  }
+
+  if (!input || !input.value.trim()) {
     resultado.style.display = "none";
     atualizarResumoBusca("Sin resultados", "0 canales", false);
+    return;
+  }
+
+  if (!dados.length) {
+    alert("Los datos aún no se cargaron. Intente nuevamente en unos segundos.");
     return;
   }
 
@@ -1654,45 +1455,44 @@ function consultarCanal() {
   const termoBusca = input.value.trim();
   const termoNormalizado = normalizarComparacao(termoBusca);
 
-  // 🔎 Busca por número EXATO ou por nome PARCIAL
   const encontrados = dados.filter(d => {
     if (d.pais !== pais) return false;
 
     const vc = normalizarTexto(d.vc);
     const nomeCanal = normalizarComparacao(d.canal);
 
-   return (
-  normalizarComparacao(vc) === termoNormalizado ||
-  nomeCanal.includes(termoNormalizado)
-);
+    return (
+      normalizarComparacao(vc) === termoNormalizado ||
+      nomeCanal.includes(termoNormalizado)
+    );
   });
 
   if (!encontrados.length) {
     atualizarResumoBusca("Sin resultados", "0 canales", false);
+    resultado.style.display = "none";
     alert("Canal no encontrado");
     return;
   }
 
-  // ✅ Agrupar por canal + vc para não repetir o mesmo canal por pacote
   const canaisMap = {};
 
   encontrados.forEach(item => {
-  const chave = chaveCanal(item);
+    const chave = chaveCanal(item);
 
-  if (!canaisMap[chave]) {
-    canaisMap[chave] = {
-      vc: normalizarTexto(item.vc),
-      canal: normalizarTexto(item.canal),
-      categoria: normalizarTexto(item.categoria),
-      tecnologia: normalizarTexto(item.tecnologia),
-      pacotes: new Set()
-    };
-  }
+    if (!canaisMap[chave]) {
+      canaisMap[chave] = {
+        vc: normalizarTexto(item.vc),
+        canal: normalizarTexto(item.canal),
+        categoria: normalizarTexto(item.categoria),
+        tecnologia: normalizarTexto(item.tecnologia),
+        pacotes: new Set()
+      };
+    }
 
-  if (item.pacote) {
-    canaisMap[chave].pacotes.add(normalizarTexto(item.pacote));
-  }
-});
+    if (item.pacote) {
+      canaisMap[chave].pacotes.add(normalizarTexto(item.pacote));
+    }
+  });
 
   const canaisUnicos = Object.values(canaisMap).sort((a, b) => {
     const numA = parseInt(a.vc, 10);
@@ -1702,21 +1502,22 @@ function consultarCanal() {
     const valB = Number.isNaN(numB) ? 999999 : numB;
 
     if (valA !== valB) return valA - valB;
+
     return a.canal.localeCompare(b.canal, 'pt-BR');
   });
 
-  // ✅ Atualizar barra 3
   const totalResultados = canaisUnicos.length;
 
   let tituloResumo = `Resultados para "${termoBusca}"`;
+
   if (totalResultados === 1) {
     tituloResumo = canaisUnicos[0].canal;
   }
 
   const subtituloResumo = `${totalResultados} ${totalResultados === 1 ? 'canal' : 'canales'}`;
+
   atualizarResumoBusca(tituloResumo, subtituloResumo, true);
 
-  // ✅ LIMPAR RESULTADO
   resultado.innerHTML = '';
 
   const topoInicial = document.createElement('div');
@@ -1727,20 +1528,15 @@ function consultarCanal() {
     const pacotes = Array.from(canal.pacotes)
       .sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
-    // ===== CONTAINER DO LOGO =====
     const logoContainer = document.createElement('div');
     logoContainer.className = 'logo-canal-container';
 
     logoContainer.innerHTML = `
-      <img src="logos/${normalizarArquivo(canal.canal)}.png" 
-           alt="${canal.canal}" 
-           class="logo-canal"
-           onerror="this.onerror=null; this.src='logos/directv.png'">
+      logos/${normalizarArquivo(canal.canal)}.png
     `;
 
     resultado.appendChild(logoContainer);
 
-    // ===== BLOCO PRINCIPAL =====
     const bloco = document.createElement('div');
     bloco.className = 'linha-resultado grid grid-canal-unico';
 
@@ -1757,7 +1553,6 @@ function consultarCanal() {
 
     resultado.appendChild(bloco);
 
-    // ===== LISTA DE PACOTES =====
     const listaBloco = document.createElement('div');
     listaBloco.className = 'linha-resultado grid grid-canal-unico bloco-pacotes-canal';
 
@@ -1776,7 +1571,6 @@ function consultarCanal() {
     listaBloco.appendChild(listaHTML);
     resultado.appendChild(listaBloco);
 
-    // ✅ ESPAÇO ENTRE RESULTADOS
     if (index < canaisUnicos.length - 1) {
       const separador = document.createElement('div');
       separador.className = 'separador-resultado';
@@ -1790,55 +1584,6 @@ function consultarCanal() {
 
   resultado.style.display = "block";
   atualizarEstadoInicial();
-}
-
-// ===== EVENTOS DOS SELECTS =====
-function prepararEventosSelects() {
-  const selectCliente = document.getElementById('cliente1');
-  const selectPacote = document.getElementById('pacote1');
-
-  if (selectCliente) {
-    selectCliente.addEventListener('change', function () {
-      const cliente = this.value;
-      const ativo = document.querySelector('.bandeira.active');
-      if (!ativo) return;
-
-      const pais = ativo.dataset.pais;
-
-      const pacotes = [...new Set(
-        dados
-          .filter(d => d.pais === pais && d.cliente === cliente)
-          .map(d => d.pacote)
-          .filter(Boolean)
-      )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
-
-      if (selectPacote) {
-        selectPacote.innerHTML = '<option value="" disabled selected>Selecciona el paquete</option>';
-        selectPacote.classList.remove('ativo');
-
-        pacotes.forEach(p => {
-          selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
-        });
-      }
-
-      this.classList.toggle('ativo', this.value !== "");
-      atualizarBarraPacotes();
-      gerarResultado();
-    });
-  }
-
-  if (selectPacote) {
-    selectPacote.addEventListener('change', function () {
-      this.classList.toggle('ativo', this.value !== "");
-      gerarResultado();
-    });
-  }
-
-  document.querySelectorAll('select').forEach(select => {
-    select.addEventListener('change', function () {
-      this.classList.toggle('ativo', this.value !== "");
-    });
-  });
 }
 
 // ===== PARSE CSV GENÉRICO =====
@@ -1872,7 +1617,6 @@ function parseCsvTextoParaDados(texto) {
 
 // ===== MAPEAMENTO PAÍS → ARQUIVO =====
 const mapaArquivosPorPais = {
-  // América Latina
   'ARGENTINA': 'paquetes_argentina.csv',
   'CHILE'    : 'paquetes_chile.csv',
   'COLOMBIA' : 'paquetes_colombia.csv',
@@ -1881,7 +1625,6 @@ const mapaArquivosPorPais = {
   'PERU'     : 'paquetes_peru.csv',
   'URUGUAY'  : 'paquetes_uruguay.csv',
 
-  // Caribe
   'BARBADOS'           : 'paquetes_caribe.csv',
   'CURAZAO'            : 'paquetes_caribe.csv',
   'GUYANA'             : 'paquetes_caribe.csv',
@@ -1892,7 +1635,37 @@ const mapaArquivosPorPais = {
   'OTHER ISLANDS'      : 'paquetes_caribe.csv'
 };
 
-// dispara o carregamento dos CSVs
+// ===== CARREGAR TODOS OS CSV =====
+async function carregarTodosOsCsv() {
+  dados = [];
+
+  const arquivosUnicos = new Set(Object.values(mapaArquivosPorPais));
+
+  for (const nomeArquivo of arquivosUnicos) {
+    const url = 'paquetes/' + nomeArquivo + '?v=' + Date.now();
+
+    try {
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        console.error('Erro ao carregar CSV:', url, response.status);
+        continue;
+      }
+
+      const texto = await response.text();
+      const registros = parseCsvTextoParaDados(texto);
+
+      dados.push(...registros);
+    } catch (e) {
+      console.error('Falha ao buscar CSV:', url, e);
+    }
+  }
+
+  atualizarEstadoInicial();
+}
+
+// ===== INICIALIZAÇÃO =====
+carregarBandeiras();
 carregarTodosOsCsv();
 
 window.addEventListener('load', atualizarEstadoInicial);
