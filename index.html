@@ -1076,8 +1076,36 @@ function normalizarArquivo(valor) {
 
 // comparação por VC (posição do canal)
 // isso mantém a grade coerente entre pacotes
+function normalizarChave(valor) {
+  return String(valor || '')
+    .trim()
+    .toUpperCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
+
+function vcInvalido(vc) {
+  const valor = normalizarChave(vc);
+
+  return (
+    !valor ||
+    valor === 'N/A' ||
+    valor === 'NA' ||
+    valor === '-' ||
+    valor === 'S/N'
+  );
+}
+
 function chaveCanal(item) {
-  return normalizarTexto(item.vc);
+  const vc = normalizarTexto(item.vc);
+
+  // Se tiver VC válido, mantém a lógica atual de comparação por posição
+  if (!vcInvalido(vc)) {
+    return vc;
+  }
+
+  // Se o VC for N/A, usa canal + tecnologia para evitar sobrescrever
+  return `SEM_VC|${normalizarChave(item.canal)}|${normalizarChave(item.tecnologia)}`;
 }
 
 function criarSkeletonCanal() {
@@ -1435,18 +1463,22 @@ function gerarResultado() {
   });
 
   const base = Array.from(mapaBase.entries())
-    .sort((a, b) => {
-      const numA = parseInt(a[0], 10);
-      const numB = parseInt(b[0], 10);
+  .sort((a, b) => {
+    const itemA = a[1];
+    const itemB = b[1];
 
-      const vcA = Number.isNaN(numA) ? 999999 : numA;
-      const vcB = Number.isNaN(numB) ? 999999 : numB;
+    const numA = parseInt(itemA.vc, 10);
+    const numB = parseInt(itemB.vc, 10);
 
-      if (vcA !== vcB) return vcA - vcB;
+    const vcA = Number.isNaN(numA) ? 999999 : numA;
+    const vcB = Number.isNaN(numB) ? 999999 : numB;
 
-      return normalizarTexto(a[1].canal).localeCompare(normalizarTexto(b[1].canal), 'pt-BR');
-    })
-    .map(entry => entry[1]);
+    if (vcA !== vcB) return vcA - vcB;
+
+    return normalizarTexto(itemA.canal)
+      .localeCompare(normalizarTexto(itemB.canal), 'pt-BR');
+  })
+  .map(entry => entry[1]);
 
   resultado.innerHTML = '';
 
