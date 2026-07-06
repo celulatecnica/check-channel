@@ -1188,8 +1188,34 @@ function normalizarComparacao(valor) {
     .replace(/[\u0300-\u036f]/g, '');
 }
 
+function normalizarChave(valor) {
+  return String(valor || '')
+    .trim()
+    .toUpperCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
+
+function vcInvalido(vc) {
+  const valor = normalizarChave(vc);
+
+  return (
+    !valor ||
+    valor === 'N/A' ||
+    valor === 'NA' ||
+    valor === '-' ||
+    valor === 'S/N'
+  );
+}
+
 function chaveCanal(item) {
-  return normalizarTexto(item.vc);
+  const vc = normalizarTexto(item.vc);
+
+  if (!vcInvalido(vc)) {
+    return vc;
+  }
+
+  return `SEM_VC|${normalizarChave(item.canal)}|${normalizarChave(item.tecnologia)}`;
 }
 
 function atualizarResumoBusca(titulo = "Sin resultados", subtitulo = "0 canales", mostrar = false) {
@@ -1386,106 +1412,40 @@ window.addEventListener('touchmove', (e) => {
 }, { passive: false });
 */
 
-// ===== BANDEIRAS =====
-function carregarBandeiras() {
-  const container = document.getElementById('bandeiras');
-  if (!container) return;
+// ===== CARREGAR TODOS OS CSV =====
+async function carregarTodosOsCsv() {
+  dados = [];
 
-  container.innerHTML = '';
+  const arquivosUnicos = new Set(Object.values(mapaArquivosPorPais));
 
-  const americaLatina = [
-    'ARGENTINA',
-    'CHILE',
-    'COLOMBIA',
-    'ECUADOR',
-    'MEXICO',
-    'PERU',
-    'URUGUAY'
-  ];
+  console.log('Arquivos CSV que serão carregados:', Array.from(arquivosUnicos));
 
-  const caribe = [
-    'BARBADOS',
-    'CURAZAO',
-    'GUYANA',
-    'PUERTO RICO',
-    'SURINAME',
-    'TRINIDAD Y TOBAGO',
-    'US VIRGIN ISLANDS',
-    'OTHER ISLANDS'
-  ];
+  for (const nomeArquivo of arquivosUnicos) {
+    const url = 'paquetes/' + nomeArquivo + '?v=' + Date.now();
 
-  const grupos = [
-    {
-      titulo: 'América Latina',
-      paises: americaLatina
-    },
-    {
-      titulo: 'Caribe',
-      paises: caribe
-    }
-  ];
+    try {
+      const response = await fetch(url);
 
-  grupos.forEach(grupo => {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'grupo-paises fechado';
-
-    const titulo = document.createElement('div');
-    titulo.className = 'grupo-paises-titulo';
-
-    titulo.innerHTML = `
-      <span>${grupo.titulo}</span>
-      <span class="grupo-seta" aria-hidden="true"></span>
-    `;
-
-    const linha = document.createElement('div');
-    linha.className = 'grupo-bandeiras';
-
-    titulo.addEventListener('click', () => {
-      const esteGrupoEstaAberto = !wrapper.classList.contains('fechado');
-
-      if (esteGrupoEstaAberto) {
-        wrapper.classList.add('fechado');
-        return;
+      if (!response.ok) {
+        console.error('Erro ao carregar CSV:', url, response.status);
+        continue;
       }
 
-      document
-        .querySelectorAll('.grupo-paises')
-        .forEach(grupoPais => {
-          grupoPais.classList.add('fechado');
-        });
+      const texto = await response.text();
+      const registros = parseCsvTextoParaDados(texto);
 
-      wrapper.classList.remove('fechado');
-    });
+      console.log(nomeArquivo, registros.length, 'registros carregados');
 
-    grupo.paises.forEach(p => {
-      const existe = dados.some(d => d.pais === p);
+      dados.push(...registros);
+    } catch (e) {
+      console.error('Falha ao buscar CSV:', url, e);
+    }
+  }
 
-      if (!existe) return;
+  console.log('Total de registros carregados:', dados.length);
 
-      const div = document.createElement('div');
-      div.className = 'bandeira';
-
-      div.innerHTML = `
-        <span class="tooltip-pais">${p}</span>
-      `;
-
-      const img = document.createElement('img');
-      img.src = `flags/${normalizarArquivo(p)}.png`;
-      img.alt = p;
-
-      div.appendChild(img);
-
-      div.dataset.pais = p;
-      div.onclick = () => selecionarPais(p, div);
-
-      linha.appendChild(div);
-    });
-
-    wrapper.appendChild(titulo);
-    wrapper.appendChild(linha);
-
-    container.appendChild(wrapper);
-  });
+  carregarBandeiras();
+  atualizarEstadoInicial();
 }
 
 // ===== SELECIONAR PAÍS =====
@@ -1604,10 +1564,10 @@ function consultarCanal() {
     const vc = normalizarTexto(d.vc);
     const nomeCanal = normalizarComparacao(d.canal);
 
-    return (
-      vc === termoBusca ||
-      nomeCanal.includes(termoNormalizado)
-    );
+   return (
+  normalizarComparacao(vc) === termoNormalizado ||
+  nomeCanal.includes(termoNormalizado)
+);
   });
 
   if (!encontrados.length) {
@@ -1620,22 +1580,22 @@ function consultarCanal() {
   const canaisMap = {};
 
   encontrados.forEach(item => {
-    const chave = `${normalizarTexto(item.vc)}|${normalizarComparacao(item.canal)}`;
+  const chave = chaveCanal(item);
 
-    if (!canaisMap[chave]) {
-      canaisMap[chave] = {
-        vc: normalizarTexto(item.vc),
-        canal: normalizarTexto(item.canal),
-        categoria: normalizarTexto(item.categoria),
-        tecnologia: normalizarTexto(item.tecnologia),
-        pacotes: new Set()
-      };
-    }
+  if (!canaisMap[chave]) {
+    canaisMap[chave] = {
+      vc: normalizarTexto(item.vc),
+      canal: normalizarTexto(item.canal),
+      categoria: normalizarTexto(item.categoria),
+      tecnologia: normalizarTexto(item.tecnologia),
+      pacotes: new Set()
+    };
+  }
 
-    if (item.pacote) {
-      canaisMap[chave].pacotes.add(normalizarTexto(item.pacote));
-    }
-  });
+  if (item.pacote) {
+    canaisMap[chave].pacotes.add(normalizarTexto(item.pacote));
+  }
+});
 
   const canaisUnicos = Object.values(canaisMap).sort((a, b) => {
     const numA = parseInt(a.vc, 10);
@@ -1784,48 +1744,90 @@ function prepararEventosSelects() {
   });
 }
 
-// ===== FETCH CSV =====
-fetch('pacotes.csv?v=' + Date.now())
-  .then(response => {
-    if (!response.ok) {
-      throw new Error(`Erro ao carregar CSV: ${response.status}`);
-    }
-    return response.text();
-  })
-  .then(texto => {
-    dados = [];
+// ===== PARSE CSV GENÉRICO =====
+function parseCsvTextoParaDados(texto) {
+  const registros = [];
+  const linhas = texto
+    .replace(/^\uFEFF/, '')
+    .split(/\r?\n/);
 
-    const linhas = texto
-      .replace(/^\uFEFF/, '')
-      .split(/\r?\n/);
+  linhas.forEach((linha, i) => {
+    if (i === 0) return;
+    if (!linha.trim()) return;
 
-    linhas.forEach((linha, i) => {
-      if (i === 0) return;
-      if (!linha.trim()) return;
+    const col = linha.split(';').map(c => c.trim());
 
-      const col = linha.split(';').map(c => c.trim());
+    if (col.length < 7 || !col[0]) return;
 
-      if (col.length < 7 || !col[0]) return;
-
-      dados.push({
-        pais: col[0],
-        cliente: col[1],
-        pacote: col[2],
-        vc: col[3],
-        canal: col[4],
-        tecnologia: col[5],
-        categoria: col[6]
-      });
+    registros.push({
+      pais: col[0],
+      cliente: col[1],
+      pacote: col[2],
+      vc: col[3],
+      canal: col[4],
+      tecnologia: col[5],
+      categoria: col[6]
     });
-
-    carregarBandeiras();
-    prepararEventosSelects();
-    atualizarBarraPacotes();
-    atualizarEstadoInicial();
-  })
-  .catch(error => {
-    console.error('Erro ao carregar os dados:', error);
   });
+
+  return registros;
+}
+
+// ===== MAPEAMENTO PAÍS → ARQUIVO =====
+const mapaArquivosPorPais = {
+  // América Latina
+  'ARGENTINA': 'paquetes_argentina.csv',
+  'CHILE'    : 'paquetes_chile.csv',
+  'COLOMBIA' : 'paquetes_colombia.csv',
+  'ECUADOR'  : 'paquetes_ecuador.csv',
+  'MEXICO'   : 'paquetes_mexico.csv',
+  'PERU'     : 'paquetes_peru.csv',
+  'URUGUAY'  : 'paquetes_uruguay.csv',
+
+  // Caribe
+  'BARBADOS'           : 'paquetes_caribe.csv',
+  'CURAZAO'            : 'paquetes_caribe.csv',
+  'GUYANA'             : 'paquetes_caribe.csv',
+  'PUERTO RICO'        : 'paquetes_puertorico_usvi.csv',
+  'SURINAME'           : 'paquetes_caribe.csv',
+  'TRINIDAD Y TOBAGO'  : 'paquetes_caribe.csv',
+  'US VIRGIN ISLANDS'  : 'paquetes_puertorico_usvi.csv',
+  'OTHER ISLANDS'      : 'paquetes_caribe.csv'
+};
+
+// ===== CARREGAR TODOS OS CSV =====
+async function carregarTodosOsCsv() {
+  dados = [];
+
+  const arquivosUnicos = new Set(Object.values(mapaArquivosPorPais));
+
+  for (const nomeArquivo of arquivosUnicos) {
+    const url = 'paquetes/' + nomeArquivo + '?v=' + Date.now();
+
+    try {
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        console.error('Erro ao carregar CSV:', url, response.status);
+        continue;
+      }
+
+      const texto = await response.text();
+      const registros = parseCsvTextoParaDados(texto);
+
+      dados.push(...registros);
+    } catch (e) {
+      console.error('Falha ao buscar CSV:', url, e);
+    }
+  }
+
+  carregarBandeiras();
+  prepararEventosSelects();
+  atualizarEstadoInicial();
+}
+
+// dispara o carregamento dos CSVs
+carregarTodosOsCsv();
 
 window.addEventListener('load', atualizarEstadoInicial);
 window.addEventListener('resize', atualizarEstadoInicial);
