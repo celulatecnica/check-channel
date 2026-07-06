@@ -1428,6 +1428,7 @@ function selecionarPais(pais, elemento) {
 }
 
 // ===== BUSCA POR NÚMERO OU NOME =====
+function consultarCanal() {// ===== BUSCA POR NÚMERO OU NOME =====
 function consultarCanal() {
   const resultado = getResultado();
   if (!resultado) return;
@@ -1528,15 +1529,20 @@ function consultarCanal() {
     const pacotes = Array.from(canal.pacotes)
       .sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
+    // ===== LOGO DO CANAL =====
     const logoContainer = document.createElement('div');
     logoContainer.className = 'logo-canal-container';
 
+    const arquivoLogo = `${normalizarArquivo(canal.canal)}.png`;
+    const caminhoLogo = encodeURIComponent(arquivoLogo);
+
     logoContainer.innerHTML = `
-      logos/${normalizarArquivo(canal.canal)}.png
+      ${caminhoLogo}
     `;
 
     resultado.appendChild(logoContainer);
 
+    // ===== BLOCO PRINCIPAL DO CANAL =====
     const bloco = document.createElement('div');
     bloco.className = 'linha-resultado grid grid-canal-unico';
 
@@ -1553,6 +1559,7 @@ function consultarCanal() {
 
     resultado.appendChild(bloco);
 
+    // ===== LISTA DE PACOTES =====
     const listaBloco = document.createElement('div');
     listaBloco.className = 'linha-resultado grid grid-canal-unico bloco-pacotes-canal';
 
