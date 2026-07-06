@@ -1447,7 +1447,104 @@ async function carregarTodosOsCsv() {
   carregarBandeiras();
   atualizarEstadoInicial();
 }
+  
+// ===== BANDEIRAS =====
+function carregarBandeiras() {
+  const container = document.getElementById('bandeiras');
+  if (!container) return;
 
+  container.innerHTML = '';
+
+  const americaLatina = [
+    'ARGENTINA',
+    'CHILE',
+    'COLOMBIA',
+    'ECUADOR',
+    'MEXICO',
+    'PERU',
+    'URUGUAY'
+  ];
+
+  const caribe = [
+    'BARBADOS',
+    'CURAZAO',
+    'GUYANA',
+    'PUERTO RICO',
+    'SURINAME',
+    'TRINIDAD Y TOBAGO',
+    'US VIRGIN ISLANDS',
+    'OTHER ISLANDS'
+  ];
+
+  const grupos = [
+    {
+      titulo: 'América Latina',
+      paises: americaLatina
+    },
+    {
+      titulo: 'Caribe',
+      paises: caribe
+    }
+  ];
+
+  grupos.forEach(grupo => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'grupo-paises fechado';
+
+    const titulo = document.createElement('div');
+    titulo.className = 'grupo-paises-titulo';
+
+    titulo.innerHTML = `
+      <span>${grupo.titulo}</span>
+      <span class="grupo-seta" aria-hidden="true"></span>
+    `;
+
+    const linha = document.createElement('div');
+    linha.className = 'grupo-bandeiras';
+
+    titulo.addEventListener('click', () => {
+      const esteGrupoEstaAberto = !wrapper.classList.contains('fechado');
+
+      if (esteGrupoEstaAberto) {
+        wrapper.classList.add('fechado');
+        return;
+      }
+
+      document
+        .querySelectorAll('.grupo-paises')
+        .forEach(grupoPais => {
+          grupoPais.classList.add('fechado');
+        });
+
+      wrapper.classList.remove('fechado');
+    });
+
+    grupo.paises.forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'bandeira';
+
+      div.innerHTML = `
+        <span class="tooltip-pais">${p}</span>
+      `;
+
+      const img = document.createElement('img');
+      img.src = `flags/${normalizarArquivo(p)}.png`;
+      img.alt = p;
+
+      div.appendChild(img);
+
+      div.dataset.pais = p;
+      div.onclick = () => selecionarPais(p, div);
+
+      linha.appendChild(div);
+    });
+
+    wrapper.appendChild(titulo);
+    wrapper.appendChild(linha);
+
+    container.appendChild(wrapper);
+  });
+}
 // ===== SELECIONAR PAÍS =====
 function selecionarPais(pais, elemento) {
   document
@@ -1794,37 +1891,6 @@ const mapaArquivosPorPais = {
   'US VIRGIN ISLANDS'  : 'paquetes_puertorico_usvi.csv',
   'OTHER ISLANDS'      : 'paquetes_caribe.csv'
 };
-
-// ===== CARREGAR TODOS OS CSV =====
-async function carregarTodosOsCsv() {
-  dados = [];
-
-  const arquivosUnicos = new Set(Object.values(mapaArquivosPorPais));
-
-  for (const nomeArquivo of arquivosUnicos) {
-    const url = 'paquetes/' + nomeArquivo + '?v=' + Date.now();
-
-    try {
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        console.error('Erro ao carregar CSV:', url, response.status);
-        continue;
-      }
-
-      const texto = await response.text();
-      const registros = parseCsvTextoParaDados(texto);
-
-      dados.push(...registros);
-    } catch (e) {
-      console.error('Falha ao buscar CSV:', url, e);
-    }
-  }
-
-  carregarBandeiras();
-  prepararEventosSelects();
-  atualizarEstadoInicial();
-}
 
 // dispara o carregamento dos CSVs
 carregarTodosOsCsv();
