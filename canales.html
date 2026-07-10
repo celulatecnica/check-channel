@@ -1539,7 +1539,10 @@ logo.src = `logos/${arquivoLogo}`;
 logo.alt = canal.canal;
 logo.className = 'logo-canal';
 
-logo.onerror = () => {2  logo.src = 'logos/directv.png';3};
+logo.onerror = () => {
+  logo.onerror = null;
+  logo.src = 'logos/directv.png';
+};
 
 logoContainer.appendChild(logo);
 resultado.appendChild(logoContainer);
