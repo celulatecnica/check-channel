@@ -1529,17 +1529,22 @@ function consultarCanal() {
       .sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
   // ===== LOGO DO CANAL =====
-      const logo = document.createElement('img');
+const logoContainer = document.createElement('div');
+logoContainer.className = 'logo-canal-container';
 
-    logo.src = `logos/${arquivoLogo}`;
-    logo.alt = canal.canal;
-    logo.className = 'logo-canal';
+const arquivoLogo = `${normalizarArquivo(canal.canal)}.png`;
 
-    logoContainer.appendChild(logo);
+const logo = document.createElement('img');
+logo.src = `logos/${arquivoLogo}`;
+logo.alt = canal.canal;
+logo.className = 'logo-canal';
 
-    logo.onerror = () => {2  logo.src = 'logos/default.png';3};
-    
-    resultado.appendChild(logoContainer);
+logo.onerror = () => {
+  logo.style.display = 'none';
+};
+
+logoContainer.appendChild(logo);
+resultado.appendChild(logoContainer);
 
     // ===== BLOCO PRINCIPAL DO CANAL =====
     const bloco = document.createElement('div');
