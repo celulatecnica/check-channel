@@ -174,17 +174,6 @@ display: -webkit-box;
 .pacote-total.vazio {
   color: #d1d1d6;
 }
-  
-.pacote-resumo {
-  font-size: 18px;
-  font-weight: 600;
-  color: #f5f5f7;
-  text-align: center;
-
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 
 .pacote-resumo.vazio {
   color: #d1d1d6; /* cinza claro para "No seleccionado" */
@@ -1500,19 +1489,23 @@ totalEst.classList.add('vazio');
     const total = canaisUnicos.size;
     const textoTotal = `${total} ${total === 1 ? 'canal' : 'canales'}`;
 
-headerFixo.textContent = pacote;
-headerFixo.classList.remove('vazio');
+    headerFixo.innerHTML =
+    pacote.replace(' PLUS ', '<br>PLUS ');
 
-headerEst.textContent = pacote;
-headerEst.classList.remove('vazio');
+    headerFixo.classList.remove('vazio');
 
-totalFixo.textContent = textoTotal;
-totalFixo.classList.remove('vazio');
+    headerEst.innerHTML =
+    pacote.replace(' PLUS ', '<br>PLUS ');
 
-totalEst.textContent = textoTotal;
-totalEst.classList.remove('vazio');
-  });
-}
+    headerEst.classList.remove('vazio');
+
+    totalFixo.textContent = textoTotal;
+    totalFixo.classList.remove('vazio');
+
+    totalEst.textContent = textoTotal;
+    totalEst.classList.remove('vazio');
+      });
+    }
 
 function calcularLimiteInicial() {
   const banner = document.getElementById('banner');
