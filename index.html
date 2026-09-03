@@ -789,11 +789,12 @@ html, body {
 
   overflow: visible;
 
-  max-height: 220px;
-  margin-top: 30px;
-  margin-bottom: 10px;
-  opacity: 1;
+  max-height: 140px;
 
+  margin-top: 0;
+  margin-bottom: 0;
+
+  opacity: 1;
   transform: translateY(0);
 
   transition:
@@ -801,6 +802,13 @@ html, body {
     opacity 0.22s ease,
     transform 0.32s ease,
     margin 0.32s ease;
+}
+
+.grupo-paises:not(.fechado) .grupo-bandeiras {
+  margin-top: 25px;
+  margin-bottom: 25px;
+
+  max-height: 220px;
 }
 
 .grupo-paises.fechado .grupo-bandeiras {
