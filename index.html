@@ -920,7 +920,152 @@ html, body {
   transform: scale(1.08);
 }
   
+/* =======================================================
+   NOVO LAYOUT RESULTADO
+======================================================= */
+
+.resultado-wrapper{
+    width:950px;
+    max-width:calc(100% - 32px);
+    margin:auto;
+}
+
+.resultado-header{
+    display:grid;
+    grid-template-columns:50% 50%;
+    margin-top:47px;
+}
+
+.resultado-header-esquerda{
+    text-align:left;
+}
+
+.bloco-titulo{
+    font-size:24px;
+    font-weight:600;
+    color:#1d1d1f;
+}
+
+.resultado-header-direita{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+}
+
+.coluna-pacote-header{
+    text-align:center;
+}
+
+.coluna-pacote-header div:first-child{
+    font-size:18px;
+    font-weight:600;
+    color:#1d1d1f;
+}
+
+.coluna-pacote-header div:last-child{
+    font-size:16px;
+    color:#6e6e73;
+    margin-top:4px;
+}
+
+.lista-canais-titulo{
+    margin-top:60px;
+    margin-bottom:24px;
+
+    font-size:24px;
+    font-weight:600;
+
+    color:#1d1d1f;
+    text-align:left;
+}
+
+#resumoTecnologia{
+    margin-top:32px;
+}
+
+.linha-tecnologia{
+    display:grid;
+
+    grid-template-columns:
+        50%
+        16.66%
+        16.66%
+        16.66%;
+
+    align-items:center;
+
+    min-height:56px;
+
+    border-bottom:1px solid #E5E5E5;
+}
+
+.descricao-tecnologia{
+    text-align:left;
+
+    font-size:18px;
+    font-weight:600;
+
+    color:#1D1D1F;
+}
+
+.valor-tecnologia{
+    text-align:center;
+
+    font-size:20px;
+    font-weight:600;
+
+    color:#1D1D1F;
+}
+
+#listaCanais{
+    margin-top:12px;
+}
+
+.linha-canal-nova {
+    display:grid;
+
+    grid-template-columns:
+        50%
+        16.66%
+        16.66%
+        16.66%;
+
+    align-items:center;
+
+    min-height:72px;
+
+    border-bottom:1px solid #E5E5E5;
+}
+
+.info-canal {
+    text-align:left;
+}
+
+.info-canal-vc {
+    font-size:14px;
+    color:#6E6E73;
+}
+
+.info-canal-nome {
+    font-size:20px;
+    font-weight:600;
+    color:#1D1D1F;
+
+    margin-top:4px;
+}
+
+.info-canal-tags {
+    margin-top:8px;
+}
+
+.status-pacote {
+    text-align:center;
+
+    font-size:24px;
+}
+
 </style>
+
 </head>
 
 <body>
@@ -1071,9 +1216,58 @@ html, body {
 </div> <!-- ✅ FECHAMENTO CORRETO DO CONTAINER -->
 
 <!-- ✅ RESULTADO -->
+
 <div id="resultado">
-  <div class="topo-branco"></div>
-  <div class="espacador-topo"></div>
+
+    <div class="topo-branco"></div>
+
+    <div class="resultado-wrapper">
+
+        <div class="resultado-header">
+
+            <div class="resultado-header-esquerda">
+
+               <div class="bloco-titulo">
+    Canales por tecnología
+</div>
+
+            </div>
+
+            <div class="resultado-header-direita">
+
+                <div class="coluna-pacote-header">
+                    <div id="headPacote1">Pacote 1</div>
+                    <div id="headTotal1">0 canales</div>
+                </div>
+
+                <div class="coluna-pacote-header">
+                    <div id="headPacote2">Pacote 2</div>
+                    <div id="headTotal2">0 canales</div>
+                </div>
+
+                <div class="coluna-pacote-header">
+                    <div id="headPacote3">Pacote 3</div>
+                    <div id="headTotal3">0 canales</div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="resumoTecnologia">
+
+        </div>
+
+        <div class="lista-canais-titulo">
+            Lista de canales
+        </div>
+
+        <div id="listaCanais">
+
+        </div>
+
+    </div>
+
 </div>
 
 <div class="fake-content">
@@ -1157,31 +1351,90 @@ function chaveCanal(item) {
   return `SEM_VC|${normalizarChave(item.canal)}|${normalizarChave(item.tecnologia)}`;
 }
 
-function criarSkeletonCanal() {
-  const canal = document.createElement('div');
-  canal.className = 'canal';
-  canal.innerHTML = `
-    <div class="skeleton vc"></div>
-    <div class="skeleton nome"></div>
-    <div class="skeleton tags"></div>
-  `;
-  return canal;
+function criarStatusPacote(existe) {
+
+    const status = document.createElement('div');
+
+    status.className = 'status-pacote';
+
+    status.innerHTML = existe
+        ? '✅'
+        : '❌';
+
+    return status;
 }
 
-function criarCanal(match) {
-  const canal = document.createElement('div');
-  canal.className = 'canal';
-  canal.innerHTML = `
-    <div class="canal-vc">${normalizarTexto(match.vc)}</div>
-    <div class="canal-nome">${normalizarTexto(match.canal)}</div>
-    <div class="tags">
-      <div class="tag">${normalizarTexto(match.categoria)}</div>
-      <div class="tag">${normalizarTexto(match.tecnologia)}</div>
-    </div>
-  `;
-  return canal;
-}
+  function gerarResumoTecnologia(mapasPacotes) {
 
+    const resumo =
+        document.getElementById('resumoTecnologia');
+
+    if (!resumo) return;
+
+    resumo.innerHTML = '';
+
+    const tecnologias = [
+        'SD',
+        'HD',
+        '4K',
+        'AUDIO',
+        'RADIO'
+    ];
+
+    tecnologias.forEach(tecnologia => {
+
+        const linha =
+            document.createElement('div');
+
+        linha.className =
+            'linha-tecnologia';
+
+        const descricao =
+            document.createElement('div');
+
+        descricao.className =
+            'descricao-tecnologia';
+
+        descricao.textContent =
+            `Canales ${tecnologia}`;
+
+        linha.appendChild(descricao);
+
+        mapasPacotes.forEach(mapa => {
+
+            let total = 0;
+
+            mapa.forEach(item => {
+
+                if (
+                    String(item.tecnologia || '')
+                        .toUpperCase()
+                        .includes(tecnologia)
+                ) {
+                    total++;
+                }
+
+            });
+
+            const valor =
+                document.createElement('div');
+
+            valor.className =
+                'valor-tecnologia';
+
+            valor.textContent =
+                total;
+
+            linha.appendChild(valor);
+
+        });
+
+        resumo.appendChild(linha);
+
+    });
+
+}
+  
 function atualizarBarraPacotes() {
   const paisAtivo = document.querySelector('.bandeira.active');
   const pais = paisAtivo ? paisAtivo.dataset.pais : '';
@@ -1556,28 +1809,108 @@ function gerarResultado() {
 
   resultado.innerHTML = '';
 
+  resultado.innerHTML = `
+<div class="topo-branco"></div>
+
+<div class="resultado-wrapper">
+
+    <div class="resultado-header">
+
+        <div class="resultado-header-esquerda">
+
+            <div class="bloco-titulo">
+                Canales por tecnología
+            </div>
+
+        </div>
+
+        <div class="resultado-header-direita">
+
+            <div class="coluna-pacote-header">
+                <div id="headPacote1"></div>
+                <div id="headTotal1"></div>
+            </div>
+
+            <div class="coluna-pacote-header">
+                <div id="headPacote2"></div>
+                <div id="headTotal2"></div>
+            </div>
+
+            <div class="coluna-pacote-header">
+                <div id="headPacote3"></div>
+                <div id="headTotal3"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="resumoTecnologia"></div>
+
+    <div class="lista-canais-titulo">
+        Lista de canales
+    </div>
+
+    <div id="listaCanais"></div>
+
+</div>
+`;
+  
   const topoInicial = document.createElement('div');
   topoInicial.className = 'topo-branco';
   resultado.appendChild(topoInicial);
+gerarResumoTecnologia(mapasPacotes);
+const listaCanais =
+    document.getElementById('listaCanais');
 
-  base.forEach(ref => {
-    const linha = document.createElement('div');
-    linha.className = 'linha-resultado';
+listaCanais.innerHTML = '';
 
-    const chaveRef = chaveCanal(ref);
+base.forEach(ref => {
+
+    const linha =
+        document.createElement('div');
+
+    linha.className =
+        'linha-canal-nova';
+
+    const chaveRef =
+        chaveCanal(ref);
+
+    const info =
+        document.createElement('div');
+
+    info.className =
+        'info-canal';
+
+    info.innerHTML = `
+        <div class="info-canal-vc">
+            ${ref.vc}
+        </div>
+
+        <div class="info-canal-nome">
+            ${ref.canal}
+        </div>
+
+        <div class="info-canal-tags">
+            ${ref.categoria} • ${ref.tecnologia}
+        </div>
+    `;
+
+    linha.appendChild(info);
 
     mapasPacotes.forEach(mapa => {
-      const match = mapa.get(chaveRef);
 
-      if (match) {
-        linha.appendChild(criarCanal(match));
-      } else {
-        linha.appendChild(criarSkeletonCanal());
-      }
+        linha.appendChild(
+            criarStatusPacote(
+                mapa.has(chaveRef)
+            )
+        );
+
     });
 
-    resultado.appendChild(linha);
-  });
+    listaCanais.appendChild(linha);
+
+});
 
   const topoFinal = document.createElement('div');
   topoFinal.className = 'topo-branco';
