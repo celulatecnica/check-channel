@@ -100,9 +100,15 @@ body {
 
 .top-bar-pacotes-inner {
   height: 100%;
+
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+
+  grid-template-columns:
+      50%
+      16.66%
+      16.66%
+      16.66%;
+
   align-items: center;
 }
 
@@ -1094,6 +1100,7 @@ html, body {
 <!-- ✅ BARRA 3 -->
 <div class="top-bar top-bar-pacotes" id="topbarPacotes">
   <div class="top-bar-inner top-bar-pacotes-inner">
+    <div></div>
 
     <div class="pacote-resumo-bloco">
       <div class="pacote-resumo vazio" id="pacoteHeader1">No seleccionado</div>
@@ -1182,6 +1189,7 @@ html, body {
 
 <div class="barra-pacotes-estatica" id="barraPacotesEstatica">
   <div class="top-bar-inner top-bar-pacotes-inner">
+    <div></div>
 
     <div class="pacote-resumo-bloco">
       <div class="pacote-resumo vazio" id="pacoteHeaderEst1">
