@@ -108,20 +108,22 @@ body {
 
 .barra-pacotes-estatica {
   display: none;
-
   width: 100%;
   height: 80px;
-
   background: #0F0F0F;
-
-  border-top: 1px solid #FFFFFF;
   border-bottom: 1px solid #4D4D4D;
+}
+
+.linha-separadora-pacotes {
+  display: none;
+  width: 100vw;
+  height: 1px;
+  background: #D1D1D6;
 }
 
 .pacote-resumo-bloco {
   min-width: 0;
   height: 100%;
-
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1026,9 +1028,11 @@ html, body {
 
   </div>
 
-  <div class="topo-preto"></div>
+<div class="topo-preto"></div>
 
-  <div class="barra-pacotes-estatica" id="barraPacotesEstatica">
+<div class="linha-separadora-pacotes"></div>
+
+<div class="barra-pacotes-estatica" id="barraPacotesEstatica">
   <div class="top-bar-inner top-bar-pacotes-inner">
 
     <div class="pacote-resumo-bloco">
@@ -1491,6 +1495,7 @@ function gerarResultado() {
   if (!paisAtivo || !selecionados.some(s => s.cliente && s.pacote)) {
     resultado.style.display = "none";
     document.getElementById('barraPacotesEstatica').style.display = 'none';
+    document.querySelector('.linha-separadora-pacotes').style.display = 'none';
     resultado.innerHTML = '<div class="espacador-topo"></div>';
     atualizarEstadoInicial();
     return;
@@ -1577,6 +1582,7 @@ function gerarResultado() {
 
   resultado.style.display = "block";
   document.getElementById('barraPacotesEstatica').style.display = 'block';
+  document.querySelector('.linha-separadora-pacotes').style.display = 'block';
   
   atualizarBarraPacotes();
   atualizarEstadoInicial();
