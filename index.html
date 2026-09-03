@@ -106,6 +106,18 @@ body {
   align-items: center;
 }
 
+.barra-pacotes-estatica {
+  display: none;
+
+  width: 100%;
+  height: 80px;
+
+  background: #0F0F0F;
+
+  border-top: 1px solid #FFFFFF;
+  border-bottom: 1px solid #4D4D4D;
+}
+
 .pacote-resumo-bloco {
   min-width: 0;
   height: 100%;
@@ -1016,6 +1028,39 @@ html, body {
 
   <div class="topo-preto"></div>
 
+  <div class="barra-pacotes-estatica" id="barraPacotesEstatica">
+  <div class="top-bar-inner top-bar-pacotes-inner">
+
+    <div class="pacote-resumo-bloco">
+      <div class="pacote-resumo vazio" id="pacoteHeaderEst1">
+        No seleccionado
+      </div>
+      <div class="pacote-total vazio" id="pacoteTotalEst1">
+        0 canales
+      </div>
+    </div>
+
+    <div class="pacote-resumo-bloco">
+      <div class="pacote-resumo vazio" id="pacoteHeaderEst2">
+        No seleccionado
+      </div>
+      <div class="pacote-total vazio" id="pacoteTotalEst2">
+        0 canales
+      </div>
+    </div>
+
+    <div class="pacote-resumo-bloco">
+      <div class="pacote-resumo vazio" id="pacoteHeaderEst3">
+        No seleccionado
+      </div>
+      <div class="pacote-total vazio" id="pacoteTotalEst3">
+        0 canales
+      </div>
+    </div>
+
+  </div>
+</div>
+
 </div> <!-- ✅ FECHAMENTO CORRETO DO CONTAINER -->
 
 <!-- ✅ RESULTADO -->
@@ -1137,20 +1182,36 @@ function atualizarBarraPacotes() {
   [1, 2, 3].forEach(i => {
     const clienteSelect = document.getElementById(`cliente${i}`);
     const pacoteSelect  = document.getElementById(`pacote${i}`);
-    const header        = document.getElementById(`pacoteHeader${i}`);
-    const totalEl       = document.getElementById(`pacoteTotal${i}`);
-    
-    if (!clienteSelect || !pacoteSelect || !header || !totalEl) return;
+    const headerFixo = document.getElementById(`pacoteHeader${i}`);
+    const totalFixo = document.getElementById(`pacoteTotal${i}`);
+
+    const headerEst = document.getElementById(`pacoteHeaderEst${i}`);
+    const totalEst = document.getElementById(`pacoteTotalEst${i}`);    
+
+    if (
+      !clienteSelect ||
+      !pacoteSelect ||
+      !headerFixo ||
+      !totalFixo ||
+      !headerEst ||
+      !totalEst
+    ) return;
 
     const cliente = clienteSelect.value;
     const pacote = pacoteSelect.value;
 
     if (!pais || !cliente || !pacote) {
-      header.textContent = 'No seleccionado';
-      header.classList.add('vazio');
+headerFixo.textContent = 'No seleccionado';
+headerFixo.classList.add('vazio');
 
-      totalEl.textContent = '0 canales';
-      totalEl.classList.add('vazio');
+headerEst.textContent = 'No seleccionado';
+headerEst.classList.add('vazio');
+
+totalFixo.textContent = '0 canales';
+totalFixo.classList.add('vazio');
+
+totalEst.textContent = '0 canales';
+totalEst.classList.add('vazio');
       return;
     }
 
@@ -1167,11 +1228,17 @@ function atualizarBarraPacotes() {
     const total = canaisUnicos.size;
     const textoTotal = `${total} ${total === 1 ? 'canal' : 'canales'}`;
 
-    header.textContent = pacote;
-    header.classList.remove('vazio');
+headerFixo.textContent = pacote;
+headerFixo.classList.remove('vazio');
 
-    totalEl.textContent = textoTotal;
-    totalEl.classList.remove('vazio');
+headerEst.textContent = pacote;
+headerEst.classList.remove('vazio');
+
+totalFixo.textContent = textoTotal;
+totalFixo.classList.remove('vazio');
+
+totalEst.textContent = textoTotal;
+totalEst.classList.remove('vazio');
   });
 }
 
@@ -1199,7 +1266,13 @@ function atualizarEstadoCabecalho() {
   const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
 
   const triggerClaro = resultado.offsetTop - 100;
-  const triggerPacotes = resultado.offsetTop - 55;
+const barraEstatica =
+  document.getElementById('barraPacotesEstatica');
+
+const triggerPacotes =
+  barraEstatica.offsetTop +
+  barraEstatica.offsetHeight -
+  100;
 
   if (y >= triggerClaro) {
     topbars.forEach(el => el.classList.add('scrolled'));
@@ -1417,6 +1490,7 @@ function gerarResultado() {
   // só mostra resultado se houver país e pelo menos 1 pacote completo selecionado
   if (!paisAtivo || !selecionados.some(s => s.cliente && s.pacote)) {
     resultado.style.display = "none";
+    document.getElementById('barraPacotesEstatica').style.display = 'none';
     resultado.innerHTML = '<div class="espacador-topo"></div>';
     atualizarEstadoInicial();
     return;
@@ -1502,7 +1576,8 @@ function gerarResultado() {
   resultado.appendChild(topoFinal);
 
   resultado.style.display = "block";
-
+  document.getElementById('barraPacotesEstatica').style.display = 'block';
+  
   atualizarBarraPacotes();
   atualizarEstadoInicial();
 }
