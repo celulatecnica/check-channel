@@ -306,21 +306,22 @@ body {
 
 .nome-pais {
   position: absolute;
-
-  top: 58px;
+  top: 56px;
   left: 50%;
 
   transform: translateX(-50%);
 
   width: 90px;
 
-  text-align: center;
-
   font-size: 10px;
   font-weight: 500;
-  color: #d1d1d6;
+  color: #D1D1D6;
 
+  text-align: center;
   line-height: 1.15;
+
+  white-space: normal;
+  pointer-events: none;
 }
   
 .bandeira.active {
@@ -785,9 +786,9 @@ html, body {
   flex-wrap: wrap;
   gap: 12px;
 
-  overflow: hidden;
+  overflow: visible;
 
-  max-height: 180px;
+  max-height: 220px;
   margin-top: 10px;
   margin-bottom: 10px;
   opacity: 1;
@@ -808,22 +809,6 @@ html, body {
   opacity: 0;
   transform: translateY(-6px);
   pointer-events: none;
-}
-
-.bandeira {
-  width: 90px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  gap: 6px;
-  margin: 6px;
-
-  cursor: pointer;
-  position: relative;
-
-  transition: all 0.25s ease;
 }
 
 .tooltip-pais::before {
