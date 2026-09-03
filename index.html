@@ -133,13 +133,17 @@ body {
 .pacote-resumo-bloco {
   min-width: 0;
   height: 100%;
+
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
 
-  text-align: center;
+  justify-content: flex-end;
+
+  align-items: center;
+
+  padding-bottom: 14px;
+
+  gap: 6px;
 }
 
 .pacote-resumo {
@@ -156,6 +160,11 @@ display: -webkit-box;
 -webkit-line-clamp: 2;
 -webkit-box-orient: vertical;
   max-width: 100%;
+  min-height: 42px;
+
+display: flex;
+align-items: flex-end;
+justify-content: center;
 }
 
 .pacote-total {
