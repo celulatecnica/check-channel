@@ -1003,10 +1003,16 @@
           const bandeira = document.createElement('div');
           bandeira.className = 'bandeira';
           bandeira.dataset.pais = pais;
-          bandeira.innerHTML = `
-            <img src="flags/${normalizarArquivo(pais)}.png" alt="${pais}">
-            <div class="nome-pais">${pais}</div>
-          `;
+
+          const img = document.createElement('img');
+          img.src = `flags/${normalizarArquivo(pais)}.png`;
+          img.alt = pais;
+          bandeira.appendChild(img);
+
+          const nomePais = document.createElement('div');
+          nomePais.className = 'nome-pais';
+          nomePais.textContent = pais;
+          bandeira.appendChild(nomePais);
 
           bandeira.addEventListener('click', () => selecionarPais(pais, bandeira));
           linha.appendChild(bandeira);
