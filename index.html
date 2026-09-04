@@ -1,1443 +1,2101 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Check Channel DIRECTV</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Check Channel DIRECTV</title>
   <link rel="icon" type="image/png" href="logo-checkchannel.png">
-  <style>
-    /* ===== RESET ===== */
-    * {
-      box-sizing: border-box;
-    }
-
-    html, body {
-      overflow-x: hidden;
-    }
-
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
-      background: #0F0F0F;
-      color: #f5f5f7;
-    }
-
-    /* ===== BARRA SUPERIOR (FIXA) ===== */
-    .top-bar {
-      position: fixed;
-      left: 0;
-      width: 100%;
-      z-index: 999;
-      transition: all 0.3s ease;
-    }
-
-    .top-bar-inner {
-      width: 950px;
-      max-width: calc(100% - 32px);
-      margin: auto;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: relative;
-      z-index: 2;
-    }
-
-    /* ✅ Camada de blur unificada */
-    .blur-layer {
-      position: absolute;
-      inset: 0;
-      backdrop-filter: blur(30px);
-      -webkit-backdrop-filter: blur(30px);
-      background: rgba(15, 15, 15, 0.55);
-      z-index: 1;
-    }
-
-    /* BARRA 1 - Logo */
-    .top-bar-main {
-      top: 0;
-      height: 45px;
-    }
-
-    /* BARRA 2 - Título e menu */
-    .top-bar-sub {
-      top: 45px;
-      height: 55px;
-      background: rgba(0, 0, 0, 0.2);
-      border-bottom: 1px solid #4D4D4D;
-    }
-
-    /* BARRA 3 - Pacotes selecionados */
-    .top-bar-pacotes {
-      top: 100px;
-      height: 130px;
-      background: rgba(15, 15, 15, 0.9);
-      border-bottom: 1px solid #4D4D4D;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.15s linear;
-    }
-
-    .top-bar-pacotes.visible {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .top-bar-pacotes-inner {
-      display: grid;
-      grid-template-columns: 50% 16.66% 16.66% 16.66%;
-      height: 100%;
-      align-items: center;
-    }
-
-    /* ===== SCROLL - ESTADO CLARO ===== */
-    .top-bar.scrolled {
-      background: rgba(255, 255, 255, 0.6);
-    }
-
-    .top-bar.scrolled .blur-layer {
-      background: rgba(255, 255, 255, 0.4);
-    }
-
-    .top-bar.scrolled .titulo-pequeno {
-      color: #1d1d1f;
-    }
-
-    .top-bar.scrolled .menu-item {
-      color: #6e6e73;
-    }
-
-    .top-bar.scrolled .menu-item.ativo {
-      color: #000000;
-    }
-
-    .top-bar.scrolled .menu-item.ativo::after {
-      background: #000000;
-    }
-
-    /* ===== LOGO ===== */
-    .logo {
-      height: 20px;
-      display: block;
-    }
-
-    /* ===== TÍTULO ===== */
-    .titulo-pequeno {
-      font-size: 21px;
-      font-weight: 600;
-      color: #f5f5f7;
-      transition: color 0.3s ease;
-    }
-
-    /* ===== MENU ===== */
-    .menu-header {
-      display: flex;
-      gap: 24px;
-    }
-
-    .menu-item {
-      font-size: 14px;
-      font-weight: 500;
-      color: #b5b5b8;
-      cursor: pointer;
-      position: relative;
-      text-decoration: none;
-      display: inline-block;
-      transition: color 0.3s ease;
-    }
-
-    .menu-item.ativo {
-      color: #ffffff;
-    }
-
-    .menu-item.ativo::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: -16px;
-      height: 2px;
-      background: #ffffff;
-      transition: background 0.3s ease;
-    }
-
-    /* ===== PACOTES (Header) ===== */
-    .pacote-resumo-bloco {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .pacote-resumo {
-      width: 100%;
-      height: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      font-size: 18px;
-      font-weight: 600;
-      color: #f5f5f7;
-      line-height: 1.25;
-    }
-
-    .pacote-resumo.vazio {
-      color: #d1d1d6;
-    }
-
-    .pacote-total {
-      font-size: 16px;
-      font-weight: 400;
-      color: #d1d1d6;
-      line-height: 1.1;
-      height: 24px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .pacote-total.vazio {
-      color: #8e8e93;
-    }
-
-    /* ===== BANNER ===== */
-    #banner {
-      width: 100%;
-      display: block;
-    }
-
-    /* ===== CONTAINER PRINCIPAL ===== */
-    .container {
-      width: 950px;
-      max-width: calc(100% - 32px);
-      margin: auto;
-      text-align: center;
-      padding: 0 16px;
-    }
-
-    .titulo-principal {
-      font-size: 32px;
-      margin: 47px 0;
-      font-weight: 600;
-    }
-
-    .linha {
-      width: 100%;
-      border-bottom: 1px solid #4D4D4D;
-      margin-bottom: 47px;
-    }
-
-    .titulo-secao {
-      width: 100%;
-      margin: 47px auto 23px;
-      font-size: 24px;
-      font-weight: 600;
-    }
-
-    #bandeiras {
-      margin-bottom: 47px;
-    }
-
-    /* ===== GRUPOS DE PAÍSES ===== */
-    .grupo-paises {
-      width: 100%;
-    }
-
-    .grupo-paises-titulo {
-      width: fit-content;
-      margin: 0 auto;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 9px;
-      font-size: 21px;
-      font-weight: 600;
-      color: #f5f5f7;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    /* Seta dos grupos */
-    .grupo-seta {
-      width: 18px;
-      height: 18px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      border-radius: 50%;
-      transition: background-color 0.25s ease, transform 0.25s ease;
-    }
-
-    .grupo-seta::before {
-      content: "";
-      width: 6px;
-      height: 6px;
-      border-right: 2px solid;
-      border-bottom: 2px solid;
-      transition: border-color 0.25s ease, transform 0.25s ease;
-    }
-
-    /* FECHADO */
-    .grupo-paises.fechado .grupo-seta {
-      background-color: #ffffff;
-    }
-
-    .grupo-paises.fechado .grupo-seta::before {
-      border-color: #0F0F0F;
-      transform: rotate(-45deg);
-      margin-top: 0;
-      margin-left: -2px;
-    }
-
-    /* ABERTO */
-    .grupo-paises:not(.fechado) .grupo-seta {
-      background-color: #0F0F0F;
-    }
-
-    .grupo-paises:not(.fechado) .grupo-seta::before {
-      border-color: #ffffff;
-      transform: rotate(45deg);
-      margin-top: -3px;
-      margin-left: 0;
-    }
-
-    .grupo-paises-titulo:hover .grupo-seta {
-      transform: scale(1.08);
-    }
-
-    /* Bandeiras animadas */
-    .grupo-bandeiras {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      max-height: 140px;
-      opacity: 1;
-      transition: max-height 0.32s ease, opacity 0.22s ease, margin 0.32s ease;
-    }
-
-    .grupo-paises:not(.fechado) .grupo-bandeiras {
-      margin: 50px 0 25px;
-      max-height: 220px;
-    }
-
-    .grupo-paises.fechado .grupo-bandeiras {
-      max-height: 0;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    /* Bandeiras individuais */
-    .bandeira {
-      width: 72px;
-      height: 48px;
-      border-radius: 6px;
-      overflow: hidden;
-      cursor: pointer;
-      position: relative;
-      border: 2px solid transparent;
-      box-shadow: 0 0 0 4px transparent;
-      transition: all 0.25s ease;
-    }
-
-    .bandeira img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 6px;
-    }
-
-    .nome-pais {
-      position: absolute;
-      bottom: calc(100% + 12px);
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90px;
-      font-size: 12px;
-      font-weight: 500;
-      color: #D1D1D6;
-      text-align: center;
-      line-height: 1.15;
-      pointer-events: none;
-    }
-
-    .bandeira.active {
-      box-shadow: 0 0 0 3px #0F0F0F, 0 0 0 5px #0071e3;
-    }
-
-    /* ===== GRID DE PACOTES ===== */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin-top: 24px;
-    }
-
-    .titulo-pacote {
-      font-size: 24px;
-      font-weight: 600;
-      margin-bottom: 23px;
-      color: #f5f5f7;
-    }
-
-    .grupo-selects {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    /* ===== SELECTS ===== */
-    select {
-      height: 60px;
-      padding: 0 20px;
-      border-radius: 12px;
-      border: none;
-      font-size: 18px;
-      background: #2A2A2A;
-      color: #8e8e93;
-      outline: none;
-      appearance: none;
-      transition: all 0.2s ease;
-      cursor: pointer;
-    }
-
-    select.ativo {
-      color: #ffffff;
-    }
-
-    select:hover {
-      background: #333333;
-    }
-
-    select:focus {
-      background: #333333;
-    }
-
-    /* ===== BARRA ESTÁTICA (visível antes do resultado) ===== */
-    .barra-pacotes-estatica {
-      display: none;
-      width: 100%;
-      height: 130px;
-      background: #0F0F0F;
-      border-bottom: 1px solid #4D4D4D;
-    }
-
-    /* ===== ESPAÇADORES ===== */
-    .topo-preto {
-      height: 47px;
-      width: 100%;
-      background: #0F0F0F;
-    }
-
-    .topo-branco {
-      height: 47px;
-      width: 100%;
-      background: #ffffff;
-    }
-
-    .linha-separadora-pacotes {
-      display: none;
-      position: relative;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100vw;
-      height: 1px;
-      background: #D1D1D6;
-    }
-
-    /* ===== RESULTADO (Fundo branco) ===== */
-    #resultado {
-      display: none;
-      width: 100%;
-      position: relative;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #ffffff;
-    }
-
-    #resultado::before {
-      content: "";
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100vw;
-      height: 100%;
-      background: #ffffff;
-      z-index: -1;
-    }
-
-    /* ===== RESULTADO - ESTRUTURA ===== */
-    .resultado-wrapper {
-      width: 950px;
-      max-width: calc(100% - 32px);
-      margin: auto;
-      padding: 0 16px;
-    }
-
-    .resultado-header {
-      display: grid;
-      grid-template-columns: 50% 50%;
-      margin-top: 47px;
-      gap: 24px;
-    }
-
-    .resultado-header-esquerda {
-      text-align: left;
-    }
-
-    .bloco-titulo {
-      font-size: 24px;
-      font-weight: 600;
-      color: #1d1d1f;
-    }
-
-    .resultado-header-direita {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-    }
-
-    .coluna-pacote-header {
-      text-align: center;
-    }
-
-    .coluna-pacote-header div:first-child {
-      font-size: 18px;
-      font-weight: 600;
-      color: #1d1d1f;
-    }
-
-    .coluna-pacote-header div:last-child {
-      font-size: 16px;
-      color: #6e6e73;
-      margin-top: 4px;
-    }
-
-    /* ===== RESUMO POR TECNOLOGIA ===== */
-    #resumoTecnologia {
-      margin-top: 32px;
-    }
-
-    .linha-tecnologia {
-      display: grid;
-      grid-template-columns: 50% 16.66% 16.66% 16.66%;
-      align-items: center;
-      min-height: 56px;
-      border-bottom: 1px solid #E5E5E5;
-    }
-
-    .descricao-tecnologia {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-align: left;
-      font-size: 18px;
-      font-weight: 400;
-      color: #1D1D1F;
-    }
-
-    .icone-tecnologia {
-      width: 35px;
-      height: 35px;
-      object-fit: contain;
-      flex-shrink: 0;
-    }
-
-    .valor-tecnologia {
-      text-align: center;
-      font-size: 20px;
-      font-weight: 600;
-      color: #1D1D1F;
-    }
-
-    /* ===== LISTA DE CANAIS ===== */
-    .lista-canais-titulo {
-      margin: 60px 0 24px;
-      font-size: 24px;
-      font-weight: 600;
-      color: #1d1d1f;
-      text-align: left;
-    }
-
-    #listaCanais {
-      margin-top: 12px;
-    }
-
-    .linha-canal-nova {
-      display: grid;
-      grid-template-columns: 50% 16.66% 16.66% 16.66%;
-      align-items: center;
-      min-height: 72px;
-      border-bottom: 1px solid #E5E5E5;
-    }
-
-    .info-canal {
-      text-align: left;
-    }
-
-    .info-canal-vc {
-      font-size: 14px;
-      color: #6E6E73;
-    }
-
-    .info-canal-nome {
-      font-size: 20px;
-      font-weight: 600;
-      color: #1D1D1F;
-      margin-top: 4px;
-    }
-
-    .info-canal-tags {
-      margin-top: 8px;
-      font-size: 14px;
-      color: #6E6E73;
-    }
-
-    .status-pacote {
-      text-align: center;
-      font-size: 24px;
-    }
-
-    /* ===== RODAPÉ ===== */
-    .fake-content {
-      height: 280px;
-      background: #0F0F0F;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-    }
-
-    .footer-faixa {
-      width: 950px;
-      max-width: calc(100% - 32px);
-    }
-
-    .footer-inner {
-      width: 100%;
-      padding: 0 16px 18px;
-      text-align: left;
-    }
-
-    .footer-text {
-      margin: 0 0 14px;
-      font-size: 14px;
-      line-height: 1.65;
-      color: #8e8e93;
-    }
-
-    .footer-text a {
-      color: #d1d1d6;
-      text-decoration: none;
-      transition: text-decoration 0.2s ease;
-    }
-
-    .footer-text a:hover {
-      text-decoration: underline;
-    }
-
-    .footer-divider {
-      width: 100%;
-      border-top: 1px solid #4D4D4D;
-      margin: 24px 0 18px;
-    }
-
-    .footer-copy {
-      margin: 0;
-      font-size: 14px;
-      line-height: 1.5;
-      color: #8e8e93;
-    }
-  </style>
+<style>
+
+/* ===== RESET ===== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+  background: #0F0F0F;
+  color: #f5f5f7;
+}
+
+/* ===== BASE ===== */
+.top-bar {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+}
+
+.top-bar-inner {
+  width: 950px;
+  max-width: calc(100% - 32px);
+  margin: auto;
+
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  position: relative;
+  z-index: 2;
+}
+
+/* ===== BARRA 1 (Fina - logo) ===== */
+.top-bar-main {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 45px;
+}
+
+/* ✅ camada de blur separada */
+.blur-layer {
+  position: absolute;
+  inset: 0;
+
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+
+  background: rgba(15,15,15);
+  z-index: 1;
+}
+
+/* ===== BARRA 2 (Grossa - título) ===== */
+.top-bar-sub {
+  top: 45px;
+  height: 55px;
+  background: rgba(0,0,0,0.2);
+  border-bottom: 1px solid #4D4D4D;
+}
+  
+/* ===== BARRA 3 (Pacotes selecionados) ===== */
+.top-bar-pacotes {
+  top: 100px;
+  height: 130px;
+
+  background: rgba(0,0,0,0.20);
+  border-bottom: 1px solid #4D4D4D;
+
+  opacity: 0;
+  transform: translateY(0);
+  pointer-events: none;
+  transition:
+    opacity 0.15s linear,
+    background 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.top-bar-pacotes.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.top-bar-pacotes-inner {
+  height: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+      50%
+      16.66%
+      16.66%
+      16.66%;
+
+  align-items: center;
+}
+
+.barra-pacotes-estatica {
+  display: none;
+  width: 100%;
+  height: 130px;
+  background: #0F0F0F;
+  border-bottom: 1px solid #4D4D4D;
+}
+
+.seu-header-fixo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+  
+.linha-separadora-pacotes {
+  display: none;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  height: 1px;
+  background: #D1D1D6;
+}
+
+.pacote-resumo-bloco {
+  min-width: 0;
+  height: 100%;
+justify-content: center;
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 0;
+}
+  
+.pacote-resumo {
+  width: 100%;
+
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  font-size: 18px;
+  font-weight: 600;
+
+  color: #f5f5f7;
+
+  white-space: normal;
+  overflow: visible;
+
+  line-height: 1.25;
+}
+
+.pacote-total {
+  font-size: 16px;
+      margin-top: 0px;
+  font-weight: 400;
+  color: #d1d1d6;
+  line-height: 1.1;
+  height: 24px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.pacote-resumo.vazio,
+.pacote-total.vazio {
+  color: #d1d1d6;
+}
+
+.pacote-resumo.vazio {
+  color: #d1d1d6; /* cinza claro para "No seleccionado" */
+}
+
+/* ===== LOGO ===== */
+.logo {
+  height: 20px;
+  display: block;
+}
+
+/* ===== TITULO ===== */
+.titulo-pequeno {
+  font-size: 21px;
+  font-weight: 600;
+}
+
+/* ===== BANNER ===== */
+#banner {
+  width: 100%;
+  display: block;
+}
+
+/* espaço pra scroll */
+/* espaço final com rodapé embutido */
+.fake-content {
+  height: 280px;
+  background: #0F0F0F;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;   /* centraliza o rodapé na horizontal */
+  align-items: flex-end;     /* cola o rodapé no final da faixa */
+}
+
+.footer-faixa {
+  width: 950px;
+  max-width: calc(100% - 32px);
+}
+
+.footer-inner {
+  width: 100%;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-bottom: 18px; /* respiro final: substitui a segunda linha */
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.footer-text {
+  margin: 0 0 14px 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: #8e8e93;
+  max-width: 950px;
+}
+
+.footer-text a {
+  color: #d1d1d6;
+  text-decoration: none;
+}
+
+.footer-text a:hover {
+  text-decoration: underline;
+}
+
+.footer-divider {
+  width: 100%;
+  border-top: 1px solid #4D4D4D;
+  margin: 24px 0 18px 0;
+}
+
+.footer-copy {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #8e8e93;
+}
+
+/* ===== CONTAINER ===== */
+.container {
+  width: 950px;
+  max-width: calc(100% - 32px);
+  margin: auto;
+  text-align: center;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+/* ===== TÍTULO PRINCIPAL ===== */
+.titulo-principal {
+  font-size: 32px;
+  margin-top: 47px;
+  margin-bottom: 47px;
+  font-weight: 600;
+}
+  
+.linha {
+  width: 100%;
+  border-bottom: 1px solid #4D4D4D;
+  margin-bottom: 47px;
+}
+
+/* ===== TITULO DE SEÇÃO ===== */
+.titulo-secao {
+  width: 950px;
+  max-width: calc(100% - 32px);
+  margin: auto;
+
+  margin-top: 47px;
+  margin-bottom: 23px;
+
+  font-size: 24px;
+  font-weight: 600;
+
+  text-align: center;
+}
+
+#bandeiras {
+  margin-bottom: 47px;
+}
+
+.bandeira {
+  width: 72px;
+  height: 48px;
+  margin: 6px;
+
+  border-radius: 6px;
+  overflow: visible;
+
+  cursor: pointer;
+  position: relative;
+
+  border: 2px solid transparent;
+  box-shadow: 0 0 0 4px transparent;
+
+  transition: all 0.25s ease;
+}
+
+.bandeira img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.nome-pais {
+  position: absolute;
+
+  bottom: calc(100% + 12px);
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  width: 90px;
+
+  font-size: 12px;
+  font-weight: 500;
+  color: #D1D1D6;
+
+  text-align: center;
+  line-height: 1.15;
+
+  white-space: normal;
+  pointer-events: none;
+}
+  
+.bandeira.active {
+  box-shadow:
+    0 0 0 3px #0F0F0F,
+    0 0 0 5px #0071e3;
+}
+  
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 24px;
+}
+
+/* título pacote */
+.titulo-pacote {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 23px;
+  color: #f5f5f7;
+}
+
+/* selects agrupados */
+.grupo-selects {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* estilo dos selects */
+select {
+  height: 60px;
+  padding: 0 20px;
+  border-radius: 12px;
+  border: none;
+
+  font-size: 18px;
+  background: #2A2A2A;
+
+  color: #8e8e93;
+  outline: none;
+  appearance: none;
+  transition: all 0.2s ease;
+}
+
+select.ativo {
+  color: #ffffff;
+}
+
+select:hover {
+  background: #333333;
+}
+
+select:focus {
+  outline: none;
+  box-shadow: none;
+  background: #333333;
+}
+
+
+.menu-header {
+  display: flex;
+  gap: 24px;
+}
+
+.menu-item {
+  font-size: 14px;
+  font-weight: 500;
+  color: #b5b5b8;
+  cursor: pointer;
+  position: relative;
+  text-decoration: none; /* remove sublinhado */
+  display: inline-block;
+}
+
+.menu-item.ativo {
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.menu-item.ativo::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -16px;
+  height: 2px;
+  background: #ffffff;
+}
+
+/* ===== RESULTADO ===== */
+#resultado {
+  display: none;
+  margin-top: 0;
+  background: #ffffff;
+  padding: 0;
+
+  width: 100%;
+
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* ✅ FAIXA BRANCA REAL (FULL WIDTH) */
+#resultado::before {
+  content: "";
+  position: absolute;
+
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 100vw;
+  height: 100%;
+
+  background: #ffffff;
+  z-index: -1;
+}
+
+.linha-resultado {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+
+  width: 950px;
+  max-width: calc(100% - 32px);
+
+  margin-left: auto;
+  margin-right: auto;
+
+  margin-bottom: 12px;
+}
+
+/* bloco canal */
+.canal {
+  text-align: center;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e5e5;
+  height: 105px;
+  max-width: 100%;
+  gap: 2px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* VC */
+.canal-vc {
+  font-size: 16px;
+  color: #1d1d1f;
+
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* nome */
+.canal-nome {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1d1d1f;
+  
+  margin-top: 4px;
+  margin-right: 0;
+  margin-bottom: 10px;
+  margin-left: 0;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* tags */
+.tags {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  height: 24px;
+  align-items: center;
+}
+
+.tag {
+  font-size: 14px;
+  padding: 4px 10px;
+  border-radius: 10px;
+  background: #f2f2f2;
+  color: #1d1d1f;
+}
+
+.linha-resultado:first-child {
+  margin-top: 47px;
+}
+
+.topo-branco {
+  height: 47px;
+  width: 100%;
+}
+
+.topo-preto {
+  height: 47px;
+  width: 100%;
+  background: #0F0F0F;
+}
+
+/* ===== SKELETON ===== */
+.skeleton {
+  background: #e5e5e5;
+  border-radius: 8px;
+  margin: 6px auto;
+}
+
+.skeleton.vc {
+  width: 40px;
+  height: 16px;
+}
+
+.skeleton.nome {
+  width: 120px;
+  height: 18px;
+}
+
+.skeleton.tags {
+  width: 90px;
+  height: 16px;
+}
+
+html, body {
+  overflow-x: hidden;
+}
+  
+/* ===== HEADER CLARO AO SCROLL ===== */
+.top-bar.scrolled {
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.top-bar.scrolled .titulo-pequeno {
+  color: #1d1d1f;
+}
+
+.top-bar.scrolled .menu-item {
+  color: #6e6e73;
+}
+
+.top-bar.scrolled .menu-item.ativo {
+  color: #000000;
+}
+
+.top-bar.scrolled .menu-item.ativo::after {
+  background: #000000;
+}
+
+.top-bar.scrolled .blur-layer {
+  background: rgba(255,255,255,0.4);
+}
+
+.top-bar {
+  transition: all 0.3s ease;
+}
+
+.titulo-pequeno, .menu-item {
+  transition: color 0.3s ease;
+}
+/* ===== ESTADO PADRÃO (ESCURO) ===== */
+.top-bar-main .blur-layer {
+  background: rgba(15,15,15,0.55);
+}
+
+.top-bar-sub {
+  background: rgba(0,0,0,0.20);
+  border-bottom: 1px solid #4D4D4D;
+}
+
+.titulo-pequeno {
+  color: #f5f5f7;
+}
+
+.menu-item {
+  color: #b5b5b8;
+}
+
+.menu-item.ativo {
+  color: #ffffff;
+}
+
+.menu-item.ativo::after {
+  background: #ffffff;
+}
+
+/* ===== HEADER CLARO ===== */
+.top-bar.scrolled {
+  background: rgba(255,255,255,0.60);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.top-bar.scrolled .blur-layer {
+  background: rgba(255,255,255,0.40);
+}
+
+.top-bar.scrolled .titulo-pequeno {
+  color: #1d1d1f;
+}
+
+.top-bar.scrolled .menu-item {
+  color: #6e6e73;
+}
+
+.top-bar.scrolled .menu-item.ativo {
+  color: #000000;
+}
+
+.top-bar.scrolled .menu-item.ativo::after {
+  background: #000000;
+}
+  
+.top-bar-pacotes {
+  background: rgba(15,15,15);
+  border-bottom: 1px solid #4D4D4D;
+}
+
+.top-bar-pacotes .pacote-resumo {
+  color: #f5f5f7;
+}
+
+.top-bar-pacotes .pacote-total {
+  color: #d1d1d6;
+}
+
+.top-bar-pacotes .pacote-resumo.vazio,
+.top-bar-pacotes .pacote-total.vazio {
+  color: #8e8e93;
+}
+
+.top-bar-pacotes.scrolled {
+  background: rgba(15,15,15);
+  border-bottom: 1px solid #4D4D4D;
+}
+
+.top-bar-pacotes.scrolled .pacote-resumo {
+  color: #f5f5f7;
+}
+
+.top-bar-pacotes.scrolled .pacote-total {
+  color: #f5f5f7;
+}
+
+.top-bar-pacotes.scrolled .pacote-resumo.vazio,
+.top-bar-pacotes.scrolled .pacote-total.vazio {
+  color: #8e8e93;
+}
+  
+/* ===== GRUPOS DE PAÍSES ===== */
+
+.grupo-paises {
+  width: 100%;
+}
+
+.grupo-paises + .grupo-paises {
+  margin-top: 0;
+}
+
+.grupo-paises-titulo {
+  width: fit-content;
+  margin: 0 auto;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+
+  font-size: 21px;
+  font-weight: 600;
+  color: #f5f5f7;
+  text-align: center;
+
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ===== SETA DOS GRUPOS ===== */
+
+.grupo-seta {
+  width: 18px;
+  height: 18px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+  border-radius: 50%;
+
+  transition:
+    background-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+/* Desenho da seta */
+.grupo-seta::before {
+  content: "";
+
+  width: 6px;
+  height: 6px;
+
+  border-right: 2px solid;
+  border-bottom: 2px solid;
+
+  transition:
+    border-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+/* NÃO SELECIONADO / FECHADO:
+   círculo branco e seta #0F0F0F */
+.grupo-paises.fechado .grupo-seta {
+  background-color: #ffffff;
+}
+
+.grupo-paises.fechado .grupo-seta::before {
+  border-color: #0F0F0F;
+  transform: rotate(-45deg);
+  margin-top: 0;
+  margin-left: -2px;
+}
+
+/* SELECIONADO / ABERTO:
+   círculo #0F0F0F e seta branca */
+.grupo-paises:not(.fechado) .grupo-seta {
+  background-color: #0F0F0F;
+}
+
+.grupo-paises:not(.fechado) .grupo-seta::before {
+  border-color: #ffffff;
+  transform: rotate(45deg);
+  margin-top: -3px;
+  margin-left: 0;
+}
+
+/* Hover: sem animação de escala */
+.grupo-paises-titulo:hover .grupo-seta {
+  transform: none;
+}
+
+
+/* ===== BANDEIRAS DOS GRUPOS ===== */
+
+.grupo-bandeiras {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  overflow: visible;
+
+  max-height: 140px;
+
+  margin-top: 0;
+  margin-bottom: 0;
+
+  opacity: 1;
+  transform: translateY(0);
+
+  transition:
+    max-height 0.32s ease,
+    opacity 0.22s ease,
+    transform 0.32s ease,
+    margin 0.32s ease;
+}
+
+.grupo-paises:not(.fechado) .grupo-bandeiras {
+  margin-top: 50px;
+  margin-bottom: 25px;
+
+  max-height: 220px;
+}
+
+.grupo-paises.fechado .grupo-bandeiras {
+  max-height: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+}
+
+.tooltip-pais::before {
+  content: "";
+  position: absolute;
+
+  top: -5px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid rgba(28,28,30,.95);
+}
+  
+.bandeira:hover .tooltip-pais {
+  opacity: 1;
+  visibility: visible;
+}
+/* ===== SETA DOS GRUPOS - ESTADO FINAL CORRIGIDO ===== */
+
+/* Base da bolinha */
+.grupo-paises .grupo-seta {
+  width: 18px;
+  height: 18px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+  border-radius: 50%;
+
+  transition:
+    background-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+/* Desenho real da seta */
+.grupo-paises .grupo-seta::before {
+  content: "";
+
+  width: 6px;
+  height: 6px;
+
+  border-right: 2px solid;
+  border-bottom: 2px solid;
+
+  transition:
+    border-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+/* FECHADO / NÃO SELECIONADO:
+   círculo branco e seta #0F0F0F */
+.grupo-paises.fechado .grupo-seta {
+  background-color: #ffffff !important;
+}
+
+.grupo-paises.fechado .grupo-seta::before {
+  border-color: #0F0F0F !important;
+  transform: rotate(-45deg);
+  margin-top: 0;
+  margin-left: -2px;
+}
+
+/* ABERTO / SELECIONADO:
+   círculo #0F0F0F e seta branca */
+.grupo-paises:not(.fechado) .grupo-seta {
+  background-color: #0F0F0F !important;
+}
+
+.grupo-paises:not(.fechado) .grupo-seta::before {
+  border-color: #ffffff !important;
+  transform: rotate(45deg);
+  margin-top: -3px;
+  margin-left: 0;
+}
+
+/* Hover: mantém as cores corretas, só aumenta levemente */
+.grupo-paises-titulo:hover .grupo-seta {
+  transform: scale(1.08);
+}
+  
+/* =======================================================
+   NOVO LAYOUT RESULTADO
+======================================================= */
+
+.resultado-wrapper{
+    width:950px;
+    max-width:calc(100% - 32px);
+    margin:auto;
+}
+
+.resultado-header{
+    display:grid;
+    grid-template-columns:50% 50%;
+    margin-top:47px;
+}
+
+.resultado-header-esquerda{
+    text-align:left;
+}
+
+.bloco-titulo{
+    font-size:24px;
+    font-weight:600;
+    color:#1d1d1f;
+}
+
+.resultado-header-direita{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+}
+
+.coluna-pacote-header{
+    text-align:center;
+}
+
+.coluna-pacote-header div:first-child{
+    font-size:18px;
+    font-weight:600;
+    color:#1d1d1f;
+}
+
+.coluna-pacote-header div:last-child{
+    font-size:16px;
+    color:#6e6e73;
+    margin-top:4px;
+}
+
+.lista-canais-titulo{
+    margin-top:60px;
+    margin-bottom:24px;
+
+    font-size:24px;
+    font-weight:600;
+
+    color:#1d1d1f;
+    text-align:left;
+}
+
+#resumoTecnologia{
+    margin-top:32px;
+}
+
+.linha-tecnologia{
+    display:grid;
+
+    grid-template-columns:
+        50%
+        16.66%
+        16.66%
+        16.66%;
+
+    align-items:center;
+
+    min-height:56px;
+
+    border-bottom:1px solid #E5E5E5;
+}
+
+.descricao-tecnologia{
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    text-align:left;
+
+    font-size:18px;
+    font-weight:400;
+
+    color:#1D1D1F;
+}
+
+.icone-tecnologia{
+    width:35px;
+    height:35px;
+    object-fit:contain;
+    flex-shrink:0;
+}
+
+.valor-tecnologia{
+    text-align:center;
+
+    font-size:20px;
+    font-weight:600;
+
+    color:#1D1D1F;
+}
+
+#listaCanais{
+    margin-top:12px;
+}
+
+.linha-canal-nova {
+    display:grid;
+
+    grid-template-columns:
+        50%
+        16.66%
+        16.66%
+        16.66%;
+
+    align-items:center;
+
+    min-height:72px;
+
+    border-bottom:1px solid #E5E5E5;
+}
+
+.info-canal {
+    text-align:left;
+}
+
+.info-canal-vc {
+    font-size:14px;
+    color:#6E6E73;
+}
+
+.info-canal-nome {
+    font-size:20px;
+    font-weight:600;
+    color:#1D1D1F;
+
+    margin-top:4px;
+}
+
+.info-canal-tags {
+    margin-top:8px;
+}
+
+.status-pacote {
+    text-align:center;
+
+    font-size:24px;
+}
+
+</style>
+
 </head>
 
 <body>
-  <!-- ✅ BARRA 1 - LOGO -->
-  <div class="top-bar top-bar-main" id="topbarMain">
-    <div class="blur-layer"></div>
-    <div class="top-bar-inner">
-      <img src="icon_gpt_branco.png" class="logo" alt="Check Channel">
+
+<!-- ✅ BARRA 1 -->
+<div class="top-bar top-bar-main" id="topbarMain">
+  <div class="blur-layer"></div>
+  <div class="top-bar-inner">
+    <img src="icon_gpt_branco.png" class="logo">
+  </div>
+</div>
+
+<!-- ✅ BARRA 2 -->
+<div class="top-bar top-bar-sub" id="topbarSub">
+  <div class="top-bar-inner">
+    <div class="titulo-pequeno">Check Channel</div>
+
+<div class="menu-header">
+  <a href="index.html" class="menu-item ativo">Paquetes</a>
+  <a href="canales.html" class="menu-item">Canales</a>
+</div>
+
+  </div>
+</div>
+  
+<!-- ✅ BARRA 3 -->
+<div class="top-bar top-bar-pacotes" id="topbarPacotes">
+  <div class="top-bar-inner top-bar-pacotes-inner">
+    <div></div>
+
+    <div class="pacote-resumo-bloco">
+      <div class="pacote-resumo vazio" id="pacoteHeader1">No seleccionado</div>
+      <div class="pacote-total vazio" id="pacoteTotal1">0 canales</div>
     </div>
+
+    <div class="pacote-resumo-bloco">
+      <div class="pacote-resumo vazio" id="pacoteHeader2">No seleccionado</div>
+      <div class="pacote-total vazio" id="pacoteTotal2">0 canales</div>
+    </div>
+
+    <div class="pacote-resumo-bloco">
+      <div class="pacote-resumo vazio" id="pacoteHeader3">No seleccionado</div>
+      <div class="pacote-total vazio" id="pacoteTotal3">0 canales</div>
+    </div>
+
+  </div>
+</div>
+  
+<!-- ✅ BANNER -->
+<img id="banner" src="banner.png">
+
+<div class="container" id="topo">
+
+  <h1 class="titulo-principal">
+    Consulte los planes de programación
+  </h1>
+
+  <div class="linha"></div>
+
+  <div class="titulo-secao">
+    Seleccione el país
   </div>
 
-  <!-- ✅ BARRA 2 - TÍTULO E MENU -->
-  <div class="top-bar top-bar-sub" id="topbarSub">
-    <div class="top-bar-inner">
-      <div class="titulo-pequeno">Check Channel</div>
-      <div class="menu-header">
-        <a href="index.html" class="menu-item ativo" data-page="paquetes">Paquetes</a>
-        <a href="canales.html" class="menu-item" data-page="canales">Canales</a>
-      </div>
-    </div>
-  </div>
+  <div id="bandeiras"></div>
 
-  <!-- ✅ BARRA 3 - PACOTES SELECIONADOS -->
-  <div class="top-bar top-bar-pacotes" id="topbarPacotes">
-    <div class="top-bar-inner top-bar-pacotes-inner">
-      <div></div>
-      <div class="pacote-resumo-bloco">
-        <div class="pacote-resumo vazio" id="pacoteHeader1">No seleccionado</div>
-        <div class="pacote-total vazio" id="pacoteTotal1">0 canales</div>
-      </div>
-      <div class="pacote-resumo-bloco">
-        <div class="pacote-resumo vazio" id="pacoteHeader2">No seleccionado</div>
-        <div class="pacote-total vazio" id="pacoteTotal2">0 canales</div>
-      </div>
-      <div class="pacote-resumo-bloco">
-        <div class="pacote-resumo vazio" id="pacoteHeader3">No seleccionado</div>
-        <div class="pacote-total vazio" id="pacoteTotal3">0 canales</div>
-      </div>
-    </div>
-  </div>
+  <div class="grid">
 
-  <!-- ✅ BANNER -->
-  <img id="banner" src="banner.png" alt="Banner">
+    <!-- PACOTE 1 -->
+    <div class="pacote">
+      <div class="titulo-pacote">Paquete principal</div>
+      <div class="grupo-selects">
+        <select id="cliente1">
+          <option value="" disabled selected>Selecciona el tipo de cliente</option>
+        </select>
 
-  <!-- ✅ CONTEÚDO PRINCIPAL -->
-  <div class="container" id="topo">
-    <h1 class="titulo-principal">Consulte los planes de programación</h1>
-    <div class="linha"></div>
-    <div class="titulo-secao">Seleccione el país</div>
-    <div id="bandeiras"></div>
-
-    <div class="grid">
-      <!-- PACOTE 1 -->
-      <div class="pacote">
-        <div class="titulo-pacote">Paquete principal</div>
-        <div class="grupo-selects">
-          <select id="cliente1" aria-label="Tipo de cliente - Paquete principal">
-            <option value="" disabled selected>Selecciona el tipo de cliente</option>
-          </select>
-          <select id="pacote1" aria-label="Paquete - Paquete principal">
-            <option value="" disabled selected>Selecciona el paquete</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- PACOTE 2 -->
-      <div class="pacote">
-        <div class="titulo-pacote">Comparación 1</div>
-        <div class="grupo-selects">
-          <select id="cliente2" aria-label="Tipo de cliente - Comparación 1">
-            <option value="" disabled selected>Selecciona el tipo de cliente</option>
-          </select>
-          <select id="pacote2" aria-label="Paquete - Comparación 1">
-            <option value="" disabled selected>Selecciona el paquete</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- PACOTE 3 -->
-      <div class="pacote">
-        <div class="titulo-pacote">Comparación 2</div>
-        <div class="grupo-selects">
-          <select id="cliente3" aria-label="Tipo de cliente - Comparación 2">
-            <option value="" disabled selected>Selecciona el tipo de cliente</option>
-          </select>
-          <select id="pacote3" aria-label="Paquete - Comparación 2">
-            <option value="" disabled selected>Selecciona el paquete</option>
-          </select>
-        </div>
+        <select id="pacote1">
+          <option value="" disabled selected>Selecciona el paquete</option>
+        </select>
       </div>
     </div>
 
-    <div class="topo-preto"></div>
-    <div class="linha-separadora-pacotes"></div>
+    <!-- PACOTE 2 -->
+    <div class="pacote">
+      <div class="titulo-pacote">Comparación 1</div>
+      <div class="grupo-selects">
+        <select id="cliente2">
+          <option value="" disabled selected>Selecciona el tipo de cliente</option>
+        </select>
 
-    <!-- Barra estática de pacotes (antes do resultado) -->
-    <div class="barra-pacotes-estatica" id="barraPacotesEstatica">
-      <div class="top-bar-inner top-bar-pacotes-inner">
-        <div></div>
-        <div class="pacote-resumo-bloco">
-          <div class="pacote-resumo vazio" id="pacoteHeaderEst1">No seleccionado</div>
-          <div class="pacote-total vazio" id="pacoteTotalEst1">0 canales</div>
-        </div>
-        <div class="pacote-resumo-bloco">
-          <div class="pacote-resumo vazio" id="pacoteHeaderEst2">No seleccionado</div>
-          <div class="pacote-total vazio" id="pacoteTotalEst2">0 canales</div>
-        </div>
-        <div class="pacote-resumo-bloco">
-          <div class="pacote-resumo vazio" id="pacoteHeaderEst3">No seleccionado</div>
-          <div class="pacote-total vazio" id="pacoteTotalEst3">0 canales</div>
-        </div>
+        <select id="pacote2">
+          <option value="" disabled selected>Selecciona el paquete</option>
+        </select>
       </div>
     </div>
-  </div>
 
-  <!-- ✅ RESULTADO (Fundo branco) -->
-  <div id="resultado"></div>
+    <!-- PACOTE 3 -->
+    <div class="pacote">
+      <div class="titulo-pacote">Comparación 2</div>
+      <div class="grupo-selects">
+        <select id="cliente3">
+          <option value="" disabled selected>Selecciona el tipo de cliente</option>
+        </select>
 
-  <!-- ✅ RODAPÉ -->
-  <div class="fake-content">
-    <footer class="footer-faixa">
-      <div class="footer-inner">
-        <p class="footer-text">
-          Esta herramienta fue desarrollada por la Célula Técnica con el objetivo de optimizar la consulta y comparación de canales incluidos en los diferentes paquetes comerciales.
-          En caso de errores comuníquese con nuestro equipo <span class="footer-nowrap">a través de <a href="mailto:[REDACTED_EMAIL]">[REDACTED_EMAIL]</a></span>.
-        </p>
-        <div class="footer-divider"></div>
-        <p class="footer-copy">
-          Check Channel © 2026 Célula Técnica, Ingeniería WAIKEN. Todos los derechos reservados.
-        </p>
+        <select id="pacote3">
+          <option value="" disabled selected>Selecciona el paquete</option>
+        </select>
       </div>
-    </footer>
+    </div>
+
   </div>
 
-  <script>
-    // ===== CONSTANTES E VARIÁVEIS GLOBAIS =====
-    let dados = [];
-    const HEADER_TOTAL = 50;
-    let limiteInicial = 0;
-    let lastScrollY = 0;
-    let ticking = false;
+<div class="topo-preto"></div>
 
-    const CONFIG = {
-      debounceDelay: 100,
-      scrollThrottle: 16
-    };
+<div class="linha-separadora-pacotes"></div>
 
-    const MAPA_PAISES = {
-      ARGENTINA: 'paquetes_argentina.csv',
-      CHILE: 'paquetes_chile.csv',
-      COLOMBIA: 'paquetes_colombia.csv',
-      ECUADOR: 'paquetes_ecuador.csv',
-      MEXICO: 'paquetes_mexico.csv',
-      PERU: 'paquetes_peru.csv',
-      URUGUAY: 'paquetes_uruguay.csv',
-      BARBADOS: 'paquetes_caribe.csv',
-      CURAZAO: 'paquetes_caribe.csv',
-      GUYANA: 'paquetes_caribe.csv',
-      'PUERTO RICO': 'paquetes_puertorico_usvi.csv',
-      SURINAME: 'paquetes_caribe.csv',
-      'TRINIDAD Y TOBAGO': 'paquetes_caribe.csv',
-      'US VIRGIN ISLANDS': 'paquetes_puertorico_usvi.csv',
-      'OTHER ISLANDS': 'paquetes_caribe.csv'
-    };
+<div class="barra-pacotes-estatica" id="barraPacotesEstatica">
+  <div class="top-bar-inner top-bar-pacotes-inner">
+    <div></div>
 
-    const GRUPOS_PAISES = [
-      {
-        titulo: 'América Latina',
-        paises: ['ARGENTINA', 'CHILE', 'COLOMBIA', 'ECUADOR', 'MEXICO', 'PERU', 'URUGUAY']
-      },
-      {
-        titulo: 'Caribe',
-        paises: ['BARBADOS', 'CURAZAO', 'GUYANA', 'PUERTO RICO', 'SURINAME', 'TRINIDAD Y TOBAGO', 'US VIRGIN ISLANDS', 'OTHER ISLANDS']
-      }
+    <div class="pacote-resumo-bloco">
+      <div class="pacote-resumo vazio" id="pacoteHeaderEst1">
+        No seleccionado
+      </div>
+      <div class="pacote-total vazio" id="pacoteTotalEst1">
+        0 canales
+      </div>
+    </div>
+
+    <div class="pacote-resumo-bloco">
+      <div class="pacote-resumo vazio" id="pacoteHeaderEst2">
+        No seleccionado
+      </div>
+      <div class="pacote-total vazio" id="pacoteTotalEst2">
+        0 canales
+      </div>
+    </div>
+
+    <div class="pacote-resumo-bloco">
+      <div class="pacote-resumo vazio" id="pacoteHeaderEst3">
+        No seleccionado
+      </div>
+      <div class="pacote-total vazio" id="pacoteTotalEst3">
+        0 canales
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div> <!-- ✅ FECHAMENTO CORRETO DO CONTAINER -->
+
+<!-- ✅ RESULTADO -->
+
+<div id="resultado">
+
+    <div class="topo-branco"></div>
+
+    <div class="resultado-wrapper">
+
+        <div class="resultado-header">
+
+            <div class="resultado-header-esquerda">
+
+               <div class="bloco-titulo">
+    Canales por tecnología
+</div>
+
+            </div>
+
+            <div class="resultado-header-direita">
+
+                <div class="coluna-pacote-header">
+                    <div id="headPacote1">Pacote 1</div>
+                    <div id="headTotal1">0 canales</div>
+                </div>
+
+                <div class="coluna-pacote-header">
+                    <div id="headPacote2">Pacote 2</div>
+                    <div id="headTotal2">0 canales</div>
+                </div>
+
+                <div class="coluna-pacote-header">
+                    <div id="headPacote3">Pacote 3</div>
+                    <div id="headTotal3">0 canales</div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="resumoTecnologia">
+
+        </div>
+
+        <div class="lista-canais-titulo">
+            Lista de canales
+        </div>
+
+        <div id="listaCanais">
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="fake-content">
+  <footer class="footer-faixa">
+    <div class="footer-inner">
+ 
+<p class="footer-text">
+  Esta herramienta fue desarrollada por la Célula Técnica con el objetivo de optimizar la consulta y comparación de canales incluidos en los diferentes paquetes comerciales. 
+  En caso de errores comuníquese con nuestro equipo <span class="footer-nowrap">a través de <a href="mailto:celulatecnica@directvla.com.co">celulatecnica@directvla.com.co</a></span>.
+</p>
+
+      <div class="footer-divider"></div>
+
+      <p class="footer-copy">
+        Check Channel © 2026 Célula Técnica, Ingeniería WAIKEN. Todos los derechos reservados.
+      </p>
+    </div>
+  </footer>
+</div>
+
+<script>
+  
+let dados = [];
+
+const HEADER_TOTAL = 50; // 45 + 55
+let limiteInicial = 0;
+
+// ===== HELPERS =====
+function getResultado() {
+  return document.getElementById('resultado');
+}
+
+function resultadoVisivel() {
+  const resultado = getResultado();
+  return resultado && getComputedStyle(resultado).display !== 'none';
+}
+
+function normalizarTexto(valor) {
+  return String(valor || '').trim();
+}
+
+function normalizarArquivo(valor) {
+  return normalizarTexto(valor)
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // remove acentos
+    .replace(/\s+/g, ''); // remove espaços
+}
+
+// comparação por VC (posição do canal)
+// isso mantém a grade coerente entre pacotes
+function normalizarChave(valor) {
+  return String(valor || '')
+    .trim()
+    .toUpperCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
+
+function vcInvalido(vc) {
+  const valor = normalizarChave(vc);
+
+  return (
+    !valor ||
+    valor === 'N/A' ||
+    valor === 'NA' ||
+    valor === '-' ||
+    valor === 'S/N'
+  );
+}
+
+function chaveCanal(item) {
+  const vc = normalizarTexto(item.vc);
+
+  // Se tiver VC válido, mantém a lógica atual de comparação por posição
+  if (!vcInvalido(vc)) {
+    return vc;
+  }
+
+  // Se o VC for N/A, usa canal + tecnologia para evitar sobrescrever
+  return `SEM_VC|${normalizarChave(item.canal)}|${normalizarChave(item.tecnologia)}`;
+}
+
+function criarStatusPacote(existe) {
+
+    const status = document.createElement('div');
+
+    status.className = 'status-pacote';
+
+    status.innerHTML = existe
+        ? '✅'
+        : '❌';
+
+    return status;
+}
+
+  function gerarResumoTecnologia(mapasPacotes) {
+
+    const resumo =
+        document.getElementById('resumoTecnologia');
+
+    if (!resumo) return;
+
+    resumo.innerHTML = '';
+
+    const tecnologias = [
+        'SD',
+        'HD',
+        '4K',
+        'AUDIO',
+        'RADIO'
     ];
 
-    const TECNOLOGIAS = ['SD', 'HD', '4K', 'AUDIO', 'RADIO'];
+// ✅ CORRETO
+const iconesTecnologia = {
+    'SD':    '<img class="icone-tecnologia" src="icon_sd.png">',
+    'HD':    '<img class="icone-tecnologia" src="icon_hd.png">',
+    '4K':    '<img class="icone-tecnologia" src="icon_4k.png">',
+    'AUDIO': '<img class="icone-tecnologia" src="icon_audio.png">',
+    'RADIO': '<img class="icone-tecnologia" src="icon_radio.png">'
+};
+    
+    tecnologias.forEach(tecnologia => {
 
-    const ICONES_TECNOLOGIA = {
-      SD: '<img class="icone-tecnologia" src="icon_sd.png" alt="SD">',
-      HD: '<img class="icone-tecnologia" src="icon_hd.png" alt="HD">',
-      '4K': '<img class="icone-tecnologia" src="icon_4k.png" alt="4K">',
-      AUDIO: '<img class="icone-tecnologia" src="icon_audio.png" alt="Audio">',
-      RADIO: '<img class="icone-tecnologia" src="icon_radio.png" alt="Radio">'
-    };
+        const linha =
+            document.createElement('div');
 
-    const TITULOS_TECNOLOGIA = {
-      SD: '<strong>Canales SD</strong> <span style="font-weight:400;">(Standard Definition)</span>',
-      HD: '<strong>Canales HD</strong> <span style="font-weight:400;">(High Definition)</span>',
-      '4K': '<strong>Canales 4K</strong> <span style="font-weight:400;">(Ultra HD)</span>',
-      AUDIO: '<strong>Canales de AUDIO</strong>',
-      RADIO: '<strong>Canales de RADIO</strong>'
-    };
+        linha.className =
+            'linha-tecnologia';
 
-    // ===== HELPERS - TEXTO =====
-    function normalizarTexto(valor) {
-      return String(valor || '').trim();
-    }
+        const descricao =
+            document.createElement('div');
 
-    function normalizarArquivo(valor) {
-      return normalizarTexto(valor)
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/\s+/g, '');
-    }
+        descricao.className =
+            'descricao-tecnologia';
 
-    function normalizarChave(valor) {
-      return String(valor || '')
-        .trim()
-        .toUpperCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '');
-    }
+const titulosTecnologia = {
+    'SD': '<strong>Canales SD</strong> <span style="font-weight:400;">(Standard Definition)</span>',
+    'HD': '<strong>Canales HD</strong> <span style="font-weight:400;">(High Definition)</span>',
+    '4K': '<strong>Canales 4K</strong> <span style="font-weight:400;">(Ultra HD)</span>',
+    'AUDIO': '<strong>Canales de AUDIO</strong>',
+    'RADIO': '<strong>Canales de RADIO</strong>'
+};
 
-    // ===== HELPERS - VALIDAÇÃO =====
-    function vcInvalido(vc) {
-      const valor = normalizarChave(vc);
-      return !valor || ['N/A', 'NA', '-', 'S/N'].includes(valor);
-    }
-
-    function chaveCanal(item) {
-      const vc = normalizarTexto(item.vc);
-      if (!vcInvalido(vc)) {
-        return vc;
-      }
-      return `SEM_VC|${normalizarChave(item.canal)}|${normalizarChave(item.tecnologia)}`;
-    }
-
-    // ===== HELPERS - DOM =====
-    function getElementoSeguro(id) {
-      const elemento = document.getElementById(id);
-      if (!elemento) console.warn(`Elemento não encontrado: ${id}`);
-      return elemento;
-    }
-
-    function getResultado() {
-      return getElementoSeguro('resultado');
-    }
-
-    function resultadoVisivel() {
-      const resultado = getResultado();
-      return resultado && getComputedStyle(resultado).display !== 'none';
-    }
-
-    // ===== CRIAR ELEMENTOS =====
-    function criarStatusPacote(existe) {
-      const status = document.createElement('div');
-      status.className = 'status-pacote';
-      status.textContent = existe ? '✅' : '❌';
-      return status;
-    }
-
-    // ===== CSV PARSER =====
-    function parseCsvTextoParaDados(texto) {
-      const registros = [];
-      const linhas = texto.replace(/^\uFEFF/, '').split(/\r?\n/);
-
-      linhas.forEach((linha, i) => {
-        if (i === 0 || !linha.trim()) return;
-
-        const col = linha.split(';').map(c => c.trim());
-        if (col.length < 7 || !col[0]) return;
-
-        registros.push({
-          pais: col[0],
-          cliente: col[1],
-          pacote: col[2],
-          vc: col[3],
-          canal: col[4],
-          tecnologia: col[5],
-          categoria: col[6]
-        });
-      });
-
-      return registros;
-    }
-
-    // ===== CARREGAR CSVs =====
-    async function carregarTodosOsCsv() {
-      dados = [];
-      const arquivosUnicos = new Set(Object.values(MAPA_PAISES));
-
-      for (const nomeArquivo of arquivosUnicos) {
-        const url = `paquetes/${nomeArquivo}?v=${Date.now()}`;
-        try {
-          const response = await fetch(url);
-          if (!response.ok) {
-            console.error(`Erro ao carregar CSV: ${url} (${response.status})`);
-            continue;
-          }
-          const texto = await response.text();
-          const registros = parseCsvTextoParaDados(texto);
-          dados.push(...registros);
-        } catch (e) {
-          console.error(`Falha ao buscar CSV: ${url}`, e);
-        }
-      }
-
-      inicializar();
-    }
-
-    // ===== INICIALIZAÇÃO =====
-    function inicializar() {
-      carregarBandeiras();
-      prepararEventosSelects();
-      atualizarBarraPacotes();
-      atualizarEstadoInicial();
-    }
-
-    // ===== BANDEIRAS =====
-    function carregarBandeiras() {
-      const container = getElementoSeguro('bandeiras');
-      if (!container) return;
-
-      container.innerHTML = '';
-
-      GRUPOS_PAISES.forEach((grupo, grupoIdx) => {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'grupo-paises fechado';
-
-        const titulo = document.createElement('div');
-        titulo.className = 'grupo-paises-titulo';
-        titulo.innerHTML = `
-          <span>${grupo.titulo}</span>
-          <span class="grupo-seta" aria-hidden="true"></span>
-        `;
-
-        const linha = document.createElement('div');
-        linha.className = 'grupo-bandeiras';
-
-        titulo.addEventListener('click', () => alternarGrupo(wrapper));
-
-        grupo.paises.forEach(pais => {
-          const existe = dados.some(d => d.pais === pais);
-          if (!existe) return;
-
-          const bandeira = document.createElement('div');
-          bandeira.className = 'bandeira';
-          bandeira.dataset.pais = pais;
-          bandeira.innerHTML = `
-            <img src="flags/${normalizarArquivo(pais)}.png" alt="${pais}">
-            <div class="nome-pais">${pais}</div>
-          `;
-
-          bandeira.addEventListener('click', () => selecionarPais(pais, bandeira));
-          linha.appendChild(bandeira);
-        });
-
-        wrapper.appendChild(titulo);
-        wrapper.appendChild(linha);
-        container.appendChild(wrapper);
-      });
-    }
-
-    function alternarGrupo(wrapper) {
-      const estaAberto = !wrapper.classList.contains('fechado');
-
-      if (estaAberto) {
-        wrapper.classList.add('fechado');
-      } else {
-        document.querySelectorAll('.grupo-paises').forEach(g => g.classList.add('fechado'));
-        wrapper.classList.remove('fechado');
-      }
-    }
-
-    // ===== SELEÇÃO DE PAÍS =====
-    function selecionarPais(pais, elemento) {
-      document.querySelectorAll('.bandeira').forEach(b => b.classList.remove('active'));
-      elemento.classList.add('active');
-
-      // Limpar selects
-      [1, 2, 3].forEach(i => {
-        const clienteSelect = getElementoSeguro(`cliente${i}`);
-        const pacoteSelect = getElementoSeguro(`pacote${i}`);
-
-        if (clienteSelect) {
-          clienteSelect.innerHTML = '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
-          clienteSelect.classList.remove('ativo');
-        }
-        if (pacoteSelect) {
-          pacoteSelect.innerHTML = '<option value="" disabled selected>Selecciona el paquete</option>';
-          pacoteSelect.classList.remove('ativo');
-        }
-      });
-
-      // Carregar clientes
-      const clientes = [...new Set(
-        dados
-          .filter(d => d.pais === pais)
-          .map(d => d.cliente)
-          .filter(Boolean)
-      )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
-
-      [1, 2, 3].forEach(i => {
-        const select = getElementoSeguro(`cliente${i}`);
-        if (!select) return;
-
-        select.innerHTML = '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
-        clientes.forEach(c => {
-          const option = document.createElement('option');
-          option.value = c;
-          option.textContent = c;
-          select.appendChild(option);
-        });
-      });
-
-      // Limpar resultado
-      const resultado = getResultado();
-      if (resultado) resultado.style.display = 'none';
-
-      document.querySelectorAll('.top-bar').forEach(el => el.classList.remove('scrolled'));
-      atualizarBarraPacotes();
-      atualizarEstadoInicial();
-    }
-
-    // ===== BARRA DE PACOTES =====
-    function atualizarBarraPacotes() {
-      const paisAtivo = document.querySelector('.bandeira.active');
-      const pais = paisAtivo ? paisAtivo.dataset.pais : '';
-
-      [1, 2, 3].forEach(i => {
-        const clienteSelect = getElementoSeguro(`cliente${i}`);
-        const pacoteSelect = getElementoSeguro(`pacote${i}`);
-        const headerFixo = getElementoSeguro(`pacoteHeader${i}`);
-        const totalFixo = getElementoSeguro(`pacoteTotal${i}`);
-        const headerEst = getElementoSeguro(`pacoteHeaderEst${i}`);
-        const totalEst = getElementoSeguro(`pacoteTotalEst${i}`);
-
-        if (!clienteSelect || !pacoteSelect || !headerFixo || !totalFixo) return;
-
-        const cliente = clienteSelect.value;
-        const pacote = pacoteSelect.value;
-
-        if (!pais || !cliente || !pacote) {
-          [headerFixo, headerEst].forEach(el => {
-            if (el) {
-              el.textContent = 'No seleccionado';
-              el.classList.add('vazio');
-            }
-          });
-          [totalFixo, totalEst].forEach(el => {
-            if (el) {
-              el.textContent = '0 canales';
-              el.classList.add('vazio');
-            }
-          });
-          return;
-        }
-
-        const canaisUnicos = new Set(
-          dados
-            .filter(d => d.pais === pais && d.cliente === cliente && d.pacote === pacote)
-            .map(d => chaveCanal(d))
-        );
-
-        const total = canaisUnicos.size;
-        const textoTotal = `${total} ${total === 1 ? 'canal' : 'canales'}`;
-        const htmlPacote = pacote.replace(' PLUS ', '<br>PLUS ');
-
-        [headerFixo, headerEst].forEach(el => {
-          if (el) {
-            el.innerHTML = htmlPacote;
-            el.classList.remove('vazio');
-          }
-        });
-
-        [totalFixo, totalEst].forEach(el => {
-          if (el) {
-            el.textContent = textoTotal;
-            el.classList.remove('vazio');
-          }
-        });
-      });
-    }
-
-    // ===== GERAR RESUMO TECNOLOGIA =====
-    function gerarResumoTecnologia(mapasPacotes) {
-      const resumo = getElementoSeguro('resumoTecnologia');
-      if (!resumo) return;
-
-      resumo.innerHTML = '';
-
-      TECNOLOGIAS.forEach(tecnologia => {
-        const linha = document.createElement('div');
-        linha.className = 'linha-tecnologia';
-
-        const descricao = document.createElement('div');
-        descricao.className = 'descricao-tecnologia';
-        descricao.innerHTML = `
-          ${ICONES_TECNOLOGIA[tecnologia]}
-          <span>${TITULOS_TECNOLOGIA[tecnologia]}</span>
-        `;
+descricao.innerHTML = `
+    ${iconesTecnologia[tecnologia]}
+    <span>${titulosTecnologia[tecnologia]}</span>
+`;
 
         linha.appendChild(descricao);
 
         mapasPacotes.forEach(mapa => {
-          let total = 0;
-          mapa.forEach(item => {
-            if (String(item.tecnologia || '').toUpperCase().includes(tecnologia)) {
-              total++;
-            }
-          });
 
-          const valor = document.createElement('div');
-          valor.className = 'valor-tecnologia';
-          valor.textContent = total;
-          linha.appendChild(valor);
+            let total = 0;
+
+            mapa.forEach(item => {
+
+                if (
+                    String(item.tecnologia || '')
+                        .toUpperCase()
+                        .includes(tecnologia)
+                ) {
+                    total++;
+                }
+
+            });
+
+            const valor =
+                document.createElement('div');
+
+            valor.className =
+                'valor-tecnologia';
+
+            valor.textContent =
+                total;
+
+            linha.appendChild(valor);
+
         });
 
         resumo.appendChild(linha);
-      });
+
+    });
+
+}
+  
+function atualizarBarraPacotes() {
+  const paisAtivo = document.querySelector('.bandeira.active');
+  const pais = paisAtivo ? paisAtivo.dataset.pais : '';
+  
+  [1, 2, 3].forEach(i => {
+    const clienteSelect = document.getElementById(`cliente${i}`);
+    const pacoteSelect = document.getElementById(`pacote${i}`);
+    const headerFixo = document.getElementById(`pacoteHeader${i}`);
+    const totalFixo = document.getElementById(`pacoteTotal${i}`);
+    const headerEst = document.getElementById(`pacoteHeaderEst${i}`);
+    const totalEst = document.getElementById(`pacoteTotalEst${i}`);
+    
+    if (!clienteSelect || !pacoteSelect || !headerFixo || !totalFixo || !headerEst || !totalEst) return;
+    
+    const cliente = clienteSelect.value;
+    const pacote = pacoteSelect.value;
+    
+    if (!pais || !cliente || !pacote) {
+      headerFixo.textContent = 'No seleccionado';
+      headerFixo.classList.add('vazio');
+      headerEst.textContent = 'No seleccionado';
+      headerEst.classList.add('vazio');
+      totalFixo.textContent = '0 canales';
+      totalFixo.classList.add('vazio');
+      totalEst.textContent = '0 canales';
+      totalEst.classList.add('vazio');
+      return;
+    }
+    
+    const canaisUnicos = new Set(
+      dados
+        .filter(d => d.pais === pais && d.cliente === cliente && d.pacote === pacote)
+        .map(d => chaveCanal(d))
+    );
+    
+    const total = canaisUnicos.size;
+    const textoTotal = `${total} ${total === 1 ? 'canal' : 'canales'}`;
+    
+    headerFixo.innerHTML = pacote.replace(' PLUS ', '<br>PLUS ');
+    headerFixo.classList.remove('vazio');
+    headerEst.innerHTML = pacote.replace(' PLUS ', '<br>PLUS ');
+    headerEst.classList.remove('vazio');
+    totalFixo.textContent = textoTotal;
+    totalFixo.classList.remove('vazio');
+    totalEst.textContent = textoTotal;
+    totalEst.classList.remove('vazio');
+  });  // ← Fecha corretamente aqui
+}
+
+function calcularLimiteInicial() {
+  const banner = document.getElementById('banner');
+  if (!banner) return;
+  limiteInicial = Math.max(0, banner.offsetHeight - HEADER_TOTAL);
+}
+
+function clampScrollInicial() {
+  // trava de scroll removida
+}
+
+function atualizarEstadoCabecalho() {
+  const topbars = document.querySelectorAll('.top-bar');
+  const barraPacotes = document.getElementById('topbarPacotes');
+
+  if (!resultadoVisivel()) {
+    topbars.forEach(el => el.classList.remove('scrolled'));
+    if (barraPacotes) barraPacotes.classList.remove('visible');
+    return;
+  }
+
+  const resultado = getResultado();
+  const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+
+  const triggerClaro = resultado.offsetTop - 100;
+const barraEstatica =
+  document.getElementById('barraPacotesEstatica');
+
+const triggerPacotes =
+  barraEstatica.offsetTop - 100;
+
+console.log(
+  'scroll:',
+  y,
+  'trigger:',
+  triggerPacotes
+);
+
+  if (y >= triggerClaro) {
+    topbars.forEach(el => el.classList.add('scrolled'));
+  } else {
+    topbars.forEach(el => el.classList.remove('scrolled'));
+  }
+
+  if (barraPacotes) {
+    if (y >= triggerPacotes) {
+      barraPacotes.classList.add('visible');
+    } else {
+      barraPacotes.classList.remove('visible');
+    }
+  }
+}
+
+function atualizarEstadoInicial() {
+  calcularLimiteInicial();
+  atualizarEstadoCabecalho();
+}
+
+// ===== SCROLL =====
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+
+  const topMain = document.getElementById('topbarMain');
+  const topSub = document.getElementById('topbarSub');
+  const topPacotes = document.getElementById('topbarPacotes');
+
+  let progresso = scrollY / 70;
+  if (progresso > 1) progresso = 1;
+
+  const movimento = -50 * progresso;
+
+  if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
+  if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
+  if (topPacotes) topPacotes.style.transform = `translateY(${movimento}px)`;
+
+  atualizarEstadoCabecalho();
+}, { passive: true });
+
+// ===== BANDEIRAS =====
+function carregarBandeiras() {
+
+  const container = document.getElementById('bandeiras');
+  if (!container) return;
+
+  container.innerHTML = '';
+
+  const americaLatina = [
+    'ARGENTINA',
+    'CHILE',
+    'COLOMBIA',
+    'ECUADOR',
+    'MEXICO',
+    'PERU',
+    'URUGUAY'
+  ];
+
+  const caribe = [
+    'BARBADOS',
+    'CURAZAO',
+    'GUYANA',
+    'PUERTO RICO',
+    'SURINAME',
+    'TRINIDAD Y TOBAGO',
+    'US VIRGIN ISLANDS',
+    'OTHER ISLANDS'
+  ];
+
+
+  const grupos = [
+    {
+      titulo: 'América Latina',
+      paises: americaLatina
+    },
+    {
+      titulo: 'Caribe',
+      paises: caribe
+    }
+  ];
+
+  grupos.forEach(grupo => {
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'grupo-paises';
+
+    const titulo = document.createElement('div');
+    titulo.className = 'grupo-paises-titulo';
+    titulo.innerHTML = `
+  <span>${grupo.titulo}</span>
+  <span class="grupo-seta" aria-hidden="true"></span>
+`;
+
+    const linha = document.createElement('div');
+    linha.className = 'grupo-bandeiras';
+
+    wrapper.classList.add('fechado');
+
+titulo.addEventListener('click', () => {
+  const esteGrupoEstaAberto = !wrapper.classList.contains('fechado');
+
+  // Se clicar no grupo já aberto, apenas fecha
+  if (esteGrupoEstaAberto) {
+    wrapper.classList.add('fechado');
+    return;
+  }
+
+  // Fecha todos os outros grupos
+  document
+    .querySelectorAll('.grupo-paises')
+    .forEach(grupoPais => {
+      grupoPais.classList.add('fechado');
+    });
+
+  // Abre o grupo clicado ao mesmo tempo
+  wrapper.classList.remove('fechado');
+});
+    grupo.paises.forEach(p => {
+
+      const existe = dados.some(d => d.pais === p);
+
+      if (!existe) return;
+
+
+
+const div = document.createElement('div');
+div.className = 'bandeira';
+
+div.innerHTML = `
+  <img src="flags/${normalizarArquivo(p)}.png" alt="${p}">
+  <div class="nome-pais">${p}</div>
+`;
+
+      div.dataset.pais = p;
+      
+      div.onclick = () => selecionarPais(p, div);
+
+      linha.appendChild(div);
+
+    });
+
+    wrapper.appendChild(titulo);
+    wrapper.appendChild(linha);
+
+    container.appendChild(wrapper);
+
+  });
+}
+
+// ===== SELECIONAR PAÍS =====
+function selecionarPais(pais, elemento) {
+  document.querySelectorAll('.bandeira').forEach(b => b.classList.remove('active'));
+  elemento.classList.add('active');
+
+  ['cliente1', 'cliente2', 'cliente3'].forEach((clienteId, index) => {
+    const clienteSelect = document.getElementById(clienteId);
+    const pacoteSelect = document.getElementById(`pacote${index + 1}`);
+
+    if (clienteSelect) {
+      clienteSelect.innerHTML = '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
+      clienteSelect.classList.remove('ativo');
     }
 
-    // ===== GERAR RESULTADO =====
-    function gerarResultado() {
-      const resultado = getResultado();
-      if (!resultado) return;
+    if (pacoteSelect) {
+      pacoteSelect.innerHTML = '<option value="" disabled selected>Selecciona el paquete</option>';
+      pacoteSelect.classList.remove('ativo');
+    }
+  });
 
-      const selecionados = [1, 2, 3].map(i => ({
-        cliente: getElementoSeguro(`cliente${i}`)?.value || '',
-        pacote: getElementoSeguro(`pacote${i}`)?.value || ''
-      }));
+  const clientes = [...new Set(
+    dados
+      .filter(d => d.pais === pais)
+      .map(d => d.cliente)
+      .filter(Boolean)
+  )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
-      atualizarBarraPacotes();
+  ['cliente1', 'cliente2', 'cliente3'].forEach(id => {
+    const select = document.getElementById(id);
+    if (!select) return;
 
-      const paisAtivo = document.querySelector('.bandeira.active');
+    select.innerHTML = '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
 
-      if (!paisAtivo || !selecionados.some(s => s.cliente && s.pacote)) {
-        resultado.style.display = 'none';
-        getElementoSeguro('barraPacotesEstatica').style.display = 'none';
-        document.querySelector('.linha-separadora-pacotes').style.display = 'none';
-        atualizarEstadoInicial();
-        return;
+    clientes.forEach(c => {
+      select.innerHTML += `<option value="${c}">${c}</option>`;
+    });
+  });
+
+  const resultado = getResultado();
+  if (resultado) {
+    resultado.style.display = "none";
+    resultado.innerHTML = '<div class="espacador-topo"></div>';
+  }
+
+  document.querySelectorAll('.top-bar').forEach(el => el.classList.remove('scrolled'));
+
+  atualizarBarraPacotes();
+  atualizarEstadoInicial();
+}
+
+// ===== GERAR RESULTADO =====
+function gerarResultado() {
+  const resultado = getResultado();
+  if (!resultado) return;
+
+  const selecionados = [1, 2, 3].map(i => ({
+    cliente: document.getElementById(`cliente${i}`)?.value || '',
+    pacote: document.getElementById(`pacote${i}`)?.value || ''
+  }));
+
+  atualizarBarraPacotes();
+
+  const paisAtivo = document.querySelector('.bandeira.active');
+
+  // só mostra resultado se houver país e pelo menos 1 pacote completo selecionado
+  if (!paisAtivo || !selecionados.some(s => s.cliente && s.pacote)) {
+    resultado.style.display = "none";
+    document.getElementById('barraPacotesEstatica').style.display = 'none';
+    document.querySelector('.linha-separadora-pacotes').style.display = 'none';
+    resultado.innerHTML = '<div class="espacador-topo"></div>';
+    atualizarEstadoInicial();
+    return;
+  }
+
+  const pais = paisAtivo.dataset.pais;
+
+  // mapa individual por coluna/pacote
+  const mapasPacotes = selecionados.map(sel => {
+    const mapa = new Map();
+
+    if (!sel.cliente || !sel.pacote) return mapa;
+
+    dados
+      .filter(d =>
+        d.pais === pais &&
+        d.cliente === sel.cliente &&
+        d.pacote === sel.pacote
+      )
+      .forEach(item => {
+        mapa.set(chaveCanal(item), item);
+      });
+
+    return mapa;
+  });
+
+  // união total dos canais de todos os pacotes selecionados
+  const mapaBase = new Map();
+
+  mapasPacotes.forEach(mapa => {
+    mapa.forEach((item, chave) => {
+      if (!mapaBase.has(chave)) {
+        mapaBase.set(chave, item);
       }
+    });
+  });
 
-      const pais = paisAtivo.dataset.pais;
+  const base = Array.from(mapaBase.entries())
+  .sort((a, b) => {
+    const itemA = a[1];
+    const itemB = b[1];
 
-      // Criar mapas por pacote
-      const mapasPacotes = selecionados.map(sel => {
-        const mapa = new Map();
-        if (!sel.cliente || !sel.pacote) return mapa;
+    const numA = parseInt(itemA.vc, 10);
+    const numB = parseInt(itemB.vc, 10);
 
-        dados
-          .filter(d =>
-            d.pais === pais &&
-            d.cliente === sel.cliente &&
-            d.pacote === sel.pacote
-          )
-          .forEach(item => {
-            mapa.set(chaveCanal(item), item);
-          });
+    const vcA = Number.isNaN(numA) ? 999999 : numA;
+    const vcB = Number.isNaN(numB) ? 999999 : numB;
 
-        return mapa;
-      });
+    if (vcA !== vcB) return vcA - vcB;
 
-      // Mapa base (union)
-      const mapaBase = new Map();
-      mapasPacotes.forEach(mapa => {
-        mapa.forEach((item, chave) => {
-          if (!mapaBase.has(chave)) {
-            mapaBase.set(chave, item);
-          }
-        });
-      });
+    return normalizarTexto(itemA.canal)
+      .localeCompare(normalizarTexto(itemB.canal), 'pt-BR');
+  })
+  .map(entry => entry[1]);
 
-      // Ordenar
-      const base = Array.from(mapaBase.entries())
-        .sort((a, b) => {
-          const itemA = a[1];
-          const itemB = b[1];
-          const numA = parseInt(itemA.vc, 10);
-          const numB = parseInt(itemB.vc, 10);
-          const vcA = Number.isNaN(numA) ? 999999 : numA;
-          const vcB = Number.isNaN(numB) ? 999999 : numB;
+  resultado.innerHTML = '';
 
-          if (vcA !== vcB) return vcA - vcB;
-          return normalizarTexto(itemA.canal)
-            .localeCompare(normalizarTexto(itemB.canal), 'pt-BR');
-        })
-        .map(entry => entry[1]);
+  resultado.innerHTML = `
+<div class="topo-branco"></div>
 
-      // Renderizar resultado
-      resultado.innerHTML = `
-        <div class="topo-branco"></div>
-        <div class="resultado-wrapper">
-          <div class="resultado-header">
-            <div class="resultado-header-esquerda">
-              <div class="bloco-titulo">Canales por tecnología</div>
+<div class="resultado-wrapper">
+
+    <div class="resultado-header">
+
+        <div class="resultado-header-esquerda">
+
+            <div class="bloco-titulo">
+                Canales por tecnología
             </div>
-            <div class="resultado-header-direita">
-              <div class="coluna-pacote-header">
+
+        </div>
+
+        <div class="resultado-header-direita">
+
+            <div class="coluna-pacote-header">
                 <div id="headPacote1"></div>
                 <div id="headTotal1"></div>
-              </div>
-              <div class="coluna-pacote-header">
+            </div>
+
+            <div class="coluna-pacote-header">
                 <div id="headPacote2"></div>
                 <div id="headTotal2"></div>
-              </div>
-              <div class="coluna-pacote-header">
+            </div>
+
+            <div class="coluna-pacote-header">
                 <div id="headPacote3"></div>
                 <div id="headTotal3"></div>
-              </div>
             </div>
-          </div>
-          <div id="resumoTecnologia"></div>
-          <div class="lista-canais-titulo">Lista de canales</div>
-          <div id="listaCanais"></div>
+
         </div>
-        <div class="topo-branco"></div>
-      `;
 
-      // Atualizar headers
-      selecionados.forEach((sel, idx) => {
-        const i = idx + 1;
-        const headPacote = getElementoSeguro(`headPacote${i}`);
-        const headTotal = getElementoSeguro(`headTotal${i}`);
+    </div>
 
-        if (headPacote) headPacote.textContent = sel.pacote;
-        if (headTotal) {
-          const total = mapasPacotes[idx].size;
-          headTotal.textContent = `${total} ${total === 1 ? 'canal' : 'canales'}`;
-        }
-      });
+    <div id="resumoTecnologia"></div>
 
-      gerarResumoTecnologia(mapasPacotes);
+    <div class="lista-canais-titulo">
+        Lista de canales
+    </div>
 
-      const listaCanais = getElementoSeguro('listaCanais');
-      if (listaCanais) {
-        listaCanais.innerHTML = '';
+    <div id="listaCanais"></div>
 
-        base.forEach(ref => {
-          const linha = document.createElement('div');
-          linha.className = 'linha-canal-nova';
+</div>
+`;
+  
+  const topoInicial = document.createElement('div');
+  topoInicial.className = 'topo-branco';
+  resultado.appendChild(topoInicial);
+gerarResumoTecnologia(mapasPacotes);
+const listaCanais =
+    document.getElementById('listaCanais');
 
-          const chaveRef = chaveCanal(ref);
-          const info = document.createElement('div');
-          info.className = 'info-canal';
-          info.innerHTML = `
-            <div class="info-canal-vc">${ref.vc}</div>
-            <div class="info-canal-nome">${ref.canal}</div>
-            <div class="info-canal-tags">${ref.categoria} • ${ref.tecnologia}</div>
-          `;
+listaCanais.innerHTML = '';
 
-          linha.appendChild(info);
+base.forEach(ref => {
 
-          mapasPacotes.forEach(mapa => {
-            linha.appendChild(criarStatusPacote(mapa.has(chaveRef)));
-          });
+    const linha =
+        document.createElement('div');
 
-          listaCanais.appendChild(linha);
-        });
-      }
+    linha.className =
+        'linha-canal-nova';
 
-      resultado.style.display = 'block';
-      getElementoSeguro('barraPacotesEstatica').style.display = 'block';
-      document.querySelector('.linha-separadora-pacotes').style.display = 'block';
+    const chaveRef =
+        chaveCanal(ref);
 
-      atualizarBarraPacotes();
-      atualizarEstadoInicial();
-    }
+    const info =
+        document.createElement('div');
 
-    // ===== EVENTOS DOS SELECTS =====
-    function prepararEventosSelects() {
-      [1, 2, 3].forEach(i => {
-        const selectCliente = getElementoSeguro(`cliente${i}`);
-        const selectPacote = getElementoSeguro(`pacote${i}`);
+    info.className =
+        'info-canal';
 
-        if (selectCliente) {
-          selectCliente.addEventListener('change', function () {
-            const cliente = this.value;
-            const ativo = document.querySelector('.bandeira.active');
-            if (!ativo) return;
+    info.innerHTML = `
+        <div class="info-canal-vc">
+            ${ref.vc}
+        </div>
 
-            const pais = ativo.dataset.pais;
-            const pacotes = [...new Set(
-              dados
-                .filter(d => d.pais === pais && d.cliente === cliente)
-                .map(d => d.pacote)
-                .filter(Boolean)
-            )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+        <div class="info-canal-nome">
+            ${ref.canal}
+        </div>
 
-            if (selectPacote) {
-              selectPacote.innerHTML = '<option value="" disabled selected>Selecciona el paquete</option>';
-              selectPacote.classList.remove('ativo');
-              pacotes.forEach(p => {
-                const option = document.createElement('option');
-                option.value = p;
-                option.textContent = p;
-                selectPacote.appendChild(option);
-              });
-            }
+        <div class="info-canal-tags">
+            ${ref.categoria} • ${ref.tecnologia}
+        </div>
+    `;
 
-            this.classList.toggle('ativo', this.value !== '');
-            atualizarBarraPacotes();
-            gerarResultado();
-          });
-        }
+    linha.appendChild(info);
+
+    mapasPacotes.forEach(mapa => {
+
+        linha.appendChild(
+            criarStatusPacote(
+                mapa.has(chaveRef)
+            )
+        );
+
+    });
+
+    listaCanais.appendChild(linha);
+
+});
+
+  const topoFinal = document.createElement('div');
+  topoFinal.className = 'topo-branco';
+  resultado.appendChild(topoFinal);
+
+  resultado.style.display = "block";
+  document.getElementById('barraPacotesEstatica').style.display = 'block';
+  document.querySelector('.linha-separadora-pacotes').style.display = 'block';
+  
+  atualizarBarraPacotes();
+  atualizarEstadoInicial();
+}
+
+// ===== EVENTOS DOS SELECTS =====
+function prepararEventosSelects() {
+  ['cliente1', 'cliente2', 'cliente3'].forEach((id, index) => {
+    const selectCliente = document.getElementById(id);
+    const selectPacote = document.getElementById(`pacote${index + 1}`);
+
+    if (selectCliente) {
+      selectCliente.addEventListener('change', function () {
+        const cliente = this.value;
+        const ativo = document.querySelector('.bandeira.active');
+        if (!ativo) return;
+
+        const pais = ativo.dataset.pais;
+
+        const pacotes = [...new Set(
+          dados
+            .filter(d => d.pais === pais && d.cliente === cliente)
+            .map(d => d.pacote)
+            .filter(Boolean)
+        )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
         if (selectPacote) {
-          selectPacote.addEventListener('change', function () {
-            this.classList.toggle('ativo', this.value !== '');
-            gerarResultado();
+          selectPacote.innerHTML = '<option value="" disabled selected>Selecciona el paquete</option>';
+          selectPacote.classList.remove('ativo');
+
+          pacotes.forEach(p => {
+            selectPacote.innerHTML += `<option value="${p}">${p}</option>`;
           });
         }
+
+        this.classList.toggle('ativo', this.value !== "");
+        atualizarBarraPacotes();
+        gerarResultado();
       });
     }
 
-    // ===== SCROLL HANDLER =====
-    function atualizarEstadoCabecalho() {
-      const topbars = document.querySelectorAll('.top-bar');
-      const barraPacotes = getElementoSeguro('topbarPacotes');
-
-      if (!resultadoVisivel()) {
-        topbars.forEach(el => el.classList.remove('scrolled'));
-        if (barraPacotes) barraPacotes.classList.remove('visible');
-        return;
-      }
-
-      const resultado = getResultado();
-      const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-      const triggerClaro = resultado.offsetTop - 100;
-
-      const barraEstatica = getElementoSeguro('barraPacotesEstatica');
-      const triggerPacotes = barraEstatica ? barraEstatica.offsetTop - 100 : Infinity;
-
-      if (y >= triggerClaro) {
-        topbars.forEach(el => el.classList.add('scrolled'));
-      } else {
-        topbars.forEach(el => el.classList.remove('scrolled'));
-      }
-
-      if (barraPacotes) {
-        if (y >= triggerPacotes) {
-          barraPacotes.classList.add('visible');
-        } else {
-          barraPacotes.classList.remove('visible');
-        }
-      }
+    if (selectPacote) {
+      selectPacote.addEventListener('change', function () {
+        this.classList.toggle('ativo', this.value !== "");
+        gerarResultado();
+      });
     }
+  });
 
-    function calcularLimiteInicial() {
-      const banner = getElementoSeguro('banner');
-      if (!banner) return;
-      limiteInicial = Math.max(0, banner.offsetHeight - HEADER_TOTAL);
-    }
+  document.querySelectorAll('select').forEach(select => {
+    select.addEventListener('change', function () {
+      this.classList.toggle('ativo', this.value !== "");
+    });
+  });
+}
 
-    function atualizarEstadoInicial() {
-      calcularLimiteInicial();
-      atualizarEstadoCabecalho();
-    }
+// ===== PARSE CSV GENÉRICO =====
+function parseCsvTextoParaDados(texto) {
+  const registros = [];
+  const linhas = texto
+    .replace(/^\uFEFF/, '') // remove BOM
+    .split(/\r?\n/);
 
-    // Throttled scroll handler
-    function handleScroll() {
-      lastScrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+  linhas.forEach((linha, i) => {
+    if (i === 0) return;           // pula cabeçalho
+    if (!linha.trim()) return;     // linha vazia
 
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const scrollY = lastScrollY;
-          const topMain = getElementoSeguro('topbarMain');
-          const topSub = getElementoSeguro('topbarSub');
-          const topPacotes = getElementoSeguro('topbarPacotes');
+    const col = linha.split(';').map(c => c.trim());
+    if (col.length < 7 || !col[0]) return;
 
-          let progresso = scrollY / 70;
-          if (progresso > 1) progresso = 1;
-          const movimento = -50 * progresso;
+    registros.push({
+      pais: col[0],
+      cliente: col[1],
+      pacote: col[2],
+      vc: col[3],
+      canal: col[4],
+      tecnologia: col[5],
+      categoria: col[6]
+    });
+  });
 
-          if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
-          if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
-          if (topPacotes) topPacotes.style.transform = `translateY(${movimento}px)`;
+  return registros;
+}
 
-          atualizarEstadoCabecalho();
-          ticking = false;
-        });
+// ===== MAPEAMENTO PAÍS → ARQUIVO =====
+const mapaArquivosPorPais = {
+  // América Latina
+  'ARGENTINA': 'paquetes_argentina.csv',
+  'CHILE'    : 'paquetes_chile.csv',
+  'COLOMBIA' : 'paquetes_colombia.csv',
+  'ECUADOR'  : 'paquetes_ecuador.csv',
+  'MEXICO'   : 'paquetes_mexico.csv',
+  'PERU'     : 'paquetes_peru.csv',
+  'URUGUAY'  : 'paquetes_uruguay.csv',
 
-        ticking = true;
+  // Caribe — todos vêm do mesmo arquivo
+  'BARBADOS'           : 'paquetes_caribe.csv',
+  'CURAZAO'            : 'paquetes_caribe.csv',
+  'GUYANA'             : 'paquetes_caribe.csv',
+  'PUERTO RICO'        : 'paquetes_puertorico_usvi.csv', // se estiver em outro arquivo, ajuste
+  'SURINAME'           : 'paquetes_caribe.csv',
+  'TRINIDAD Y TOBAGO'  : 'paquetes_caribe.csv',
+  'US VIRGIN ISLANDS'  : 'paquetes_puertorico_usvi.csv', // ou paquetes_caribe.csv, conforme seu caso
+  'OTHER ISLANDS'      : 'paquetes_caribe.csv'
+};
+
+// ===== CARREGAR TODOS OS CSV =====
+async function carregarTodosOsCsv() {
+  dados = [];
+
+  // pega apenas os nomes de arquivos únicos
+  const arquivosUnicos = new Set(Object.values(mapaArquivosPorPais));
+
+  for (const nomeArquivo of arquivosUnicos) {
+    const url = 'paquetes/' + nomeArquivo + '?v=' + Date.now();
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        console.error('Erro ao carregar CSV:', url, response.status);
+        continue;
       }
+      const texto = await response.text();
+      const registros = parseCsvTextoParaDados(texto);
+      dados.push(...registros);
+    } catch (e) {
+      console.error('Falha ao buscar CSV:', url, e);
     }
+  }
 
-    // ===== EVENT LISTENERS =====
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('load', atualizarEstadoInicial);
-    window.addEventListener('resize', atualizarEstadoInicial);
+  // Depois de ter todos os registros:
+  carregarBandeiras();
+  prepararEventosSelects();
+  atualizarBarraPacotes();
+  atualizarEstadoInicial();
+}
 
-    // ===== INICIAR =====
-    carregarTodosOsCsv();
-  </script>
+// dispara o carregamento assim que o script carrega
+carregarTodosOsCsv();
+
+window.addEventListener('load', atualizarEstadoInicial);
+window.addEventListener('resize', atualizarEstadoInicial);
+  
+</script>
+  
 </body>
 </html>
