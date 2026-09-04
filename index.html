@@ -1402,7 +1402,7 @@ function criarStatusPacote(existe) {
 
 // ✅ CORRETO
 const iconesTecnologia = {
-    'SD':    '<img class="icone-tecnologia" src="icon_sd.png" alt="Canales SD (Standard Definition)">',
+    'SD':    '<img class="icone-tecnologia" src="icon_sd.png">',
     'HD':    '<img class="icone-tecnologia" src="icon_hd.png">',
     '4K':    '<img class="icone-tecnologia" src="icon_4k.png">',
     'AUDIO': '<img class="icone-tecnologia" src="icon_audio.png">',
@@ -1423,9 +1423,17 @@ const iconesTecnologia = {
         descricao.className =
             'descricao-tecnologia';
 
+const titulosTecnologia = {
+    'SD': '<strong>Canales SD</strong> <span style="font-weight:400;">(Standard Definition)</span>',
+    'HD': '<strong>Canales HD</strong> <span style="font-weight:400;">(High Definition)</span>',
+    '4K': '<strong>Canales 4K</strong> <span style="font-weight:400;">(Ultra HD)</span>',
+    'AUDIO': '<strong>Canales de AUDIO</strong>',
+    'RADIO': '<strong>Canales de RADIO</strong>'
+};
+
 descricao.innerHTML = `
     ${iconesTecnologia[tecnologia]}
-    <span>Canales ${tecnologia}</span>
+    <span>${titulosTecnologia[tecnologia]}</span>
 `;
 
         linha.appendChild(descricao);
