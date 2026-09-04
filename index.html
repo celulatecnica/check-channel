@@ -615,6 +615,13 @@
       flex-shrink: 0;
     }
 
+    .info-canal-icone {
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+    
     .info-canal-categoria {
       font-size: 13px;
       color: #2A2A2A;
@@ -1202,6 +1209,14 @@
     }
 
     // ===== GERAR RESULTADO =====
+    function obterIconeCategoria(categoria) {
+      return categoria
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/\s+/g, '-');
+    }
+    
     function gerarResultado() {
       const resultado = getResultado();
       if (!resultado) return;
@@ -1323,7 +1338,7 @@
             <span class="info-canal-vc">${ref.vc}</span>
             <span class="info-canal-nome">${ref.canal}</span>
             <span class="info-canal-tecnologia">${ref.tecnologia}</span>
-            <span class="info-canal-categoria">${ref.categoria}</span>
+            icons/${obterIconeCategoria(ref.categoria)}.png
           `;
 
           linha.appendChild(info);
