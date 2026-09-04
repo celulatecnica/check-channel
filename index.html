@@ -1544,9 +1544,7 @@ const barraEstatica =
   document.getElementById('barraPacotesEstatica');
 
 const triggerPacotes =
-  barraEstatica.offsetTop +
-  barraEstatica.offsetHeight -
-  100;
+  barraEstatica.offsetTop;
 
   if (y >= triggerClaro) {
     topbars.forEach(el => el.classList.add('scrolled'));
