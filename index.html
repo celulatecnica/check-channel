@@ -1400,13 +1400,14 @@ function criarStatusPacote(existe) {
         'RADIO'
     ];
 
-    const iconesTecnologia = {
-        'SD': <img src="icons/icon_sd.png" alt="SD">
-        'HD': <img src="icons/icon_hd.png" alt="HD">
-        '4K': <img src="icons/icon_4k.png" alt="4K">
-        'AUDIO': <img src="icons/icon_audio.png" alt="AUDIO">
-        'RADIO': <img src="icons/icon_radio.png" alt="RADIO">'
-    };
+// ✅ CORRETO
+const iconesTecnologia = {
+    'SD': '<img src="icons/icon_sd.png" alt="SD">',
+    'HD': '<img src="icons/icon_hd.png" alt="HD">',
+    '4K': '<img src="icons/icon_4k.png" alt="4K">',
+    'AUDIO': '<img src="icons/icon_audio.png" alt="AUDIO">',
+    'RADIO': '<img src="icons/icon_radio.png" alt="RADIO">'
+};
     
     tecnologias.forEach(tecnologia => {
 
@@ -1467,73 +1468,51 @@ descricao.innerHTML = `
 function atualizarBarraPacotes() {
   const paisAtivo = document.querySelector('.bandeira.active');
   const pais = paisAtivo ? paisAtivo.dataset.pais : '';
-
+  
   [1, 2, 3].forEach(i => {
     const clienteSelect = document.getElementById(`cliente${i}`);
-    const pacoteSelect  = document.getElementById(`pacote${i}`);
+    const pacoteSelect = document.getElementById(`pacote${i}`);
     const headerFixo = document.getElementById(`pacoteHeader${i}`);
     const totalFixo = document.getElementById(`pacoteTotal${i}`);
-
     const headerEst = document.getElementById(`pacoteHeaderEst${i}`);
-    const totalEst = document.getElementById(`pacoteTotalEst${i}`);    
-
-    if (
-      !clienteSelect ||
-      !pacoteSelect ||
-      !headerFixo ||
-      !totalFixo ||
-      !headerEst ||
-      !totalEst
-    ) return;
-
+    const totalEst = document.getElementById(`pacoteTotalEst${i}`);
+    
+    if (!clienteSelect || !pacoteSelect || !headerFixo || !totalFixo || !headerEst || !totalEst) return;
+    
     const cliente = clienteSelect.value;
     const pacote = pacoteSelect.value;
-
+    
     if (!pais || !cliente || !pacote) {
-headerFixo.textContent = 'No seleccionado';
-headerFixo.classList.add('vazio');
-
-headerEst.textContent = 'No seleccionado';
-headerEst.classList.add('vazio');
-
-totalFixo.textContent = '0 canales';
-totalFixo.classList.add('vazio');
-
-totalEst.textContent = '0 canales';
-totalEst.classList.add('vazio');
+      headerFixo.textContent = 'No seleccionado';
+      headerFixo.classList.add('vazio');
+      headerEst.textContent = 'No seleccionado';
+      headerEst.classList.add('vazio');
+      totalFixo.textContent = '0 canales';
+      totalFixo.classList.add('vazio');
+      totalEst.textContent = '0 canales';
+      totalEst.classList.add('vazio');
       return;
     }
-
+    
     const canaisUnicos = new Set(
       dados
-        .filter(d =>
-          d.pais === pais &&
-          d.cliente === cliente &&
-          d.pacote === pacote
-        )
+        .filter(d => d.pais === pais && d.cliente === cliente && d.pacote === pacote)
         .map(d => chaveCanal(d))
     );
-
+    
     const total = canaisUnicos.size;
     const textoTotal = `${total} ${total === 1 ? 'canal' : 'canales'}`;
-
-    headerFixo.innerHTML =
-    pacote.replace(' PLUS ', '<br>PLUS ');
-
+    
+    headerFixo.innerHTML = pacote.replace(' PLUS ', '<br>PLUS ');
     headerFixo.classList.remove('vazio');
-
-    headerEst.innerHTML =
-    pacote.replace(' PLUS ', '<br>PLUS ');
-
+    headerEst.innerHTML = pacote.replace(' PLUS ', '<br>PLUS ');
     headerEst.classList.remove('vazio');
-
     totalFixo.textContent = textoTotal;
     totalFixo.classList.remove('vazio');
-
     totalEst.textContent = textoTotal;
     totalEst.classList.remove('vazio');
-      });
-    }
+  });  // ← Fecha corretamente aqui
+}
 
 function calcularLimiteInicial() {
   const banner = document.getElementById('banner');
