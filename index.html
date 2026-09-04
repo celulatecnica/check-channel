@@ -322,7 +322,7 @@
     }
 
     .grupo-paises:not(.fechado) .grupo-bandeiras {
-      margin: 50px 0 25px;
+      margin: 25px 0 50px;
       max-height: 220px;
     }
 
@@ -364,12 +364,21 @@
       text-align: center;
       line-height: 1.15;
       pointer-events: none;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.2s ease;
+      white-space: normal;
     }
 
     .bandeira.active {
       box-shadow: 0 0 0 3px #0F0F0F, 0 0 0 5px #0071e3;
     }
 
+    .bandeira:hover .nome-pais {
+      opacity: 1;
+      visibility: visible;
+    }
+    
     /* ===== GRID DE PACOTES ===== */
     .grid {
       display: grid;
