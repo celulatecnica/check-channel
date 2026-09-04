@@ -1006,12 +1006,23 @@ html, body {
 }
 
 .descricao-tecnologia{
+    display:flex;
+    align-items:center;
+    gap:10px;
+
     text-align:left;
 
     font-size:18px;
     font-weight:600;
 
     color:#1D1D1F;
+}
+
+.icone-tecnologia{
+    width:24px;
+    height:24px;
+    object-fit:contain;
+    flex-shrink:0;
 }
 
 .valor-tecnologia{
@@ -1389,6 +1400,14 @@ function criarStatusPacote(existe) {
         'RADIO'
     ];
 
+    const iconesTecnologia = {
+        SD: 'icon_sd.png',
+        HD: 'icon_hd.png',
+        '4K': 'icon_4k.png',
+        AUDIO: 'icon_audio.png',
+        RADIO: 'icon_radio.png'
+    };
+    
     tecnologias.forEach(tecnologia => {
 
         const linha =
@@ -1403,8 +1422,10 @@ function criarStatusPacote(existe) {
         descricao.className =
             'descricao-tecnologia';
 
-        descricao.textContent =
-            `Canales ${tecnologia}`;
+descricao.innerHTML = `
+    ${iconesTecnologia[tecnologia]}
+    <span>Canales ${tecnologia}</span>
+`;
 
         linha.appendChild(descricao);
 
