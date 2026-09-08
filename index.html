@@ -948,31 +948,36 @@
     }
 
     // ===== CSV PARSER =====
-    function parseCsvTextoParaDados(texto) {
-      const registros = [];
-      const linhas = texto.replace(/^\uFEFF/, '').split(/\r?\n/);
+    // ===== CSV PARSER =====
+function parseCsvTextoParaDados(texto) {
+  const registros = [];
+  const linhas = texto
+    .replace(/^\uFEFF/, '')
+    .split(/\r?\n/);
 
-      linhas.forEach((linha, i) => {
-        if (i === 0 || !linha.trim()) return;
+  linhas.forEach((linha, i) => {
+    if (i === 0 || !linha.trim()) return;
 
-       const col = linha.split(';').map(c => c.trim());
+    const col = linha
+      .split(';')
+      .map(c => c.trim());
 
-if (!col[0]) return;
+    if (!col[0]) return;
 
-registros.push({
-  pais: col[0] || '',
-  cliente: col[1] || '',
-  pacote: col[2] || '',
-  vc: col[3] || '',
-  canal: col[4] || '',
-  tecnologia: col[5] || '',
-  categoria: col[6] || '',
-  disponibilidad: col[7] || ''
-});
-      });
+    registros.push({
+      pais: normalizarChave(col[0]),
+      cliente: normalizarTexto(col[1]),
+      pacote: normalizarTexto(col[2]),
+      vc: normalizarTexto(col[3]),
+      canal: normalizarTexto(col[4]),
+      tecnologia: normalizarTexto(col[5]),
+      categoria: normalizarTexto(col[6]),
+      disponibilidad: normalizarTexto(col[7])
+    });
+  });
 
-      return registros;
-    }
+  return registros;
+}
 
     // ===== CARREGAR CSVs =====
     async function carregarTodosOsCsv() {
@@ -989,14 +994,7 @@ registros.push({
           }
           const texto = await response.text();
           const registros = parseCsvTextoParaDados(texto);
-          dados.push(...registros);
-          
-          console.log(
-            nomeArquivo,
-            registros.length,
-            registros[0]
-          );
-          
+          dados.push(...registros);          
         } catch (e) {
           console.error(`Falha ao buscar CSV: ${url}`, e);
         }
@@ -1098,7 +1096,7 @@ registros.push({
       // Carregar clientes
       const clientes = [...new Set(
         dados
-          .filter(d => d.pais === pais)
+          .filter(d => normalizarChave(d.pais) === normalizarChave(pais))
           .map(d => d.cliente)
           .filter(Boolean)
       )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
@@ -1161,8 +1159,12 @@ registros.push({
 
         const canaisUnicos = new Set(
           dados
-            .filter(d => d.pais === pais && d.cliente === cliente && d.pacote === pacote)
-            .map(d => chaveCanal(d))
+  .filter(d =>
+    normalizarChave(d.pais) === normalizarChave(pais) &&
+    d.cliente === cliente &&
+    d.pacote === pacote
+  )
+  .map(d => chaveCanal(d))
         );
 
         const total = canaisUnicos.size;
@@ -1260,15 +1262,15 @@ registros.push({
         const mapa = new Map();
         if (!sel.cliente || !sel.pacote) return mapa;
 
-        dados
-          .filter(d =>
-            d.pais === pais &&
-            d.cliente === sel.cliente &&
-            d.pacote === sel.pacote
-          )
-          .forEach(item => {
-            mapa.set(chaveCanal(item), item);
-          });
+dados
+  .filter(d =>
+    normalizarChave(d.pais) === normalizarChave(pais) &&
+    d.cliente === sel.cliente &&
+    d.pacote === sel.pacote
+  )
+  .forEach(item => {
+    mapa.set(chaveCanal(item), item);
+  });
 
         return mapa;
       });
@@ -1388,10 +1390,13 @@ registros.push({
 
             const pais = ativo.dataset.pais;
             const pacotes = [...new Set(
-              dados
-                .filter(d => d.pais === pais && d.cliente === cliente)
-                .map(d => d.pacote)
-                .filter(Boolean)
+dados
+  .filter(d =>
+    normalizarChave(d.pais) === normalizarChave(pais) &&
+    d.cliente === cliente
+  )
+  .map(d => d.pacote)
+  .filter(Boolean)
             )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
             if (selectPacote) {
