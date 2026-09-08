@@ -1284,7 +1284,7 @@ const mapasPacotes = selecionados.map(sel => {
   return mapa;
 });
 
-// Mapa base com todos os canais existentes no país selecionado
+// Mapa base para montar a lista de canais
 const mapaBase = new Map();
 
 dados
@@ -1293,9 +1293,19 @@ dados
   )
   .forEach(item => {
     const chave = chaveCanal(item);
+    const vcEhInvalido = vcInvalido(item.vc);
 
-    if (!mapaBase.has(chave)) {
-      mapaBase.set(chave, item);
+    const existeEmPacoteSelecionado = mapasPacotes.some(mapa =>
+      mapa.has(chave)
+    );
+
+    // Canal com VC válido aparece sempre.
+    // Canal com VC N/A só aparece se estiver disponível
+    // em pelo menos um dos pacotes selecionados.
+    if (!vcEhInvalido || existeEmPacoteSelecionado) {
+      if (!mapaBase.has(chave)) {
+        mapaBase.set(chave, item);
+      }
     }
   });
 
