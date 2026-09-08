@@ -955,19 +955,20 @@
       linhas.forEach((linha, i) => {
         if (i === 0 || !linha.trim()) return;
 
-        const col = linha.split(';').map(c => c.trim());
-        if (col.length < 7 || !col[0]) return;
+       const col = linha.split(';').map(c => c.trim());
 
-      registros.push({
-        pais: col[0] || '',
-        cliente: col[1] || '',
-        pacote: col[2] || '',
-        vc: col[3] || '',
-        canal: col[4] || '',
-        tecnologia: col[5] || '',
-        categoria: col[6] || '',
-        disponibilidad: col[7] || ''
-      });
+if (!col[0]) return;
+
+registros.push({
+  pais: col[0] || '',
+  cliente: col[1] || '',
+  pacote: col[2] || '',
+  vc: col[3] || '',
+  canal: col[4] || '',
+  tecnologia: col[5] || '',
+  categoria: col[6] || '',
+  disponibilidad: col[7] || ''
+});
       });
 
       return registros;
@@ -989,6 +990,13 @@
           const texto = await response.text();
           const registros = parseCsvTextoParaDados(texto);
           dados.push(...registros);
+          
+          console.log(
+            nomeArquivo,
+            registros.length,
+            registros[0]
+          );
+          
         } catch (e) {
           console.error(`Falha ao buscar CSV: ${url}`, e);
         }
