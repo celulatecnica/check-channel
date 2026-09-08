@@ -327,10 +327,10 @@
       transition: max-height 0.32s ease, opacity 0.22s ease, margin 0.32s ease;
     }
 
-    .grupo-paises:not(.fechado) .grupo-bandeiras {
-      margin: 25px 0 50px;
-      max-height: 220px;
-    }
+   .grupo-paises:not(.fechado) .grupo-bandeiras {
+  margin: 25px 0 50px;
+  max-height: 300px;
+}
 
     .grupo-paises.fechado .grupo-bandeiras {
       max-height: 0;
@@ -338,47 +338,87 @@
       pointer-events: none;
     }
 
-    /* Bandeiras individuais */
-    .bandeira {
-      width: 72px;
-      height: 48px;
-      border-radius: 6px;
-      overflow: visible;
-      cursor: pointer;
-      position: relative;
-      border: 2px solid transparent;
-      box-shadow: 0 0 0 4px transparent;
-      transition: all 0.25s ease;
-    }
+   /* ===== NOVO ESTILO DAS BANDEIRAS ===== */
 
-    .bandeira img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 6px;
-    }
+.grupo-bandeiras {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
 
-    .nome-pais {
-      position: absolute;
-      top: calc(100% + 12px);
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90px;
-      font-size: 12px;
-      font-weight: 500;
-      color: #D1D1D6;
-      text-align: center;
-      line-height: 1.15;
-      pointer-events: none;
-      opacity: 1;
-      visibility: visible;
-      transition: opacity 0.2s ease;
-      white-space: normal;
-    }
+.bandeira {
+  width: 100px;
+  height: 82px;
 
-    .bandeira.active {
-      box-shadow: 0 0 0 3px #0F0F0F, 0 0 0 5px #0071e3;
-    }
+  background: linear-gradient(
+    180deg,
+    rgba(7,20,45,.95) 0%,
+    rgba(3,10,25,.95) 100%
+  );
+
+  border: 1px solid rgba(80,130,255,.15);
+  border-radius: 12px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  position: relative;
+
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease,
+    border-color .25s ease;
+}
+
+.bandeira:hover {
+  transform: translateY(-2px);
+
+  border-color: rgba(84,168,255,.6);
+
+  box-shadow:
+    0 0 18px rgba(84,168,255,.20);
+}
+
+.bandeira img {
+  width: 42px;
+  height: 28px;
+  object-fit: cover;
+  border-radius: 3px;
+}
+
+.nome-pais {
+  position: static;
+
+  width: auto;
+
+  margin-top: 10px;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  letter-spacing: .4px;
+
+  text-transform: uppercase;
+
+  color: #FFFFFF;
+
+  transform: none;
+
+  pointer-events: none;
+}
+
+.bandeira.active {
+  border: 2px solid #53A8FF;
+
+  box-shadow:
+    0 0 0 2px rgba(83,168,255,.15),
+    0 0 18px rgba(83,168,255,.75),
+    inset 0 0 12px rgba(83,168,255,.20);
+}
 
     .bandeira:hover .nome-pais {
       opacity: 1;
