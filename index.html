@@ -1261,12 +1261,11 @@ function parseCsvTextoParaDados(texto) {
   const nomeArquivo = normalizarArquivo(nomeTecnologia);
 
   return `
-    icon_${nomeArquivo}.png"
-    >
+    <img src="icon_${nomeArquivo}.png">
   `;
 }
     
-    function gerarResultado() {
+    function gerarResultado() {  
       const resultado = getResultado();
       if (!resultado) return;
 
