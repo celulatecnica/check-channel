@@ -93,14 +93,20 @@
     }
 
     /* ===== SCROLL - ESTADO CLARO ===== */
-    .top-bar.scrolled {
+    .top-bar-main.scrolled,
+    .top-bar-sub.scrolled {
       background: rgba(255, 255, 255, 0.6);
     }
 
-    .top-bar.scrolled .blur-layer {
+    .top-bar-main.scrolled .blur-layer,
+    .top-bar-sub.scrolled .blur-layer {
       background: rgba(255, 255, 255, 0.4);
     }
 
+    .top-bar-pacotes.scrolled {
+      background: rgba(15, 15, 15, 0.95);
+    }
+    
     .top-bar.scrolled .titulo-pequeno {
       color: #1d1d1f;
     }
