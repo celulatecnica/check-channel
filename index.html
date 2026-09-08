@@ -37,7 +37,6 @@
       width: 950px;
       max-width: calc(100% - 32px);
       margin: auto;
-      padding: 0 16px;
       height: 100%;
       display: flex;
       align-items: center;
@@ -1473,7 +1472,7 @@
 
           if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
           if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
-          if (topPacotes) topPacotes.style.transform = `translateY(${movimento}px)`;
+          if (topPacotes) topPacotes.style.transform = 'translateY(-50px)';
 
           atualizarEstadoCabecalho();
           ticking = false;
