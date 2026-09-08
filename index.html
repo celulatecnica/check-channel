@@ -1251,14 +1251,16 @@ function parseCsvTextoParaDados(texto) {
         .replace(/\s+/g, '-');
     }
 
-    function criarImagemTecnologia(tecnologia) {
-  const nomeTecnologia = normalizarTexto(tecnologia);
+function criarImagemTecnologia(tecnologia) {
+  const tecnologiaNormalizada = normalizarChave(tecnologia);
 
-  if (!nomeTecnologia) {
+  const tecnologiasComIcone = ['SD', 'HD', '4K'];
+
+  if (!tecnologiasComIcone.includes(tecnologiaNormalizada)) {
     return '';
   }
 
-  const nomeArquivo = normalizarArquivo(nomeTecnologia);
+  const nomeArquivo = tecnologiaNormalizada.toLowerCase();
 
   return `
     <img src="icon_${nomeArquivo}.png">
