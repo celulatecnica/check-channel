@@ -597,26 +597,36 @@
 
     .info-canal {
       display: flex;
-      align-items: baseline;
+      align-items: center;
+      min-height: 52px;
       padding-left: 10px;
       gap: 8px;
       white-space: nowrap;
     }
 
     .info-canal-vc {
+      display: inline-flex;
+      align-items: center;
       font-size: 18px;
+      line-height: 22px;
       color: #2A2A2A;
     }
 
     .info-canal-nome {
+      display: inline-flex;
+      align-items: center;
       font-size: 18px;
       font-weight: 600;
+      line-height: 22px;
       color: #2A2A2A;
-      margin-top: 0px;
+      margin: 0;
     }
 
     .info-canal-tecnologia {
+      display: inline-flex;
+      align-items: center;
       font-size: 18px;
+      line-height: 22px;
       color: #2A2A2A;
       flex-shrink: 0;
     }
@@ -625,7 +635,9 @@
       width: 22px;
       height: 22px;
       object-fit: contain;
-      flex-shrink: 0;
+      object-position: center;
+      display: block;
+      flex: 0 0 22px;
     }
     
     .info-canal-categoria {
@@ -1238,6 +1250,21 @@ function parseCsvTextoParaDados(texto) {
         .replace(/[\u0300-\u036f]/g, '')
         .replace(/\s+/g, '-');
     }
+
+    function criarImagemTecnologia(tecnologia) {
+  const nomeTecnologia = normalizarTexto(tecnologia);
+
+  if (!nomeTecnologia) {
+    return '';
+  }
+
+  const nomeArquivo = normalizarArquivo(nomeTecnologia);
+
+  return `
+    icon_${nomeArquivo}.png"
+    >
+  `;
+}
     
     function gerarResultado() {
       const resultado = getResultado();
@@ -1377,11 +1404,11 @@ const base = Array.from(mapaBase.entries())
           const info = document.createElement('div');
           info.className = 'info-canal';
           info.innerHTML = `
-            <span class="info-canal-vc">${ref.vc}</span>
-            <span class="info-canal-nome">${ref.canal}</span>
-            <img class="icone-tecnologia" src="icon_${ref.tecnologia.toLowerCase()}.png" alt="${ref.tecnologia}">
-            <span class="info-canal-tecnologia">${ref.categoria}</span>
-          `;
+  <span class="info-canal-vc">${ref.vc}</span>
+  <span class="info-canal-nome">${ref.canal}</span>
+  ${criarImagemTecnologia(ref.tecnologia)}
+  <span class="info-canal-tecnologia">${ref.categoria}</span>
+`;
 
           linha.appendChild(info);
 
