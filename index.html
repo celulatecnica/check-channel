@@ -374,6 +374,16 @@
     border-color .25s ease;
 }
 
+.bandeira[data-pais="OTHER ISLANDS"] {
+  justify-content: center;
+}
+
+.bandeira[data-pais="OTHER ISLANDS"] .nome-pais {
+  margin-top: 0;
+  width: 70px;
+  line-height: 1.2;
+}
+
 .bandeira:hover {
   transform: translateY(-2px);
 
@@ -1112,10 +1122,12 @@ function parseCsvTextoParaDados(texto) {
           bandeira.className = 'bandeira';
           bandeira.dataset.pais = pais;
 
+          if (pais !== 'OTHER ISLANDS') {
           const img = document.createElement('img');
           img.src = `flags/${normalizarArquivo(pais)}.png`;
           img.alt = pais;
           bandeira.appendChild(img);
+          }
 
           const nomePais = document.createElement('div');
           nomePais.className = 'nome-pais';
