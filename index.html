@@ -1028,7 +1028,7 @@
         titulo.addEventListener('click', () => alternarGrupo(wrapper));
 
         grupo.paises.forEach(pais => {
-          const existe = dados.some(d => d.pais === pais);
+          const existe = dados.some(d => normalizarChave(d.pais) === normalizarChave(pais));
           if (!existe) return;
 
           const bandeira = document.createElement('div');
