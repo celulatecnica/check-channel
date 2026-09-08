@@ -915,6 +915,10 @@
       return !valor || ['N/A', 'NA', '-', 'S/N'].includes(valor);
     }
 
+      function disponibilidadeAtiva(valor) {
+      return normalizarChave(valor) === 'SI';
+    }
+    
     function chaveCanal(item) {
       const vc = normalizarTexto(item.vc);
       if (!vcInvalido(vc)) {
@@ -1158,14 +1162,15 @@ function parseCsvTextoParaDados(texto) {
         }
 
         const canaisUnicos = new Set(
-          dados
-  .filter(d =>
-    normalizarChave(d.pais) === normalizarChave(pais) &&
-    d.cliente === cliente &&
-    d.pacote === pacote
-  )
-  .map(d => chaveCanal(d))
-        );
+  dados
+    .filter(d =>
+      normalizarChave(d.pais) === normalizarChave(pais) &&
+      d.cliente === cliente &&
+      d.pacote === pacote &&
+      disponibilidadeAtiva(d.disponibilidad)
+    )
+    .map(d => chaveCanal(d))
+);
 
         const total = canaisUnicos.size;
         const textoTotal = `${total} ${total === 1 ? 'canal' : 'canales'}`;
@@ -1257,49 +1262,59 @@ function parseCsvTextoParaDados(texto) {
 
       const pais = paisAtivo.dataset.pais;
 
-      // Criar mapas por pacote
-      const mapasPacotes = selecionados.map(sel => {
-        const mapa = new Map();
-        if (!sel.cliente || !sel.pacote) return mapa;
+// Criar mapas com somente os canais disponíveis em cada pacote
+const mapasPacotes = selecionados.map(sel => {
+  const mapa = new Map();
+
+  if (!sel.cliente || !sel.pacote) {
+    return mapa;
+  }
+
+  dados
+    .filter(d =>
+      normalizarChave(d.pais) === normalizarChave(pais) &&
+      d.cliente === sel.cliente &&
+      d.pacote === sel.pacote &&
+      disponibilidadeAtiva(d.disponibilidad)
+    )
+    .forEach(item => {
+      mapa.set(chaveCanal(item), item);
+    });
+
+  return mapa;
+});
+
+// Mapa base com todos os canais existentes no país selecionado
+const mapaBase = new Map();
 
 dados
   .filter(d =>
-    normalizarChave(d.pais) === normalizarChave(pais) &&
-    d.cliente === sel.cliente &&
-    d.pacote === sel.pacote
+    normalizarChave(d.pais) === normalizarChave(pais)
   )
   .forEach(item => {
-    mapa.set(chaveCanal(item), item);
+    const chave = chaveCanal(item);
+
+    if (!mapaBase.has(chave)) {
+      mapaBase.set(chave, item);
+    }
   });
 
-        return mapa;
-      });
+// Ordenar
+const base = Array.from(mapaBase.entries())
+  .sort((a, b) => {
+    const itemA = a[1];
+    const itemB = b[1];
+    const numA = parseInt(itemA.vc, 10);
+    const numB = parseInt(itemB.vc, 10);
+    const vcA = Number.isNaN(numA) ? 999999 : numA;
+    const vcB = Number.isNaN(numB) ? 999999 : numB;
 
-      // Mapa base (union)
-      const mapaBase = new Map();
-      mapasPacotes.forEach(mapa => {
-        mapa.forEach((item, chave) => {
-          if (!mapaBase.has(chave)) {
-            mapaBase.set(chave, item);
-          }
-        });
-      });
+    if (vcA !== vcB) return vcA - vcB;
 
-      // Ordenar
-      const base = Array.from(mapaBase.entries())
-        .sort((a, b) => {
-          const itemA = a[1];
-          const itemB = b[1];
-          const numA = parseInt(itemA.vc, 10);
-          const numB = parseInt(itemB.vc, 10);
-          const vcA = Number.isNaN(numA) ? 999999 : numA;
-          const vcB = Number.isNaN(numB) ? 999999 : numB;
-
-          if (vcA !== vcB) return vcA - vcB;
-          return normalizarTexto(itemA.canal)
-            .localeCompare(normalizarTexto(itemB.canal), 'pt-BR');
-        })
-        .map(entry => entry[1]);
+    return normalizarTexto(itemA.canal)
+      .localeCompare(normalizarTexto(itemB.canal), 'pt-BR');
+  })
+  .map(entry => entry[1]);
 
       // Renderizar resultado
       resultado.innerHTML = `
