@@ -956,7 +956,7 @@
         if (i === 0 || !linha.trim()) return;
 
         const col = linha.split(';').map(c => c.trim());
-        if (col.length < 7 || !col[0]) return;
+        if (col.length < 8 || !col[0]) return;
 
         registros.push({
           pais: col[0],
@@ -965,7 +965,8 @@
           vc: col[3],
           canal: col[4],
           tecnologia: col[5],
-          categoria: col[6]
+          categoria: col[6],
+          disponibilidad: col[7]
         });
       });
 
