@@ -978,7 +978,7 @@
       const arquivosUnicos = new Set(Object.values(MAPA_PAISES));
 
       for (const nomeArquivo of arquivosUnicos) {
-        const url = `paquetes/${nomeArquivo}?v=${Date.now()}`;
+        const url = `paquetes/${nomeArquivo}`;
         try {
           const response = await fetch(url);
           if (!response.ok) {
