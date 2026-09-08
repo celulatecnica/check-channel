@@ -1008,9 +1008,16 @@ function parseCsvTextoParaDados(texto) {
             console.error(`Erro ao carregar CSV: ${url} (${response.status})`);
             continue;
           }
-          const texto = await response.text();
+          const buffer = await response.arrayBuffer();
+
+          let texto = new TextDecoder('utf-8').decode(buffer);
+
+          if (texto.includes('\uFFFD')) {
+            texto = new TextDecoder('windows-1252').decode(buffer);
+          }
+
           const registros = parseCsvTextoParaDados(texto);
-          dados.push(...registros);          
+          dados.push(...registros);    
         } catch (e) {
           console.error(`Falha ao buscar CSV: ${url}`, e);
         }
