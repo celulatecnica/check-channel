@@ -294,23 +294,35 @@
 }
 
 .seletor-regiao-seta {
-  width: 14px;
-  height: 14px;
+  width: 24px;
+  height: 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+}
+
+.seletor-regiao-seta::before {
+  content: "";
+
+  width: 10px;
+  height: 10px;
 
   border-right: 3px solid #E4E7EB;
   border-bottom: 3px solid #E4E7EB;
 
   transform: rotate(45deg);
-  transition: transform .25s ease;
 
-  margin-right: 4px;
+  transition: transform .25s ease;
 }
 
-.seletor-regiao.aberto .seletor-regiao-seta {
+.seletor-regiao.aberto .seletor-regiao-seta::before {
   transform: rotate(-135deg);
 }
-
-.menu-regioes {
+    
+  .menu-regioes {
   width: 260px;
   margin: -18px auto 28px;
 
