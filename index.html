@@ -920,6 +920,7 @@
   <script>
     // ===== CONSTANTES E VARIÁVEIS GLOBAIS =====
     let dados = [];
+    let regiaoAtual = 'América Latina';
     const HEADER_TOTAL = 50;
     let limiteInicial = 0;
     let lastScrollY = 0;
@@ -1165,13 +1166,32 @@ function parseCsvTextoParaDados(texto) {
         .classList.toggle('aberto');
     });
 
-  document
-    .querySelectorAll('.opcao-regiao')
-    .forEach(opcao => {
+ 
+
+atualizarMenuRegioes();
+
+renderizarPaises(regiaoAtual);
+}
+
+    function atualizarMenuRegioes() {
+
+  const menu = document.getElementById('menuRegioes');
+
+  menu.innerHTML = '';
+
+  Object.keys(REGIOES)
+    .filter(regiao => regiao !== regiaoAtual)
+    .forEach(regiao => {
+
+      const opcao = document.createElement('div');
+
+      opcao.className = 'opcao-regiao';
+
+      opcao.textContent = regiao;
 
       opcao.addEventListener('click', () => {
 
-        const regiao = opcao.dataset.regiao;
+        regiaoAtual = regiao;
 
         document.getElementById('textoRegiao').textContent = regiao;
 
@@ -1183,12 +1203,16 @@ function parseCsvTextoParaDados(texto) {
           .getElementById('seletorRegiao')
           .classList.remove('aberto');
 
+        atualizarMenuRegioes();
+
         renderizarPaises(regiao);
+
       });
+
+      menu.appendChild(opcao);
 
     });
 
-  renderizarPaises('América Latina');
 }
 
     function renderizarPaises(regiao) {
