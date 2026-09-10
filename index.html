@@ -493,31 +493,72 @@
 }
 
 .card-pacote {
-  min-height: 220px;
+  min-height: 260px;
 
-  background: linear-gradient(
-    180deg,
-    rgba(34,38,44,1) 0%,
-    rgba(22,26,30,1) 100%
-  );
-
-  border: 1px solid rgba(82,89,97,1);
-  border-radius: 24px;
-
-  padding: 24px;
+  padding: 28px;
 
   display: flex;
   flex-direction: column;
+
+  background:
+    radial-gradient(
+      circle at top center,
+      rgba(24,72,140,.35) 0%,
+      rgba(10,30,58,.90) 45%,
+      rgba(5,12,24,1) 100%
+    );
+
+  border: 1px solid rgba(83,168,255,.35);
+  border-radius: 22px;
+
+  box-shadow:
+    inset 0 0 25px rgba(83,168,255,.08),
+    0 0 20px rgba(0,0,0,.35);
 }
 
 .card-pacote-titulo {
   font-size: 18px;
   font-weight: 600;
   color: #FFFFFF;
-  text-align: center;
+  text-align: left;
+  margin-bottom: 8px;
+}
+.cabecalho-pacote {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
   margin-bottom: 24px;
 }
 
+.numero-pacote {
+  width: 58px;
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  border: 2px solid #1F8FFF;
+
+  color: #FFFFFF;
+  font-size: 22px;
+  font-weight: 700;
+
+  flex-shrink: 0;
+}
+
+.texto-pacote {
+  flex: 1;
+  text-align: left;
+}
+
+.subtitulo-pacote {
+  font-size: 14px;
+  line-height: 1.4;
+  color: #B9C2CF;
+}
+    
 .card-pacote .grupo-selects {
   display: flex;
   flex-direction: column;
@@ -527,31 +568,37 @@
     
       /* ===== SELECTS ===== */
     select {
-      height: 60px;
-      padding: 0 20px;
-      border-radius: 12px;
-      border: none;
-      font-size: 18px;
-      background: #2A2A2A;
-      color: #8e8e93;
-      outline: none;
-      appearance: none;
-      transition: all 0.2s ease;
-      cursor: pointer;
-      width: 100%;
-    }
+  width: 100%;
+  height: 54px;
 
-    select.ativo {
-      color: #ffffff;
-    }
+  padding: 0 18px;
 
-    select:hover {
-      background: #333333;
-    }
+  color: #D7DCE4;
+  font-size: 16px;
 
-    select:focus {
-      background: #333333;
-    }
+  background:
+    linear-gradient(
+      180deg,
+      rgba(31,48,72,1) 0%,
+      rgba(22,35,54,1) 100%
+    );
+
+  border: 1px solid rgba(83,168,255,.20);
+  border-radius: 12px;
+
+  outline: none;
+  appearance: none;
+
+  cursor: pointer;
+}
+
+select:hover {
+  border-color: rgba(83,168,255,.45);
+}
+
+select:focus {
+  border-color: rgba(83,168,255,.70);
+}
 
     /* ===== BARRA ESTÁTICA (visível antes do resultado) ===== */
     .barra-pacotes-estatica {
@@ -883,46 +930,105 @@
     <div class="titulo-secao">Seleccione una región</div>
     <div id="bandeiras"></div>
 
-    <div class="grid">
-      <!-- PACOTE 1 -->
-      <div class="pacote">
-        <div class="titulo-pacote">Paquete principal</div>
-        <div class="grupo-selects">
-          <select id="cliente1" aria-label="Tipo de cliente - Paquete principal">
-            <option value="" disabled selected>Selecciona el tipo de cliente</option>
-          </select>
-          <select id="pacote1" aria-label="Paquete - Paquete principal">
-            <option value="" disabled selected>Selecciona el paquete</option>
-          </select>
-        </div>
-      </div>
+    <div class="grid-pacotes">
 
-      <!-- PACOTE 2 -->
-      <div class="pacote">
-        <div class="titulo-pacote">Comparación 1</div>
-        <div class="grupo-selects">
-          <select id="cliente2" aria-label="Tipo de cliente - Comparación 1">
-            <option value="" disabled selected>Selecciona el tipo de cliente</option>
-          </select>
-          <select id="pacote2" aria-label="Paquete - Comparación 1">
-            <option value="" disabled selected>Selecciona el paquete</option>
-          </select>
-        </div>
-      </div>
+  <div class="card-pacote">
 
-      <!-- PACOTE 3 -->
-      <div class="pacote">
-        <div class="titulo-pacote">Comparación 2</div>
-        <div class="grupo-selects">
-          <select id="cliente3" aria-label="Tipo de cliente - Comparación 2">
-            <option value="" disabled selected>Selecciona el tipo de cliente</option>
-          </select>
-          <select id="pacote3" aria-label="Paquete - Comparación 2">
-            <option value="" disabled selected>Selecciona el paquete</option>
-          </select>
+    <div class="cabecalho-pacote">
+      <div class="numero-pacote">1</div>
+
+      <div class="texto-pacote">
+        <div class="card-pacote-titulo">
+          Paquete principal
+        </div>
+
+        <div class="subtitulo-pacote">
+          Selecciona el tipo de cliente y el paquete de programación.
         </div>
       </div>
     </div>
+
+    <div class="grupo-selects">
+      <select id="cliente1">
+        <option value="" disabled selected>
+          Selecciona el tipo de cliente
+        </option>
+      </select>
+
+      <select id="pacote1">
+        <option value="" disabled selected>
+          Selecciona el paquete
+        </option>
+      </select>
+    </div>
+
+  </div>
+
+  <div class="card-pacote">
+
+    <div class="cabecalho-pacote">
+      <div class="numero-pacote">2</div>
+
+      <div class="texto-pacote">
+        <div class="card-pacote-titulo">
+          Comparación 1
+        </div>
+
+        <div class="subtitulo-pacote">
+          Selecciona el tipo de cliente y el paquete de programación.
+        </div>
+      </div>
+    </div>
+
+    <div class="grupo-selects">
+      <select id="cliente2">
+        <option value="" disabled selected>
+          Selecciona el tipo de cliente
+        </option>
+      </select>
+
+      <select id="pacote2">
+        <option value="" disabled selected>
+          Selecciona el paquete
+        </option>
+      </select>
+    </div>
+
+  </div>
+
+  <div class="card-pacote">
+
+    <div class="cabecalho-pacote">
+      <div class="numero-pacote">3</div>
+
+      <div class="texto-pacote">
+        <div class="card-pacote-titulo">
+          Comparación 2
+        </div>
+
+        <div class="subtitulo-pacote">
+          Selecciona el tipo de cliente y el paquete de programación.
+        </div>
+      </div>
+    </div>
+
+    <div class="grupo-selects">
+      <select id="cliente3">
+        <option value="" disabled selected>
+          Selecciona el tipo de cliente
+        </option>
+      </select>
+
+      <select id="pacote3">
+        <option value="" disabled selected>
+          Selecciona el paquete
+        </option>
+      </select>
+    </div>
+
+  </div>
+
+</div>
 
     <div class="topo-preto"></div>
     <div class="linha-separadora-pacotes"></div>
