@@ -565,7 +565,28 @@ radial-gradient(
   gap: 14px;
   margin-top: auto;
 }
-    
+
+.select-com-icone {
+  position: relative;
+}
+
+.select-com-icone img {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.select-com-icone select {
+  padding-left: 70px;
+}
+
       /* ===== SELECTS ===== */
     select {
   width: 100%;
@@ -577,13 +598,14 @@ radial-gradient(
   font-size: 16px;
 
   background:
-    linear-gradient(
-      180deg,
-      rgba(31,48,72,1) 0%,
-      rgba(22,35,54,1) 100%
-    );
+linear-gradient(
+    180deg,
+    rgba(34,38,44,1) 0%,
+    rgba(22,26,30,1) 100%
+  )
+;
 
-  border: 1px solid rgba(83,168,255,.20);
+  border: 1px solid rgba(82,89,97,1);
   border-radius: 12px;
 
   outline: none;
@@ -949,17 +971,23 @@ select:focus {
     </div>
 
     <div class="grupo-selects">
-      <select id="cliente1">
-        <option value="" disabled selected>
-          Selecciona el tipo de cliente
-        </option>
-      </select>
+      <div class="select-com-icone">
+   <img src="icon_tipo.png" class="seletor-regiao-icone">
+  <select id="cliente1">
+    <option value="" disabled selected>
+      Tipo de cliente
+    </option>
+  </select>
+</div>
 
-      <select id="pacote1">
-        <option value="" disabled selected>
-          Selecciona el paquete
-        </option>
-      </select>
+<div class="select-com-icone">
+  <img src="icon_pacote.png" class="seletor-regiao-icone">
+  <select id="pacote1">
+    <option value="" disabled selected>
+      Paquete
+    </option>
+  </select>
+</div>
     </div>
 
   </div>
@@ -980,19 +1008,23 @@ select:focus {
       </div>
     </div>
 
-    <div class="grupo-selects">
-      <select id="cliente2">
-        <option value="" disabled selected>
-          Selecciona el tipo de cliente
-        </option>
-      </select>
+<div class="select-com-icone">
+  <img src="icon_tipo.png" class="seletor-regiao-icone">
+  <select id="cliente2">
+    <option value="" disabled selected>
+      Tipo de cliente
+    </option>
+  </select>
+</div>
 
-      <select id="pacote2">
-        <option value="" disabled selected>
-          Selecciona el paquete
-        </option>
-      </select>
-    </div>
+<div class="select-com-icone">
+ <img src="icon_pacote.png" class="seletor-regiao-icone">
+  <select id="pacote2">
+    <option value="" disabled selected>
+      Paquete
+    </option>
+  </select>
+</div>
 
   </div>
 
@@ -1012,19 +1044,23 @@ select:focus {
       </div>
     </div>
 
-    <div class="grupo-selects">
-      <select id="cliente3">
-        <option value="" disabled selected>
-          Selecciona el tipo de cliente
-        </option>
-      </select>
+<div class="select-com-icone">
+  <img src="icon_tipo.png" class="seletor-regiao-icone">
+  <select id="cliente3">
+    <option value="" disabled selected>
+      Tipo de cliente
+    </option>
+  </select>
+</div>
 
-      <select id="pacote3">
-        <option value="" disabled selected>
-          Selecciona el paquete
-        </option>
-      </select>
-    </div>
+<div class="select-com-icone">
+  <img src="icon_pacote.png" class="seletor-regiao-icone">
+  <select id="pacote3">
+    <option value="" disabled selected>
+      Paquete
+    </option>
+  </select>
+</div>
 
   </div>
 
