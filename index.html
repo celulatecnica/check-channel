@@ -248,95 +248,100 @@
       margin-bottom: 47px;
     }
 
-    /* ===== GRUPOS DE PAÍSES ===== */
-    .grupo-paises {
-      width: 100%;
-    }
+    /* ===== SELETOR DE REGIÃO ===== */
 
-    .grupo-paises-titulo {
-      width: fit-content;
-      margin: 0 auto;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 9px;
-      font-size: 21px;
-      font-weight: 600;
-      color: #f5f5f7;
-      cursor: pointer;
-      user-select: none;
-    }
+.seletor-regiao {
+  width: 260px;
+  height: 42px;
+  margin: 0 auto 24px;
 
-    /* Seta dos grupos */
-    .grupo-seta {
-      width: 18px;
-      height: 18px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      border-radius: 50%;
-      transition: background-color 0.25s ease, transform 0.25s ease;
-    }
+  background: linear-gradient(
+    180deg,
+    rgba(14,28,52,.95) 0%,
+    rgba(8,18,36,.95) 100%
+  );
 
-    .grupo-seta::before {
-      content: "";
-      width: 6px;
-      height: 6px;
-      border-right: 2px solid;
-      border-bottom: 2px solid;
-      transition: border-color 0.25s ease, transform 0.25s ease;
-    }
+  border: 1px solid rgba(83,168,255,.20);
+  border-radius: 10px;
 
-    /* FECHADO */
-    .grupo-paises.fechado .grupo-seta {
-      background-color: #ffffff;
-    }
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-    .grupo-paises.fechado .grupo-seta::before {
-      border-color: #0F0F0F;
-      transform: rotate(-45deg);
-      margin-top: 0;
-      margin-left: -2px;
-    }
+  padding: 0 15px;
+  cursor: pointer;
 
-    /* ABERTO */
-    .grupo-paises:not(.fechado) .grupo-seta {
-      background-color: #0F0F0F;
-    }
-
-    .grupo-paises:not(.fechado) .grupo-seta::before {
-      border-color: #ffffff;
-      transform: rotate(45deg);
-      margin-top: -3px;
-      margin-left: 0;
-    }
-
-    .grupo-paises-titulo:hover .grupo-seta {
-      transform: scale(1.08);
-    }
-
-    /* Bandeiras animadas */
-    .grupo-bandeiras {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      max-height: 140px;
-      opacity: 1;
-      transition: max-height 0.32s ease, opacity 0.22s ease, margin 0.32s ease;
-    }
-
-   .grupo-paises:not(.fechado) .grupo-bandeiras {
-  margin: 30px 0 30px;
-  max-height: 300px;
+  user-select: none;
 }
 
-    .grupo-paises.fechado .grupo-bandeiras {
-      max-height: 0;
-      opacity: 0;
-      pointer-events: none;
-    }
+.seletor-regiao-esquerda {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.seletor-regiao-icone {
+  width: 16px;
+  height: 16px;
+  opacity: .9;
+}
+
+.seletor-regiao-texto {
+  font-size: 14px;
+  color: #D9E8FF;
+  font-weight: 500;
+}
+
+.seletor-regiao-seta {
+  color: #8FB8FF;
+  font-size: 14px;
+  transition: transform .25s ease;
+}
+
+.seletor-regiao.aberto .seletor-regiao-seta {
+  transform: rotate(180deg);
+}
+
+.menu-regioes {
+  width: 260px;
+  margin: -18px auto 28px;
+
+  background: #091427;
+
+  border: 1px solid rgba(83,168,255,.20);
+  border-radius: 10px;
+
+  overflow: hidden;
+
+  display: none;
+}
+
+.menu-regioes.aberto {
+  display: block;
+}
+
+.opcao-regiao {
+  padding: 12px 15px;
+  cursor: pointer;
+  color: #D9E8FF;
+  font-size: 14px;
+
+  transition: background .20s ease;
+}
+
+.opcao-regiao:hover {
+  background: rgba(83,168,255,.10);
+}
+
+/* ===== PAÍSES ===== */
+
+.grupo-bandeiras {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 47px;
+}
 
    /* ===== NOVO ESTILO DAS BANDEIRAS ===== */
 
@@ -435,28 +440,7 @@
       visibility: visible;
     }
     
-    /* ===== GRID DE PACOTES ===== */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin-top: 24px;
-    }
-
-    .titulo-pacote {
-      font-size: 21px;
-      font-weight: 600;
-      margin-bottom: 23px;
-      color: #f5f5f7;
-    }
-
-    .grupo-selects {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    /* ===== SELECTS ===== */
+      /* ===== SELECTS ===== */
     select {
       height: 60px;
       padding: 0 20px;
@@ -928,16 +912,28 @@
       'OTHER ISLANDS': 'paquetes_caribe.csv'
     };
 
-    const GRUPOS_PAISES = [
-      {
-        titulo: 'América Latina',
-        paises: ['ARGENTINA', 'CHILE', 'COLOMBIA', 'ECUADOR', 'MEXICO', 'PERU', 'URUGUAY']
-      },
-      {
-        titulo: 'Caribe',
-        paises: ['BARBADOS', 'CURAZAO', 'GUYANA', 'PUERTO RICO', 'SURINAME', 'TRINIDAD Y TOBAGO', 'US VIRGIN ISLANDS', 'OTHER ISLANDS']
-      }
-    ];
+    const REGIOES = {
+  "América Latina": [
+    'ARGENTINA',
+    'CHILE',
+    'COLOMBIA',
+    'ECUADOR',
+    'MEXICO',
+    'PERU',
+    'URUGUAY'
+  ],
+
+  "Caribe": [
+    'BARBADOS',
+    'CURAZAO',
+    'GUYANA',
+    'PUERTO RICO',
+    'SURINAME',
+    'TRINIDAD Y TOBAGO',
+    'US VIRGIN ISLANDS',
+    'OTHER ISLANDS'
+  ]
+};
 
     const TECNOLOGIAS = ['SD', 'HD', '4K', 'AUDIO', 'RADIO'];
 
@@ -1092,68 +1088,121 @@ function parseCsvTextoParaDados(texto) {
     }
 
     // ===== BANDEIRAS =====
-    function carregarBandeiras() {
-      const container = getElementoSeguro('bandeiras');
-      if (!container) return;
+ function carregarBandeiras() {
+  const container = document.getElementById('bandeiras');
 
-      container.innerHTML = '';
+  container.innerHTML = `
+    <div class="seletor-regiao" id="seletorRegiao">
+      <div class="seletor-regiao-esquerda">
+        icon_globe.png
+        <span class="seletor-regiao-texto" id="textoRegiao">
+          América Latina
+        </span>
+      </div>
 
-      GRUPOS_PAISES.forEach((grupo, grupoIdx) => {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'grupo-paises fechado';
+      <span class="seletor-regiao-seta">⌄</span>
+    </div>
 
-        const titulo = document.createElement('div');
-        titulo.className = 'grupo-paises-titulo';
-        titulo.innerHTML = `
-          <span>${grupo.titulo}</span>
-          <span class="grupo-seta" aria-hidden="true"></span>
-        `;
+    <div class="menu-regioes" id="menuRegioes">
+      <div class="opcao-regiao" data-regiao="América Latina">
+        América Latina
+      </div>
 
-        const linha = document.createElement('div');
-        linha.className = 'grupo-bandeiras';
+      <div class="opcao-regiao" data-regiao="Caribe">
+        Caribe
+      </div>
+    </div>
 
-        titulo.addEventListener('click', () => alternarGrupo(wrapper));
+    <div class="grupo-bandeiras" id="listaPaises"></div>
+  `;
 
-        grupo.paises.forEach(pais => {
-          const existe = dados.some(d => normalizarChave(d.pais) === normalizarChave(pais));
-          if (!existe) return;
+  document
+    .getElementById('seletorRegiao')
+    .addEventListener('click', () => {
 
-          const bandeira = document.createElement('div');
-          bandeira.className = 'bandeira';
-          bandeira.dataset.pais = pais;
+      document
+        .getElementById('menuRegioes')
+        .classList.toggle('aberto');
 
-          if (pais !== 'OTHER ISLANDS') {
-          const img = document.createElement('img');
-          img.src = `flags/${normalizarArquivo(pais)}.png`;
-          img.alt = pais;
-          bandeira.appendChild(img);
-          }
+      document
+        .getElementById('seletorRegiao')
+        .classList.toggle('aberto');
+    });
 
-          const nomePais = document.createElement('div');
-          nomePais.className = 'nome-pais';
-          nomePais.textContent = pais;
-          bandeira.appendChild(nomePais);
+  document
+    .querySelectorAll('.opcao-regiao')
+    .forEach(opcao => {
 
-          bandeira.addEventListener('click', () => selecionarPais(pais, bandeira));
-          linha.appendChild(bandeira);
-        });
+      opcao.addEventListener('click', () => {
 
-        wrapper.appendChild(titulo);
-        wrapper.appendChild(linha);
-        container.appendChild(wrapper);
+        const regiao = opcao.dataset.regiao;
+
+        document.getElementById('textoRegiao').textContent = regiao;
+
+        document
+          .getElementById('menuRegioes')
+          .classList.remove('aberto');
+
+        document
+          .getElementById('seletorRegiao')
+          .classList.remove('aberto');
+
+        renderizarPaises(regiao);
       });
+
+    });
+
+  renderizarPaises('América Latina');
+}
+
+    function renderizarPaises(regiao) {
+
+  const lista = document.getElementById('listaPaises');
+
+  lista.innerHTML = '';
+
+  REGIOES[regiao].forEach(pais => {
+
+    const existe = dados.some(
+      d => normalizarChave(d.pais) === normalizarChave(pais)
+    );
+
+    if (!existe) return;
+
+    const bandeira = document.createElement('div');
+
+    bandeira.className = 'bandeira';
+    bandeira.dataset.pais = pais;
+
+    if (pais !== 'OTHER ISLANDS') {
+
+      const img = document.createElement('img');
+
+      img.src = `flags/${normalizarArquivo(pais)}.png`;
+
+      img.alt = pais;
+
+      bandeira.appendChild(img);
     }
 
-    function alternarGrupo(wrapper) {
-      const estaAberto = !wrapper.classList.contains('fechado');
+    const nome = document.createElement('div');
 
-      if (estaAberto) {
-        wrapper.classList.add('fechado');
-      } else {
-        document.querySelectorAll('.grupo-paises').forEach(g => g.classList.add('fechado'));
-        wrapper.classList.remove('fechado');
-      }
-    }
+    nome.className = 'nome-pais';
+
+    nome.textContent = pais;
+
+    bandeira.appendChild(nome);
+
+    bandeira.addEventListener('click', () =>
+      selecionarPais(pais, bandeira)
+    );
+
+    lista.appendChild(bandeira);
+
+  });
+
+}
+
 
     // ===== SELEÇÃO DE PAÍS =====
     function selecionarPais(pais, elemento) {
