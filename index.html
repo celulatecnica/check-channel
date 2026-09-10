@@ -927,7 +927,7 @@ select:focus {
     .menu-custom {
   display: none;
 
-  margin-top: -10px;
+  margin-top: 8px;
 
   background: linear-gradient(
     180deg,
@@ -941,6 +941,14 @@ select:focus {
   overflow: hidden;
 }
 
+    .opcao-custom:hover {
+  background: rgba(255,255,255,.05);
+}
+
+    .opcao-custom:not(:last-child) {
+  border-bottom: 1px solid rgba(82,89,97,.50);
+}
+    
     .menu-custom.aberto {
   display: block;
 }
@@ -1379,11 +1387,30 @@ function parseCsvTextoParaDados(texto) {
     // ===== INICIALIZAÇÃO =====
     function inicializar() {
       carregarBandeiras();
+      prepararDropdownCliente1();
       prepararEventosSelects();
       atualizarBarraPacotes();
       atualizarEstadoInicial();
     }
 
+    function prepararDropdownCliente1() {
+
+    const seletor =
+        document.getElementById('cliente1');
+
+    const menu =
+        document.getElementById('menuCliente1');
+
+    if (!seletor || !menu) return;
+
+    seletor.addEventListener('click', () => {
+
+        menu.classList.toggle('aberto');
+
+    });
+
+}
+    
     // ===== BANDEIRAS =====
  function carregarBandeiras() {
   const container = document.getElementById('bandeiras');
@@ -1552,18 +1579,26 @@ renderizarPaises(regiaoAtual);
           .filter(Boolean)
       )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
-      [1, 2, 3].forEach(i => {
-        const select = getElementoSeguro(`cliente${i}`);
-        if (!select) return;
+[1, 2, 3].forEach(i => {
 
-        select.innerHTML = '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
-        clientes.forEach(c => {
-          const option = document.createElement('option');
-          option.value = c;
-          option.textContent = c;
-          select.appendChild(option);
-        });
-      });
+    const menu = getElementoSeguro(`menuCliente${i}`);
+
+    if (!menu) return;
+
+    menu.innerHTML = '';
+
+    clientes.forEach(cliente => {
+
+        const opcao = document.createElement('div');
+
+        opcao.className = 'opcao-custom';
+
+        opcao.textContent = cliente;
+
+        menu.appendChild(opcao);
+    });
+
+});
 
       // Limpar resultado
       const resultado = getResultado();
