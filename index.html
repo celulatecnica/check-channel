@@ -239,7 +239,7 @@
 
     .titulo-secao {
       width: 100%;
-      margin: 47px auto 23px;
+      margin: 47px auto 20px;
       font-size: 24px;
       font-weight: 600;
     }
@@ -322,14 +322,18 @@
   transform: rotate(-135deg);
 }
     
-  .menu-regioes {
-  width: 260px;
+.menu-regioes {
+  width: 300px;
   margin: -18px auto 28px;
 
-  background: #091427;
+  background: linear-gradient(
+    180deg,
+    rgba(34,38,44,1) 0%,
+    rgba(22,26,30,1) 100%
+  );
 
-  border: 1px solid rgba(83,168,255,.20);
-  border-radius: 10px;
+  border: 1px solid rgba(82,89,97,1);
+  border-radius: 14px;
 
   overflow: hidden;
 
@@ -341,18 +345,30 @@
 }
 
 .opcao-regiao {
-  padding: 12px 15px;
+  height: 55px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #E4E7EB;
+  font-size: 16px;
+  font-weight: 500;
+
   cursor: pointer;
-  color: #D9E8FF;
-  font-size: 14px;
 
   transition: background .20s ease;
 }
 
 .opcao-regiao:hover {
-  background: rgba(83,168,255,.10);
+  background: rgba(255,255,255,.05);
 }
 
+.opcao-regiao:not(:last-child) {
+  border-bottom: 1px solid rgba(82,89,97,.50);
+}
+
+    
 /* ===== PAÍSES ===== */
 
 .grupo-bandeiras {
