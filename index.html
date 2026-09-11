@@ -1793,6 +1793,42 @@ function limparCard(i) {
     menuPacote.classList.remove('aberto');
     menuPacote.innerHTML = '';
   }
+
+  const paisAtivo = document.querySelector('.bandeira.active');
+
+  if (!paisAtivo || !menuCliente) {
+    return;
+  }
+
+  const pais = paisAtivo.dataset.pais;
+
+  const clientes = [...new Set(
+    dados
+      .filter(d =>
+        normalizarChave(d.pais) === normalizarChave(pais)
+      )
+      .map(d => d.cliente)
+      .filter(Boolean)
+  )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
+  clientes.forEach(cliente => {
+
+    const opcaoCliente = document.createElement('div');
+
+    opcaoCliente.className = 'opcao-custom';
+    opcaoCliente.textContent = cliente;
+
+    opcaoCliente.addEventListener('click', () => {
+      selecionarClienteNoCard(
+        i,
+        cliente,
+        pais,
+        clientes
+      );
+    });
+
+    menuCliente.appendChild(opcaoCliente);
+  });
 }
 
 function atualizarEtapasPacotes() {
