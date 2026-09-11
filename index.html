@@ -927,8 +927,8 @@ select:focus {
     .menu-custom {
   display: none;
 
-  margin-top: 8px;
-
+  margin-top: -18px;
+  margin-bottom: 14px;
   background: linear-gradient(
     180deg,
     rgba(34,38,44,1) 0%,
@@ -1572,7 +1572,13 @@ renderizarPaises(regiaoAtual);
 
     menu.innerHTML = '';
 
-    clientes.forEach(cliente => {
+    const clienteSelecionado =
+    document.getElementById('cliente1')
+    ?.dataset.valor || '';
+
+clientes
+    .filter(cliente => cliente !== clienteSelecionado)
+    .forEach(cliente => {
 
         const opcao = document.createElement('div');
 
@@ -1587,7 +1593,10 @@ renderizarPaises(regiaoAtual);
     ).textContent = cliente;
 
     document.getElementById('cliente1').dataset.valor = cliente;
-
+    selecionarPais(
+    document.querySelector('.bandeira.active').dataset.pais,
+    document.querySelector('.bandeira.active')
+);
     menu.classList.remove('aberto');
 
 });
