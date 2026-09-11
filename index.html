@@ -1556,21 +1556,6 @@ renderizarPaises(regiaoAtual);
       document.querySelectorAll('.bandeira').forEach(b => b.classList.remove('active'));
       elemento.classList.add('active');
 
-      // Limpar selects
-      [1, 2, 3].forEach(i => {
-        const clienteSelect = getElementoSeguro(`cliente${i}`);
-        const pacoteSelect = getElementoSeguro(`pacote${i}`);
-
-        if (clienteSelect) {
-          clienteSelect.innerHTML = '<option value="" disabled selected>Tipo de cliente</option>';
-          clienteSelect.classList.remove('ativo');
-        }
-        if (pacoteSelect) {
-          pacoteSelect.innerHTML = '<option value="" disabled selected>Paquete</option>';
-          pacoteSelect.classList.remove('ativo');
-        }
-      });
-
       // Carregar clientes
       const clientes = [...new Set(
         dados
