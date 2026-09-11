@@ -1836,12 +1836,12 @@ menuPacote.innerHTML = '';
 
 });
 
-      atualizarBarraPacotes();
-atualizarEstadoInicial();
+       atualizarBarraPacotes();
+  atualizarEstadoInicial();
+}
 
-    // ===== BARRA DE PACOTES =====
-    function atualizarBarraPacotes() {
-      const paisAtivo = document.querySelector('.bandeira.active');
+// ===== BARRA DE PACOTES =====
+function atualizarBarraPacotes() {      const paisAtivo = document.querySelector('.bandeira.active');
       const pais = paisAtivo ? paisAtivo.dataset.pais : '';
 
       [1, 2, 3].forEach(i => {
