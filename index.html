@@ -2366,9 +2366,9 @@ function criarImagemTecnologia(tecnologia) {
       if (!resultado) return;
 
       const selecionados = [1, 2, 3].map(i => ({
-        cliente: getElementoSeguro(`cliente${i}`)?.value || '',
-        pacote: getElementoSeguro(`pacote${i}`)?.value || ''
-      }));
+  cliente: getElementoSeguro(`cliente${i}`)?.dataset.valor || '',
+  pacote: getElementoSeguro(`pacote${i}`)?.dataset.valor || ''
+}));
 
       atualizarBarraPacotes();
 
