@@ -513,6 +513,42 @@
     0 0 20px rgba(0,0,0,.35);
 }
 
+.card-pacote {
+  position: relative;
+}
+
+.card-pacote.bloqueado {
+  pointer-events: none;
+  user-select: none;
+}
+
+.card-pacote.bloqueado::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+
+  background: rgba(5, 7, 9, 0.72);
+
+  backdrop-filter: blur(1.5px);
+  -webkit-backdrop-filter: blur(1.5px);
+
+  border-radius: 22px;
+  pointer-events: all;
+}
+
+.card-pacote {
+  transition:
+    opacity 0.25s ease,
+    filter 0.25s ease,
+    transform 0.25s ease;
+}
+
+.card-pacote.bloqueado {
+  opacity: 0.58;
+  filter: saturate(0.45);
+}
+
 .card-pacote:has(.grupo-selects > .menu-custom:last-child.aberto) {
   padding-bottom: 28px;
 }
@@ -1513,8 +1549,9 @@ function abrirMenuSePossuirOpcoes(idSeletor, idMenu) {
     barraPacotes.classList.remove('visible');
   }
 
-  atualizarBarraPacotes();
-  atualizarEstadoInicial();
+atualizarBarraPacotes();
+atualizarEtapasPacotes();
+atualizarEstadoInicial();
 }
     
     // ===== INICIALIZAÇÃO =====
@@ -1531,7 +1568,8 @@ abrirMenuSePossuirOpcoes('cliente3', 'menuCliente3');
 abrirMenuSePossuirOpcoes('pacote1', 'menuPacote1');
 abrirMenuSePossuirOpcoes('pacote2', 'menuPacote2');
 abrirMenuSePossuirOpcoes('pacote3', 'menuPacote3');
-      
+
+      atualizarEtapasPacotes();
     }
 
     function prepararDropdownCliente1() {
@@ -1715,6 +1753,88 @@ renderizarPaises(regiaoAtual);
 
 }
 
+function limparCard(i) {
+
+  const seletorCliente = document.getElementById(`cliente${i}`);
+  const seletorPacote = document.getElementById(`pacote${i}`);
+  const menuCliente = document.getElementById(`menuCliente${i}`);
+  const menuPacote = document.getElementById(`menuPacote${i}`);
+
+  if (seletorCliente) {
+    seletorCliente.dataset.valor = '';
+
+    const textoCliente = seletorCliente.querySelector(
+      '.seletor-regiao-texto'
+    );
+
+    if (textoCliente) {
+      textoCliente.textContent = 'Tipo de cliente';
+    }
+  }
+
+  if (seletorPacote) {
+    seletorPacote.dataset.valor = '';
+
+    const textoPacote = seletorPacote.querySelector(
+      '.seletor-regiao-texto'
+    );
+
+    if (textoPacote) {
+      textoPacote.textContent = 'Paquete';
+    }
+  }
+
+  if (menuCliente) {
+    menuCliente.classList.remove('aberto');
+    menuCliente.innerHTML = '';
+  }
+
+  if (menuPacote) {
+    menuPacote.classList.remove('aberto');
+    menuPacote.innerHTML = '';
+  }
+}
+
+function atualizarEtapasPacotes() {
+
+  const cards = document.querySelectorAll('.grid-pacotes .card-pacote');
+
+  const paisSelecionado = Boolean(
+    document.querySelector('.bandeira.active')
+  );
+
+  const pacote1Selecionado = Boolean(
+    document.getElementById('pacote1')?.dataset.valor
+  );
+
+  const pacote2Selecionado = Boolean(
+    document.getElementById('pacote2')?.dataset.valor
+  );
+
+  if (cards[0]) {
+    cards[0].classList.toggle(
+      'bloqueado',
+      !paisSelecionado
+    );
+  }
+
+  if (cards[1]) {
+    cards[1].classList.toggle(
+      'bloqueado',
+      !paisSelecionado || !pacote1Selecionado
+    );
+  }
+
+  if (cards[2]) {
+    cards[2].classList.toggle(
+      'bloqueado',
+      !paisSelecionado ||
+      !pacote1Selecionado ||
+      !pacote2Selecionado
+    );
+  }
+}
+
 function selecionarClienteNoCard(i, cliente, pais, clientes) {
 
   const seletorCliente = document.getElementById(`cliente${i}`);
@@ -1731,6 +1851,15 @@ function selecionarClienteNoCard(i, cliente, pais, clientes) {
     return;
   }
 
+  if (i === 1) {
+  limparCard(2);
+  limparCard(3);
+}
+
+if (i === 2) {
+  limparCard(3);
+}
+  
   seletorCliente.dataset.valor = cliente;
 
   const textoCliente = seletorCliente.querySelector(
@@ -1809,15 +1938,26 @@ function selecionarClienteNoCard(i, cliente, pais, clientes) {
 
       menuPacote.classList.remove('aberto');
 
-      atualizarBarraPacotes();
-      gerarResultado();
+if (i === 1) {
+  limparCard(2);
+  limparCard(3);
+}
+
+if (i === 2) {
+  limparCard(3);
+}
+
+atualizarBarraPacotes();
+atualizarEtapasPacotes();
+gerarResultado();
     });
 
     menuPacote.appendChild(opcaoPacote);
   });
 
-  atualizarBarraPacotes();
-  gerarResultado();
+atualizarBarraPacotes();
+atualizarEtapasPacotes();
+gerarResultado();
 }
     
     // ===== SELEÇÃO DE PAÍS =====
@@ -1906,6 +2046,7 @@ function selecionarPais(pais, elemento) {
   });
 
   atualizarBarraPacotes();
+  atualizarEtapasPacotes();
   atualizarEstadoInicial();
 }
 
