@@ -493,7 +493,7 @@
 }
 
 .card-pacote {
-  height: 296px;
+  height: 320px;
 
   padding: 28px;
 
@@ -1427,11 +1427,13 @@ function parseCsvTextoParaDados(texto) {
 
     if (!seletor || !menu) return;
 
-    seletor.addEventListener('click', () => {
+seletor.addEventListener('click', () => {
 
-        menu.classList.toggle('aberto');
+    if (!menu.children.length) return;
 
-    });
+    menu.classList.toggle('aberto');
+
+});
 
 }
 
