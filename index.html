@@ -489,11 +489,11 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-  margin-bottom: 47px;
+  align-items: start;
 }
 
 .card-pacote {
-  min-height: 296px;
+  height: 296px;
 
   padding: 28px;
 
@@ -1113,9 +1113,11 @@ select:focus {
 
 <div class="menu-custom" id="menuPacote2"></div>
 
-  </div>
+</div> <!-- fecha grupo-selects -->
 
-  <div class="card-pacote">
+</div> <!-- fecha card-pacote -->
+
+<div class="card-pacote">
 
     <div class="cabecalho-pacote">
       <div class="numero-pacote">3</div>
