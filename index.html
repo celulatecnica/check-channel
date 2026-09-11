@@ -1580,6 +1580,17 @@ renderizarPaises(regiaoAtual);
 
         opcao.textContent = cliente;
 
+        opcao.addEventListener('click', () => {
+
+    document.querySelector(
+        '#cliente1 .seletor-regiao-texto'
+    ).textContent = cliente;
+
+    document.getElementById('cliente1').dataset.valor = cliente;
+
+    menu.classList.remove('aberto');
+
+});
         menu.appendChild(opcao);
     });
 
@@ -1609,7 +1620,7 @@ renderizarPaises(regiaoAtual);
 
         if (!clienteSelect || !pacoteSelect || !headerFixo || !totalFixo) return;
 
-        const cliente = clienteSelect.value;
+        const cliente = clienteSelect.dataset.valor || '';
         const pacote = pacoteSelect.value;
 
         if (!pais || !cliente || !pacote) {
