@@ -1443,6 +1443,79 @@ function abrirMenuSePossuirOpcoes(idSeletor, idMenu) {
     });
 
 }
+
+    function limparSelecoes() {
+
+  document.querySelectorAll('.menu-custom').forEach(menu => {
+    menu.classList.remove('aberto');
+    menu.innerHTML = '';
+  });
+
+  [1, 2, 3].forEach(i => {
+
+    const cliente = document.getElementById(`cliente${i}`);
+    const pacote = document.getElementById(`pacote${i}`);
+
+    if (cliente) {
+      cliente.dataset.valor = '';
+
+      const textoCliente = cliente.querySelector('.seletor-regiao-texto');
+
+      if (textoCliente) {
+        textoCliente.textContent = 'Tipo de cliente';
+      }
+    }
+
+    if (pacote) {
+      pacote.dataset.valor = '';
+
+      const textoPacote = pacote.querySelector('.seletor-regiao-texto');
+
+      if (textoPacote) {
+        textoPacote.textContent = 'Paquete';
+      }
+    }
+
+  });
+
+  document.querySelectorAll('.bandeira').forEach(bandeira => {
+    bandeira.classList.remove('active');
+  });
+
+  const resultado = document.getElementById('resultado');
+
+  if (resultado) {
+    resultado.innerHTML = '';
+    resultado.style.display = 'none';
+  }
+
+  const barraEstatica = document.getElementById('barraPacotesEstatica');
+
+  if (barraEstatica) {
+    barraEstatica.style.display = 'none';
+  }
+
+  const linhaSeparadora = document.querySelector(
+    '.linha-separadora-pacotes'
+  );
+
+  if (linhaSeparadora) {
+    linhaSeparadora.style.display = 'none';
+  }
+
+  document.querySelectorAll('.top-bar').forEach(barra => {
+    barra.classList.remove('scrolled');
+  });
+
+  const barraPacotes = document.getElementById('topbarPacotes');
+
+  if (barraPacotes) {
+    barraPacotes.classList.remove('visible');
+  }
+
+  atualizarBarraPacotes();
+  atualizarEstadoInicial();
+}
     
     // ===== INICIALIZAÇÃO =====
     function inicializar() {
@@ -1566,11 +1639,13 @@ renderizarPaises(regiaoAtual);
 
       opcao.textContent = regiao;
 
-      opcao.addEventListener('click', () => {
+ opcao.addEventListener('click', () => {
 
-        regiaoAtual = regiao;
+  limparSelecoes();
 
-        document.getElementById('textoRegiao').textContent = regiao;
+  regiaoAtual = regiao;
+
+  document.getElementById('textoRegiao').textContent = regiao;
 
         document
           .getElementById('menuRegioes')
@@ -1643,8 +1718,21 @@ renderizarPaises(regiaoAtual);
 
     // ===== SELEÇÃO DE PAÍS =====
     function selecionarPais(pais, elemento) {
-      document.querySelectorAll('.bandeira').forEach(b => b.classList.remove('active'));
-      elemento.classList.add('active');
+
+  const paisAtual = document.querySelector('.bandeira.active');
+
+  if (
+    paisAtual &&
+    paisAtual.dataset.pais !== pais
+  ) {
+    limparSelecoes();
+  }
+
+  document.querySelectorAll('.bandeira').forEach(b => {
+    b.classList.remove('active');
+  });
+
+  elemento.classList.add('active');
 
       // Carregar clientes
       const clientes = [...new Set(
@@ -1748,14 +1836,8 @@ menuPacote.innerHTML = '';
 
 });
 
-      // Limpar resultado
-      const resultado = getResultado();
-      if (resultado) resultado.style.display = 'none';
-
-      document.querySelectorAll('.top-bar').forEach(el => el.classList.remove('scrolled'));
       atualizarBarraPacotes();
-      atualizarEstadoInicial();
-    }
+atualizarEstadoInicial();
 
     // ===== BARRA DE PACOTES =====
     function atualizarBarraPacotes() {
