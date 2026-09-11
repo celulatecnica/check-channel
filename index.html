@@ -253,6 +253,7 @@
 .seletor-regiao-icone {
   width: 25px;
   height: 25px;
+  flex: 0 0 25px;
   object-fit: contain;
   filter: brightness(0) invert(1);
 }
@@ -285,12 +286,24 @@
   display: flex;
   align-items: center;
   gap: 18px;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .seletor-regiao-texto {
+  display: block;
+  min-width: 0;
+  flex: 1;
+
   font-size: 16px;
   color: #E4E7EB;
   font-weight: 500;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
 }
 
 .seletor-regiao-seta {
@@ -487,12 +500,16 @@
 
 .grid-pacotes {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 290px);
+  justify-content: center;
   gap: 24px;
   align-items: start;
 }
 
 .card-pacote {
+  width: 290px;
+  min-width: 290px;
+  max-width: 290px;
   min-height:296px;
   height: auto;
   padding: 28px;
@@ -587,6 +604,7 @@
 
 .texto-pacote {
   flex: 1;
+  min-width: 0;
   text-align: left;
 }
 
@@ -941,8 +959,10 @@ select:focus {
 
 .seletor-custom {
   width: 100%;
+  min-width: 0;
   height: 55px;
   position: relative;
+  overflow: hidden;
   background: linear-gradient(
     180deg,
     rgba(34,38,44,1) 0%,
