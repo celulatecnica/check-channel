@@ -1388,6 +1388,7 @@ function parseCsvTextoParaDados(texto) {
     function inicializar() {
       carregarBandeiras();
       prepararDropdownCliente1();
+      prepararDropdownPacote1();
       prepararEventosSelects();
       atualizarBarraPacotes();
       atualizarEstadoInicial();
@@ -1400,6 +1401,24 @@ function parseCsvTextoParaDados(texto) {
 
     const menu =
         document.getElementById('menuCliente1');
+
+    if (!seletor || !menu) return;
+
+    seletor.addEventListener('click', () => {
+
+        menu.classList.toggle('aberto');
+
+    });
+
+}
+
+    function prepararDropdownPacote1() {
+
+    const seletor =
+        document.getElementById('pacote1');
+
+    const menu =
+        document.getElementById('menuPacote1');
 
     if (!seletor || !menu) return;
 
@@ -1593,6 +1612,59 @@ clientes
     ).textContent = cliente;
 
     document.getElementById('cliente1').dataset.valor = cliente;
+          
+    const pais =
+    document.querySelector('.bandeira.active')
+    ?.dataset.pais;
+
+const pacotes = [...new Set(
+    dados
+        .filter(d =>
+            normalizarChave(d.pais) === normalizarChave(pais) &&
+            d.cliente === cliente
+        )
+        .map(d => d.pacote)
+        .filter(Boolean)
+)].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
+    const menuPacote =
+    document.getElementById('menuPacote1');
+
+menuPacote.innerHTML = '';
+
+    pacotes.forEach(pacote => {
+    
+    const opcaoPacote =
+        document.createElement('div');
+
+    opcaoPacote.className =
+        'opcao-custom';
+
+    opcaoPacote.textContent =
+        pacote;
+
+    menuPacote.appendChild(
+        opcaoPacote
+    );
+    opcaoPacote.addEventListener('click', () => {
+
+    document.querySelector(
+        '#pacote1 .seletor-regiao-texto'
+    ).textContent = pacote;
+
+    document.getElementById('pacote1')
+        .dataset.valor = pacote;
+
+    menuPacote.classList.remove(
+        'aberto'
+    );
+
+    gerarResultado();
+    atualizarBarraPacotes();
+
+});
+});
+    
     selecionarPais(
     document.querySelector('.bandeira.active').dataset.pais,
     document.querySelector('.bandeira.active')
@@ -1630,7 +1702,7 @@ clientes
         if (!clienteSelect || !pacoteSelect || !headerFixo || !totalFixo) return;
 
         const cliente = clienteSelect.dataset.valor || '';
-        const pacote = pacoteSelect.value;
+        const pacote = pacoteSelect.dataset.valor || '';
 
         if (!pais || !cliente || !pacote) {
           [headerFixo, headerEst].forEach(el => {
