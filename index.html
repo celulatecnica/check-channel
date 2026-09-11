@@ -1430,7 +1430,15 @@ function abrirMenuSePossuirOpcoes(idSeletor, idMenu) {
 
         if (!menu.children.length) return;
 
-        menu.classList.toggle('aberto');
+        const menuJaEstavaAberto = menu.classList.contains('aberto');
+
+        document.querySelectorAll('.menu-custom.aberto').forEach(outroMenu => {
+            outroMenu.classList.remove('aberto');
+        });
+
+        if (!menuJaEstavaAberto) {
+            menu.classList.add('aberto');
+        }
 
     });
 
