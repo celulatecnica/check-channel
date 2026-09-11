@@ -1562,11 +1562,11 @@ renderizarPaises(regiaoAtual);
         const pacoteSelect = getElementoSeguro(`pacote${i}`);
 
         if (clienteSelect) {
-          clienteSelect.innerHTML = '<option value="" disabled selected>Selecciona el tipo de cliente</option>';
+          clienteSelect.innerHTML = '<option value="" disabled selected>Tipo de cliente</option>';
           clienteSelect.classList.remove('ativo');
         }
         if (pacoteSelect) {
-          pacoteSelect.innerHTML = '<option value="" disabled selected>Selecciona el paquete</option>';
+          pacoteSelect.innerHTML = '<option value="" disabled selected>Paquete</option>';
           pacoteSelect.classList.remove('ativo');
         }
       });
@@ -1923,7 +1923,7 @@ dados
             )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
             if (selectPacote) {
-              selectPacote.innerHTML = '<option value="" disabled selected>Selecciona el paquete</option>';
+              selectPacote.innerHTML = '<option value="" disabled selected>Paquete</option>';
               selectPacote.classList.remove('ativo');
               pacotes.forEach(p => {
                 const option = document.createElement('option');
