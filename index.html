@@ -1860,115 +1860,45 @@ function selecionarPais(pais, elemento) {
       return;
     }
 
+    seletorCliente.dataset.valor = '';
+    seletorPacote.dataset.valor = '';
+
+    const textoCliente = seletorCliente.querySelector(
+      '.seletor-regiao-texto'
+    );
+
+    const textoPacote = seletorPacote.querySelector(
+      '.seletor-regiao-texto'
+    );
+
+    if (textoCliente) {
+      textoCliente.textContent = 'Tipo de cliente';
+    }
+
+    if (textoPacote) {
+      textoPacote.textContent = 'Paquete';
+    }
+
+    menuCliente.classList.remove('aberto');
+    menuPacote.classList.remove('aberto');
+
     menuCliente.innerHTML = '';
     menuPacote.innerHTML = '';
 
     clientes.forEach(cliente => {
 
-  const opcaoCliente = document.createElement('div');
+      const opcaoCliente = document.createElement('div');
 
-  opcaoCliente.className = 'opcao-custom';
-  opcaoCliente.textContent = cliente;
+      opcaoCliente.className = 'opcao-custom';
+      opcaoCliente.textContent = cliente;
 
-  opcaoCliente.addEventListener('click', () => {
-    selecionarClienteNoCard(
-      i,
-      cliente,
-      pais,
-      clientes
-    );
-  });
-
-  menuCliente.appendChild(opcaoCliente);
-});
-
-  const textoCliente = seletorCliente.querySelector(
-    '.seletor-regiao-texto'
-  );
-
-  if (textoCliente) {
-    textoCliente.textContent = cliente;
-  }
-
-  menuCliente.classList.remove('aberto');
-
-  menuCliente.innerHTML = '';
-
-  clientes
-    .filter(outroCliente => outroCliente !== cliente)
-    .forEach(outroCliente => {
-
-      const novaOpcaoCliente = document.createElement('div');
-
-      novaOpcaoCliente.className = 'opcao-custom';
-      novaOpcaoCliente.textContent = outroCliente;
-
-      novaOpcaoCliente.addEventListener('click', () => {
+      opcaoCliente.addEventListener('click', () => {
         selecionarClienteNoCard(
           i,
-          outroCliente,
+          cliente,
           pais,
           clientes
         );
-      });
-
-      menuCliente.appendChild(novaOpcaoCliente);
-    });
-
-        // Limpa o pacote anteriormente selecionado neste card
-        seletorPacote.dataset.valor = '';
-
-        const textoPacote = seletorPacote.querySelector(
-          '.seletor-regiao-texto'
-        );
-
-        if (textoPacote) {
-          textoPacote.textContent = 'Paquete';
-        }
-
-        menuPacote.classList.remove('aberto');
-        menuPacote.innerHTML = '';
-
-        const pacotes = [...new Set(
-          dados
-            .filter(d =>
-              normalizarChave(d.pais) === normalizarChave(pais) &&
-              d.cliente === cliente
-            )
-            .map(d => d.pacote)
-            .filter(Boolean)
-        )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
-
-        pacotes.forEach(pacote => {
-
-          const opcaoPacote = document.createElement('div');
-
-          opcaoPacote.className = 'opcao-custom';
-          opcaoPacote.textContent = pacote;
-
-          opcaoPacote.addEventListener('click', () => {
-
-            seletorPacote.dataset.valor = pacote;
-
-            const textoPacoteSelecionado = seletorPacote.querySelector(
-              '.seletor-regiao-texto'
-            );
-
-            if (textoPacoteSelecionado) {
-              textoPacoteSelecionado.textContent = pacote;
-            }
-
-            menuPacote.classList.remove('aberto');
-
-            atualizarBarraPacotes();
-            gerarResultado();
-          });
-
-          menuPacote.appendChild(opcaoPacote);
-        });
-
-        atualizarBarraPacotes();
-        gerarResultado();
       });
 
       menuCliente.appendChild(opcaoCliente);
