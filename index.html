@@ -2021,11 +2021,19 @@ if (i === 2) {
     textoCliente.textContent = cliente;
   }
 
-  menuCliente.classList.remove('aberto');
-  menuCliente.innerHTML = '';
+menuCliente.classList.remove('aberto');
+menuCliente.innerHTML = '';
+
+const clienteEhDGO =
+  normalizarChave(cliente) === 'DGO';
+
+if (!clienteEhDGO) {
 
   clientes
-    .filter(outroCliente => outroCliente !== cliente)
+    .filter(outroCliente =>
+      normalizarChave(outroCliente) !== normalizarChave(cliente) &&
+      normalizarChave(outroCliente) !== 'DGO'
+    )
     .forEach(outroCliente => {
 
       const opcaoCliente = document.createElement('div');
@@ -2044,6 +2052,7 @@ if (i === 2) {
 
       menuCliente.appendChild(opcaoCliente);
     });
+}
 
   seletorPacote.dataset.valor = '';
 
