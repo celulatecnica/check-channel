@@ -1717,126 +1717,130 @@ renderizarPaises(regiaoAtual);
 
 
     // ===== SELEÇÃO DE PAÍS =====
-    function selecionarPais(pais, elemento) {
+function selecionarPais(pais, elemento) {
 
   const paisAtual = document.querySelector('.bandeira.active');
 
-  if (
-    paisAtual &&
-    paisAtual.dataset.pais !== pais
-  ) {
+  if (paisAtual && paisAtual.dataset.pais !== pais) {
     limparSelecoes();
   }
 
-  document.querySelectorAll('.bandeira').forEach(b => {
-    b.classList.remove('active');
+  document.querySelectorAll('.bandeira').forEach(bandeira => {
+    bandeira.classList.remove('active');
   });
 
   elemento.classList.add('active');
 
-      // Carregar clientes
-      const clientes = [...new Set(
-        dados
-          .filter(d => normalizarChave(d.pais) === normalizarChave(pais))
-          .map(d => d.cliente)
-          .filter(Boolean)
-      )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
-
-[1, 2, 3].forEach(i => {
-
-    const menu = getElementoSeguro(`menuCliente${i}`);
-
-    if (!menu) return;
-
-    menu.innerHTML = '';
-
-    const clienteSelecionado =
-    document.getElementById('cliente1')
-    ?.dataset.valor || '';
-
-clientes
-    .filter(cliente => cliente !== clienteSelecionado)
-    .forEach(cliente => {
-
-        const opcao = document.createElement('div');
-
-        opcao.className = 'opcao-custom';
-
-        opcao.textContent = cliente;
-
-        opcao.addEventListener('click', () => {
-
-    document.querySelector(
-        '#cliente1 .seletor-regiao-texto'
-    ).textContent = cliente;
-
-    document.getElementById('cliente1').dataset.valor = cliente;
-          
-    const pais =
-    document.querySelector('.bandeira.active')
-    ?.dataset.pais;
-
-const pacotes = [...new Set(
+  const clientes = [...new Set(
     dados
-        .filter(d =>
-            normalizarChave(d.pais) === normalizarChave(pais) &&
-            d.cliente === cliente
-        )
-        .map(d => d.pacote)
-        .filter(Boolean)
-)].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+      .filter(d =>
+        normalizarChave(d.pais) === normalizarChave(pais)
+      )
+      .map(d => d.cliente)
+      .filter(Boolean)
+  )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
-    const menuPacote =
-    document.getElementById('menuPacote1');
+  [1, 2, 3].forEach(i => {
 
-menuPacote.innerHTML = '';
+    const seletorCliente = document.getElementById(`cliente${i}`);
+    const seletorPacote = document.getElementById(`pacote${i}`);
+    const menuCliente = document.getElementById(`menuCliente${i}`);
+    const menuPacote = document.getElementById(`menuPacote${i}`);
 
-    pacotes.forEach(pacote => {
-    
-    const opcaoPacote =
-        document.createElement('div');
+    if (
+      !seletorCliente ||
+      !seletorPacote ||
+      !menuCliente ||
+      !menuPacote
+    ) {
+      return;
+    }
 
-    opcaoPacote.className =
-        'opcao-custom';
+    menuCliente.innerHTML = '';
+    menuPacote.innerHTML = '';
 
-    opcaoPacote.textContent =
-        pacote;
+    clientes.forEach(cliente => {
 
-    menuPacote.appendChild(
-        opcaoPacote
-    );
-    opcaoPacote.addEventListener('click', () => {
+      const opcaoCliente = document.createElement('div');
 
-    document.querySelector(
-        '#pacote1 .seletor-regiao-texto'
-    ).textContent = pacote;
+      opcaoCliente.className = 'opcao-custom';
+      opcaoCliente.textContent = cliente;
 
-    document.getElementById('pacote1')
-        .dataset.valor = pacote;
+      opcaoCliente.addEventListener('click', () => {
 
-    menuPacote.classList.remove(
-        'aberto'
-    );
+        seletorCliente.dataset.valor = cliente;
 
-    gerarResultado();
-    atualizarBarraPacotes();
+        const textoCliente = seletorCliente.querySelector(
+          '.seletor-regiao-texto'
+        );
 
-});
-});
-    
-    selecionarPais(
-    document.querySelector('.bandeira.active').dataset.pais,
-    document.querySelector('.bandeira.active')
-);
-    menu.classList.remove('aberto');
+        if (textoCliente) {
+          textoCliente.textContent = cliente;
+        }
 
-});
-        menu.appendChild(opcao);
+        menuCliente.classList.remove('aberto');
+
+        // Limpa o pacote anteriormente selecionado neste card
+        seletorPacote.dataset.valor = '';
+
+        const textoPacote = seletorPacote.querySelector(
+          '.seletor-regiao-texto'
+        );
+
+        if (textoPacote) {
+          textoPacote.textContent = 'Paquete';
+        }
+
+        menuPacote.classList.remove('aberto');
+        menuPacote.innerHTML = '';
+
+        const pacotes = [...new Set(
+          dados
+            .filter(d =>
+              normalizarChave(d.pais) === normalizarChave(pais) &&
+              d.cliente === cliente
+            )
+            .map(d => d.pacote)
+            .filter(Boolean)
+        )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
+        pacotes.forEach(pacote => {
+
+          const opcaoPacote = document.createElement('div');
+
+          opcaoPacote.className = 'opcao-custom';
+          opcaoPacote.textContent = pacote;
+
+          opcaoPacote.addEventListener('click', () => {
+
+            seletorPacote.dataset.valor = pacote;
+
+            const textoPacoteSelecionado = seletorPacote.querySelector(
+              '.seletor-regiao-texto'
+            );
+
+            if (textoPacoteSelecionado) {
+              textoPacoteSelecionado.textContent = pacote;
+            }
+
+            menuPacote.classList.remove('aberto');
+
+            atualizarBarraPacotes();
+            gerarResultado();
+          });
+
+          menuPacote.appendChild(opcaoPacote);
+        });
+
+        atualizarBarraPacotes();
+        gerarResultado();
+      });
+
+      menuCliente.appendChild(opcaoCliente);
     });
+  });
 
-});
-
-       atualizarBarraPacotes();
+  atualizarBarraPacotes();
   atualizarEstadoInicial();
 }
 
