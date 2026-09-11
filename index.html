@@ -1407,14 +1407,38 @@ function parseCsvTextoParaDados(texto) {
       inicializar();
     }
 
+function abrirMenuSePossuirOpcoes(idSeletor, idMenu) {
+
+    const seletor = document.getElementById(idSeletor);
+    const menu = document.getElementById(idMenu);
+
+    if (!seletor || !menu) return;
+
+    seletor.addEventListener('click', () => {
+
+        if (!menu.children.length) return;
+
+        menu.classList.toggle('aberto');
+
+    });
+
+}
+    
     // ===== INICIALIZAÇÃO =====
     function inicializar() {
       carregarBandeiras();
-      prepararDropdownCliente1();
-      prepararDropdownPacote1();
       prepararEventosSelects();
       atualizarBarraPacotes();
       atualizarEstadoInicial();
+
+      abrirMenuSePossuirOpcoes('cliente1', 'menuCliente1');
+abrirMenuSePossuirOpcoes('cliente2', 'menuCliente2');
+abrirMenuSePossuirOpcoes('cliente3', 'menuCliente3');
+
+abrirMenuSePossuirOpcoes('pacote1', 'menuPacote1');
+abrirMenuSePossuirOpcoes('pacote2', 'menuPacote2');
+abrirMenuSePossuirOpcoes('pacote3', 'menuPacote3');
+      
     }
 
     function prepararDropdownCliente1() {
@@ -1437,7 +1461,7 @@ seletor.addEventListener('click', () => {
 
 }
 
-    function prepararDropdownPacote1() {
+function prepararDropdownPacote1() {
 
     const seletor =
         document.getElementById('pacote1');
@@ -1448,6 +1472,8 @@ seletor.addEventListener('click', () => {
     if (!seletor || !menu) return;
 
     seletor.addEventListener('click', () => {
+
+        if (!menu.children.length) return;
 
         menu.classList.toggle('aberto');
 
