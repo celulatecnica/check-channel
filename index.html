@@ -1802,33 +1802,50 @@ function limparCard(i) {
 
   const pais = paisAtivo.dataset.pais;
 
-  const clientes = [...new Set(
-    dados
-      .filter(d =>
-        normalizarChave(d.pais) === normalizarChave(pais)
-      )
-      .map(d => d.cliente)
-      .filter(Boolean)
-  )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+  const clientesDoPais = [...new Set(
+  dados
+    .filter(d =>
+      normalizarChave(d.pais) === normalizarChave(pais)
+    )
+    .map(d => d.cliente)
+    .filter(Boolean)
+)].sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
-  clientes.forEach(cliente => {
+const clientePrincipal =
+  document.getElementById('cliente1')?.dataset.valor || '';
 
-    const opcaoCliente = document.createElement('div');
+const clientePrincipalEhDGO =
+  normalizarChave(clientePrincipal) === 'DGO';
 
-    opcaoCliente.className = 'opcao-custom';
-    opcaoCliente.textContent = cliente;
+const clientesPermitidos =
+  i === 1
+    ? clientesDoPais
+    : clientePrincipalEhDGO
+      ? clientesDoPais.filter(cliente =>
+          normalizarChave(cliente) === 'DGO'
+        )
+      : clientesDoPais.filter(cliente =>
+          normalizarChave(cliente) !== 'DGO'
+        );
 
-    opcaoCliente.addEventListener('click', () => {
-      selecionarClienteNoCard(
-        i,
-        cliente,
-        pais,
-        clientes
-      );
-    });
+clientesPermitidos.forEach(cliente => {
 
-    menuCliente.appendChild(opcaoCliente);
+  const opcaoCliente = document.createElement('div');
+
+  opcaoCliente.className = 'opcao-custom';
+  opcaoCliente.textContent = cliente;
+
+  opcaoCliente.addEventListener('click', () => {
+    selecionarClienteNoCard(
+      i,
+      cliente,
+      pais,
+      clientesPermitidos
+    );
   });
+
+  menuCliente.appendChild(opcaoCliente);
+});
 }
 
 function atualizarEtapasPacotes() {
@@ -1869,6 +1886,104 @@ function atualizarEtapasPacotes() {
       !pacote2Selecionado
     );
   }
+}
+
+function prepararCardComparacao(i) {
+
+  const paisAtivo = document.querySelector('.bandeira.active');
+  const clientePrincipal = document.getElementById('cliente1')?.dataset.valor || '';
+
+  if (!paisAtivo || !clientePrincipal || i === 1) {
+    return;
+  }
+
+  const pais = paisAtivo.dataset.pais;
+
+  const clientesDoPais = [...new Set(
+    dados
+      .filter(d =>
+        normalizarChave(d.pais) === normalizarChave(pais)
+      )
+      .map(d => d.cliente)
+      .filter(Boolean)
+  )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
+  const clientePrincipalEhDGO =
+    normalizarChave(clientePrincipal) === 'DGO';
+
+  if (clientePrincipalEhDGO) {
+
+    selecionarClienteNoCard(
+      i,
+      'DGO',
+      pais,
+      clientesDoPais
+    );
+
+    return;
+  }
+
+  const clientesPermitidos = clientesDoPais.filter(cliente =>
+    normalizarChave(cliente) !== 'DGO'
+  );
+
+  const seletorCliente = document.getElementById(`cliente${i}`);
+  const seletorPacote = document.getElementById(`pacote${i}`);
+  const menuCliente = document.getElementById(`menuCliente${i}`);
+  const menuPacote = document.getElementById(`menuPacote${i}`);
+
+  if (
+    !seletorCliente ||
+    !seletorPacote ||
+    !menuCliente ||
+    !menuPacote
+  ) {
+    return;
+  }
+
+  seletorCliente.dataset.valor = '';
+  seletorPacote.dataset.valor = '';
+
+  const textoCliente = seletorCliente.querySelector(
+    '.seletor-regiao-texto'
+  );
+
+  const textoPacote = seletorPacote.querySelector(
+    '.seletor-regiao-texto'
+  );
+
+  if (textoCliente) {
+    textoCliente.textContent = 'Tipo de cliente';
+  }
+
+  if (textoPacote) {
+    textoPacote.textContent = 'Paquete';
+  }
+
+  menuCliente.classList.remove('aberto');
+  menuPacote.classList.remove('aberto');
+
+  menuCliente.innerHTML = '';
+  menuPacote.innerHTML = '';
+
+  clientesPermitidos.forEach(cliente => {
+
+    const opcaoCliente = document.createElement('div');
+
+    opcaoCliente.className = 'opcao-custom';
+    opcaoCliente.textContent = cliente;
+
+    opcaoCliente.addEventListener('click', () => {
+      selecionarClienteNoCard(
+        i,
+        cliente,
+        pais,
+        clientesPermitidos
+      );
+    });
+
+    menuCliente.appendChild(opcaoCliente);
+  });
 }
 
 function selecionarClienteNoCard(i, cliente, pais, clientes) {
@@ -1977,10 +2092,14 @@ if (i === 2) {
 if (i === 1) {
   limparCard(2);
   limparCard(3);
+
+  prepararCardComparacao(2);
 }
 
 if (i === 2) {
   limparCard(3);
+
+  prepararCardComparacao(3);
 }
 
 atualizarBarraPacotes();
