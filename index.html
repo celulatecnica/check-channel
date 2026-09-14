@@ -2533,15 +2533,15 @@ function criarImagemTecnologia(tecnologia) {
     normalizarChave(tecnologia);
 
   if (tecnologiaNormalizada === 'SD') {
-    return 'icon_sd.png';
+    return <img src="icon_sd.png" class="info-canal-icone">;
   }
 
   if (tecnologiaNormalizada === 'HD') {
-    return 'icon_hd.png';
+    return <img src="icon_hd.png" class="info-canal-icone">;
   }
 
   if (tecnologiaNormalizada === '4K') {
-    return 'icon_4k.png';
+    return <img src="icon_4k.png" class="info-canal-icone">;
   }
 
   return tecnologia;
