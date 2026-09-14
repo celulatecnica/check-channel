@@ -1701,6 +1701,7 @@ renderizarPaises(regiaoAtual);
  opcao.addEventListener('click', () => {
 
   limparSelecoes();
+  ocultarResultado();
 
   regiaoAtual = regiao;
 
@@ -2026,10 +2027,12 @@ function selecionarClienteNoCard(i, cliente, pais, clientes) {
   if (i === 1) {
   limparCard(2);
   limparCard(3);
+  ocultarResultado();
 }
 
 if (i === 2) {
   limparCard(3);
+  ocultarResultado();
 }
   
   seletorCliente.dataset.valor = cliente;
@@ -2159,7 +2162,8 @@ function selecionarPais(pais, elemento) {
   });
 
   elemento.classList.add('active');
-
+  ocultarResultado();
+  
   const clientes = [...new Set(
     dados
       .filter(d =>
@@ -2360,6 +2364,40 @@ function criarImagemTecnologia(tecnologia) {
   return `
     <img src="icon_${nomeArquivo}.png" class="info-canal-icone">
   `;
+}
+    
+function ocultarResultado() {
+
+  const resultado = document.getElementById('resultado');
+
+  if (resultado) {
+    resultado.innerHTML = '';
+    resultado.style.display = 'none';
+  }
+
+  const barraEstatica =
+    document.getElementById('barraPacotesEstatica');
+
+  if (barraEstatica) {
+    barraEstatica.style.display = 'none';
+  }
+
+  const linhaSeparadora =
+    document.querySelector('.linha-separadora-pacotes');
+
+  if (linhaSeparadora) {
+    linhaSeparadora.style.display = 'none';
+  }
+
+  const barraPacotes =
+    document.getElementById('topbarPacotes');
+
+  if (barraPacotes) {
+    barraPacotes.classList.remove('visible');
+  }
+
+  atualizarBarraPacotes();
+  atualizarEstadoInicial();
 }
     
     function gerarResultado() {  
