@@ -741,16 +741,14 @@ select:focus {
     /* ===== RESULTADO - ESTRUTURA ===== */
 .resultado-wrapper {
   width: calc(100vw - 64px);
-  max-width: 1600px;
-  margin: auto;
-  padding: 0 16px;
+  max-width: none;
+  margin: 0;
+  padding: 0 32px;
 }
 
 .resultado-header {
-  display: grid;
-  grid-template-columns: 1fr 220px;
+  width: 100%;
   margin-top: 47px;
-  gap: 24px;
 }
 
     .resultado-header-esquerda {
@@ -2597,19 +2595,11 @@ const base = Array.from(mapaBase.entries())
       resultado.innerHTML = `
         <div class="topo-branco"></div>
         <div class="resultado-wrapper">
-          <div class="resultado-header">
-            <div class="resultado-header-esquerda">
-              <div class="bloco-titulo">Canales por tecnología</div>
-            </div>
-            <div class="resultado-header-direita">
-              <div class="coluna-pacote-header">
-              </div>
-              <div class="coluna-pacote-header">
-              </div>
-              <div class="coluna-pacote-header">
-              </div>
-            </div>
-          </div>
+        <div class="resultado-header">
+    <div class="bloco-titulo">
+        Canales por tecnología
+    </div>
+</div>
           <div id="resumoTecnologia"></div>
 <div class="lista-canais-titulo">
   Lista de canales
