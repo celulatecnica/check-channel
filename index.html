@@ -802,10 +802,19 @@ select:focus {
 }
 
 .resumo-coluna {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   text-align: center;
   font-size: 15px;
   font-weight: 600;
   color: #6E7686;
+
+  white-space: normal;
+  overflow-wrap: break-word;
+  line-height: 1.3;
+  padding: 0 6px;
 }
 
 .resumo-coluna.ativa {
@@ -817,7 +826,7 @@ select:focus {
   content: "";
   position: absolute;
   left: 50%;
-  bottom: -10px;
+  bottom: -14px;
   width: 42px;
   height: 4px;
   transform: translateX(-50%);
