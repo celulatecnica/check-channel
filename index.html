@@ -1244,26 +1244,7 @@ grid-template-columns:
     </div>
   </div>
 
-  <!-- ✅ BARRA 3 - PACOTES SELECIONADOS -->
-  <div class="top-bar top-bar-pacotes" id="topbarPacotes">
-    <div class="top-bar-inner top-bar-pacotes-inner">
-      <div></div>
-      <div class="pacote-resumo-bloco">
-        <div class="pacote-resumo vazio" id="pacoteHeader1">Paquete</div>
-        <div class="pacote-total vazio" id="pacoteTotal1">0 canale(s)</div>
-      </div>
-      <div class="pacote-resumo-bloco">
-        <div class="pacote-resumo vazio" id="pacoteHeader2">Paquete</div>
-        <div class="pacote-total vazio" id="pacoteTotal2">0 canale(s)</div>
-      </div>
-      <div class="pacote-resumo-bloco">
-        <div class="pacote-resumo vazio" id="pacoteHeader3">Paquete</div>
-        <div class="pacote-total vazio" id="pacoteTotal3">0 canale(s)</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ✅ BANNER -->
+    <!-- ✅ BANNER -->
   <img id="banner" src="banner.png" alt="Banner">
 
   <!-- ✅ CONTEÚDO PRINCIPAL -->
@@ -2430,8 +2411,11 @@ function atualizarBarraPacotes() {      const paisAtivo = document.querySelector
       [1, 2, 3].forEach(i => {
         const clienteSelect = getElementoSeguro(`cliente${i}`);
         const pacoteSelect = getElementoSeguro(`pacote${i}`);
-        const headerFixo = getElementoSeguro(`pacoteHeader${i}`);
-        const totalFixo = getElementoSeguro(`pacoteTotal${i}`);
+        const headerFixo =
+    document.getElementById(`pacoteHeader${i}`);
+
+const totalFixo =
+    document.getElementById(`pacoteTotal${i}`);
         const headerEst = getElementoSeguro(`pacoteHeaderEst${i}`);
         const totalEst = getElementoSeguro(`pacoteTotalEst${i}`);
 
