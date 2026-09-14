@@ -673,13 +673,9 @@ select:focus {
 }
 
     /* ===== BARRA ESTÁTICA (visível antes do resultado) ===== */
-    .barra-pacotes-estatica {
-      display: none;
-      width: 100%;
-      height: 130px;
-      background: #0F0F0F;
-      border-bottom: 1px solid #4D4D4D;
-    }
+ .barra-pacotes-estatica {
+  display: none !important;
+}
 
     /* ===== ESPAÇADORES ===== */
     .topo-preto {
@@ -2784,8 +2780,6 @@ const totalPacotePrincipal =
       }
 
       resultado.style.display = 'block';
-      getElementoSeguro('barraPacotesEstatica').style.display = 'block';
-      document.querySelector('.linha-separadora-pacotes').style.display = 'block';
 
       atualizarBarraPacotes();
       atualizarEstadoInicial();
