@@ -740,8 +740,8 @@ select:focus {
 
     /* ===== RESULTADO - ESTRUTURA ===== */
 .resultado-wrapper {
-  width: 1280px;
-  max-width: calc(100% - 32px);
+  width: calc(100vw - 64px);
+  max-width: 1600px;
   margin: auto;
   padding: 0 16px;
 }
@@ -817,7 +817,7 @@ select:focus {
 
     .linha-tecnologia {
       display: grid;
-      grid-template-columns: 55% 15% 15% 15%;
+      grid-template-columns: 1fr 140px 140px 140px;
       align-items: center;
       min-height: 56px;
       border-bottom: 1px solid #E5E5E5;
@@ -853,7 +853,7 @@ select:focus {
 
     .cabecalho-tecnologia {
   display: grid;
-  grid-template-columns: 55% 15% 15% 15%;
+  grid-template-columns: 1fr 140px 140px 140px;
   min-height: 50px;
   align-items: center;
   background: #F7F8FA;
@@ -888,13 +888,14 @@ select:focus {
     .cabecalho-canais {
   display: grid;
   grid-template-columns:
-      80px
-      1fr
-      180px
-      120px
-      140px
-      140px
-      140px;
+grid-template-columns:
+    70px
+    minmax(350px, 1fr)
+    180px
+    120px
+    140px
+    140px
+    140px;
 
   min-height: 48px;
   align-items: center;
@@ -915,8 +916,8 @@ select:focus {
   display: grid;
 
   grid-template-columns:
-      80px
-      1fr
+      70px
+      minmax(350px, 1fr)
       180px
       120px
       140px
@@ -924,11 +925,8 @@ select:focus {
       140px;
 
   align-items: center;
-
   min-height: 48px;
-
   border-bottom: 1px solid #E5E5E5;
-
   padding: 0 16px;
 }
 
