@@ -70,15 +70,9 @@
     }
 
     /* BARRA 3 - Pacotes selecionados */
-    .top-bar-pacotes {
-      top: 100px;
-      height: 130px;
-      background: rgba(15, 15, 15, 0.95);
-      border-bottom: 1px solid #4D4D4D;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.15s linear;
-    }
+.top-bar-pacotes {
+  display: none !important;
+}
 
     .top-bar-pacotes.visible {
       opacity: 1;
@@ -2865,7 +2859,6 @@ dados
     // ===== SCROLL HANDLER =====
     function atualizarEstadoCabecalho() {
       const topbars = document.querySelectorAll('.top-bar');
-      const barraPacotes = getElementoSeguro('topbarPacotes');
 
       if (!resultadoVisivel()) {
         topbars.forEach(el => el.classList.remove('scrolled'));
@@ -2878,7 +2871,6 @@ dados
       const triggerClaro = resultado.offsetTop - 100;
 
       const barraEstatica = getElementoSeguro('barraPacotesEstatica');
-      const triggerPacotes = barraEstatica ? barraEstatica.offsetTop - 100 : Infinity;
 
       if (y >= triggerClaro) {
         topbars.forEach(el => el.classList.add('scrolled'));
@@ -2886,13 +2878,6 @@ dados
         topbars.forEach(el => el.classList.remove('scrolled'));
       }
 
-      if (barraPacotes) {
-        if (y >= triggerPacotes) {
-          barraPacotes.classList.add('visible');
-        } else {
-          barraPacotes.classList.remove('visible');
-        }
-      }
     }
 
     function calcularLimiteInicial() {
@@ -2915,7 +2900,6 @@ dados
           const scrollY = lastScrollY;
           const topMain = getElementoSeguro('topbarMain');
           const topSub = getElementoSeguro('topbarSub');
-          const topPacotes = getElementoSeguro('topbarPacotes');
 
           let progresso = scrollY / 70;
           if (progresso > 1) progresso = 1;
@@ -2923,8 +2907,7 @@ dados
 
           if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
           if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
-          if (topPacotes) topPacotes.style.transform = 'translateY(-50px)';
-
+   
           atualizarEstadoCabecalho();
           ticking = false;
         });
