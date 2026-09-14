@@ -2531,13 +2531,13 @@ function criarImagemTecnologia(tecnologia) {
   const tecnologiaNormalizada = normalizarChave(tecnologia);
 
   if (tecnologiaNormalizada === 'SD') {
-    return <img src="icon_sd.png" className="info-canal-icone" alt="SD" />;
+    return '<img class="icone-tecnologia" src="icon_sd.png" alt="SD">';
   }
   if (tecnologiaNormalizada === 'HD') {
-    return <img src="icon_hd.png" className="info-canal-icone" alt="HD" />;
+    return '<img class="icone-tecnologia" src="icon_sd.png" alt="SD">';
   }
   if (tecnologiaNormalizada === '4K') {
-    return <img src="icon_4k.png" className="info-canal-icone" alt="4K" />;
+    return '<img class="icone-tecnologia" src="icon_sd.png" alt="SD">';
   }
 
   return tecnologia;
