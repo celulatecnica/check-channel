@@ -2528,19 +2528,23 @@ const totalFixo =
     }
 
 function criarImagemTecnologia(tecnologia) {
-  const tecnologiaNormalizada = normalizarChave(tecnologia);
 
-  const tecnologiasComIcone = ['SD', 'HD', '4K'];
+  const tecnologiaNormalizada =
+    normalizarChave(tecnologia);
 
-  if (!tecnologiasComIcone.includes(tecnologiaNormalizada)) {
-    return '';
+  if (tecnologiaNormalizada === 'SD') {
+    return 'icon_sd.png';
   }
 
-  const nomeArquivo = tecnologiaNormalizada.toLowerCase();
+  if (tecnologiaNormalizada === 'HD') {
+    return 'icon_hd.png';
+  }
 
-  return `
-    <img src="icon_${nomeArquivo}.png" class="info-canal-icone">
-  `;
+  if (tecnologiaNormalizada === '4K') {
+    return 'icon_4k.png';
+  }
+
+  return tecnologia;
 }
     
 function ocultarResultado() {
@@ -2783,19 +2787,19 @@ const nomePacote3 =
 
           const chaveRef = chaveCanal(ref);
         linha.innerHTML = `
-  <div class="info-canal-vc">
-    ${ref.vc}
-  </div>
+ <div class="info-canal-vc">
+  ${ref.vc}
+</div>
 
-  <div class="info-canal-nome">
-    ${ref.canal}
-  </div>
+<div class="info-canal-nome">
+  ${ref.canal}
+</div>
 
-  <div class="info-canal-categoria">
-    ${ref.categoria}
-  </div>
+<div class="info-canal-categoria">
+  ${ref.categoria}
+</div>
 
-  <div class="info-canal-tecnologia">
+<div class="info-canal-tecnologia">
   ${criarImagemTecnologia(ref.tecnologia)}
 </div>
 `;
