@@ -739,19 +739,19 @@ select:focus {
     }
 
     /* ===== RESULTADO - ESTRUTURA ===== */
-    .resultado-wrapper {
-      width: 950px;
-      max-width: calc(100% - 32px);
-      margin: auto;
-      padding: 0 16px;
-    }
+.resultado-wrapper {
+  width: 1280px;
+  max-width: calc(100% - 32px);
+  margin: auto;
+  padding: 0 16px;
+}
 
-    .resultado-header {
-      display: grid;
-      grid-template-columns: 50% 50%;
-      margin-top: 47px;
-      gap: 24px;
-    }
+.resultado-header {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  margin-top: 47px;
+  gap: 24px;
+}
 
     .resultado-header-esquerda {
       text-align: left;
@@ -785,10 +785,35 @@ select:focus {
       margin-top: 4px;
     }
 
+    .resumo-pacote-card {
+  background: #F7F8FA;
+  border: 1px solid #E5E5E5;
+  border-radius: 14px;
+  padding: 24px;
+  min-height: 180px;
+  text-align: left;
+}
+
+.resumo-pacote-total {
+  font-size: 42px;
+  font-weight: 700;
+  color: #1D1D1F;
+  margin-bottom: 10px;
+}
+
+.resumo-pacote-texto {
+  font-size: 15px;
+  line-height: 1.5;
+  color: #6E6E73;
+}
+    
     /* ===== RESUMO POR TECNOLOGIA ===== */
-    #resumoTecnologia {
-      margin-top: 32px;
-    }
+#resumoTecnologia {
+  margin-top: 32px;
+  border: 1px solid #E5E5E5;
+  border-radius: 12px;
+  overflow: hidden;
+}
 
     .linha-tecnologia {
       display: grid;
@@ -826,6 +851,27 @@ select:focus {
       color: #1D1D1F;
     }
 
+    .cabecalho-tecnologia {
+  display: grid;
+  grid-template-columns: 55% 15% 15% 15%;
+  min-height: 50px;
+  align-items: center;
+  background: #F7F8FA;
+  border-bottom: 1px solid #E5E5E5;
+}
+
+.cabecalho-tecnologia div {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6E6E73;
+}
+
+.cabecalho-tecnologia div:first-child {
+  text-align: left;
+  padding-left: 20px;
+}
+    
     /* ===== LISTA DE CANAIS ===== */
     .lista-canais-titulo {
       margin: 60px 0 24px;
@@ -839,13 +885,52 @@ select:focus {
       margin-top: 12px;
     }
 
-    .linha-canal-nova {
-      display: grid;
-      grid-template-columns: 55% 15% 15% 15%;
-      align-items: center;
-      min-height: 30px;
-      border-bottom: 1px solid #E5E5E5;
-    }
+    .cabecalho-canais {
+  display: grid;
+  grid-template-columns:
+      80px
+      1fr
+      180px
+      120px
+      140px
+      140px
+      140px;
+
+  min-height: 48px;
+  align-items: center;
+
+  background: #F4F6F8;
+
+  border-radius: 10px 10px 0 0;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  color: #6E6E73;
+
+  padding: 0 16px;
+}
+    
+.linha-canal-nova {
+  display: grid;
+
+  grid-template-columns:
+      80px
+      1fr
+      180px
+      120px
+      140px
+      140px
+      140px;
+
+  align-items: center;
+
+  min-height: 48px;
+
+  border-bottom: 1px solid #E5E5E5;
+
+  padding: 0 16px;
+}
 
     .info-canal {
       display: flex;
@@ -2308,7 +2393,14 @@ function atualizarBarraPacotes() {      const paisAtivo = document.querySelector
       const resumo = getElementoSeguro('resumoTecnologia');
       if (!resumo) return;
 
-      resumo.innerHTML = '';
+      resumo.innerHTML = `
+<div class="cabecalho-tecnologia">
+  <div></div>
+  <div>Paquete principal</div>
+  <div>Comparación 1</div>
+  <div>Comparación 2</div>
+</div>
+`;
 
       TECNOLOGIAS.forEach(tecnologia => {
         const linha = document.createElement('div');
@@ -2505,8 +2597,21 @@ const base = Array.from(mapaBase.entries())
             </div>
           </div>
           <div id="resumoTecnologia"></div>
-          <div class="lista-canais-titulo">Lista de canales</div>
-          <div id="listaCanais"></div>
+<div class="lista-canais-titulo">
+  Lista de canales
+</div>
+
+<div class="cabecalho-canais">
+  <div>#</div>
+  <div>Canal</div>
+  <div>Género</div>
+  <div>Tecnología</div>
+  <div>Paquete principal</div>
+  <div>Comparación 1</div>
+  <div>Comparación 2</div>
+</div>
+
+<div id="listaCanais"></div>
         </div>
         <div class="topo-branco-inferior"></div>
       `;
