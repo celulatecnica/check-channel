@@ -741,6 +741,53 @@ select:focus {
   width: 1912px;
   margin: 0;
   padding: 0 250px;
+
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 24px;
+  align-items: start;
+}
+
+.card-resumo-pacote {
+  background: #FFFFFF;
+  border: 1px solid #E8EAF0;
+  border-radius: 16px;
+
+  padding: 28px;
+
+  min-height: 260px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.card-resumo-icone {
+  width: 42px;
+  height: 42px;
+  margin-bottom: 20px;
+}
+
+.card-resumo-total {
+  font-size: 52px;
+  font-weight: 700;
+  line-height: 1;
+  color: #1D1D1F;
+
+  margin-bottom: 10px;
+}
+
+.card-resumo-titulo {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1D1D1F;
+
+  margin-bottom: 20px;
+}
+
+.card-resumo-texto {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #7D8593;
 }
 
 .resultado-header {
@@ -2629,11 +2676,13 @@ const base = Array.from(mapaBase.entries())
       .localeCompare(normalizarTexto(itemB.canal), 'pt-BR');
   })
   .map(entry => entry[1]);
-
+const totalPacotePrincipal =
+    mapasPacotes[0].size;
       // Renderizar resultado
       resultado.innerHTML = `
         <div class="topo-branco"></div>
         <div class="resultado-wrapper">
+        <div class="resultado-conteudo">
         <div class="resultado-header">
 
     <div class="resumo-superior">
@@ -2685,6 +2734,25 @@ const base = Array.from(mapaBase.entries())
 </div>
 
 <div id="listaCanais"></div>
+
+</div>
+<div class="card-resumo-pacote">
+
+    icon_estatistica.png
+
+<div class="card-resumo-total">
+    ${totalPacotePrincipal}
+</div>
+
+    <div class="card-resumo-titulo">
+        canales en este paquete
+    </div>
+
+    <div class="card-resumo-texto">
+        La disponibilidad de canales puede variar según el tipo de cliente y el país.
+    </div>
+
+</div>
         </div>
         <div class="topo-branco-inferior"></div>
       `;
