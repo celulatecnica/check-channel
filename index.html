@@ -720,12 +720,9 @@ select:focus {
     /* ===== RESULTADO (Fundo branco) ===== */
 #resultado {
   display: none;
-
   width: 100vw;
-
   margin-left: calc(50% - 50vw);
-
-  background: #ffffff;
+  background: #FBFCFE;
 }
 
     #resultado::before {
@@ -735,7 +732,7 @@ select:focus {
       transform: translateX(-50%);
       width: 100vw;
       height: 100%;
-      background: #ffffff;
+      background: #FBFCFE;
       z-index: -1;
     }
 
@@ -751,6 +748,46 @@ select:focus {
   margin-top: 47px;
 }
 
+    .resumo-superior {
+  display: grid;
+  grid-template-columns: 1fr 480px;
+  align-items: end;
+  margin-bottom: 12px;
+}
+
+.resumo-titulos {
+  text-align: left;
+}
+
+.resumo-colunas {
+  display: grid;
+  grid-template-columns: 160px 160px 160px;
+}
+
+.resumo-coluna {
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: #6E7686;
+}
+
+.resumo-coluna.ativa {
+  color: #306BFF;
+  position: relative;
+}
+
+.resumo-coluna.ativa::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  width: 42px;
+  height: 3px;
+  transform: translateX(-50%);
+  background: #306BFF;
+  border-radius: 3px;
+}
+    
     .resultado-header-esquerda {
       text-align: left;
     }
@@ -760,6 +797,13 @@ select:focus {
       font-weight: 600;
       color: #1d1d1f;
     }
+
+    .bloco-subtitulo {
+  margin-top: 6px;
+  font-size: 15px;
+  color: #7D8593;
+  font-weight: 400;
+}
 
     .resultado-header-direita {
       display: grid;
@@ -807,8 +851,9 @@ select:focus {
     
     /* ===== RESUMO POR TECNOLOGIA ===== */
 #resumoTecnologia {
-  margin-top: 32px;
-  border: 1px solid #E5E5E5;
+  margin-top: 12px;
+  background: #FFFFFF;
+  border: 1px solid #E8EAF0;
   border-radius: 12px;
   overflow: hidden;
 }
@@ -2405,17 +2450,10 @@ function atualizarBarraPacotes() {      const paisAtivo = document.querySelector
     function gerarResumoTecnologia(mapasPacotes) {
       const resumo = getElementoSeguro('resumoTecnologia');
       if (!resumo) return;
-
-      resumo.innerHTML = `
-<div class="cabecalho-tecnologia">
-  <div></div>
-  <div>Paquete principal</div>
-  <div>Comparación 1</div>
-  <div>Comparación 2</div>
-</div>
-`;
-
-      TECNOLOGIAS.forEach(tecnologia => {
+      
+      resumo.innerHTML = '';
+      
+        TECNOLOGIAS.forEach(tecnologia => {
         const linha = document.createElement('div');
         linha.className = 'linha-tecnologia';
 
@@ -2597,9 +2635,39 @@ const base = Array.from(mapaBase.entries())
         <div class="topo-branco"></div>
         <div class="resultado-wrapper">
         <div class="resultado-header">
-    <div class="bloco-titulo">
-        Canales por tecnología
+
+    <div class="resumo-superior">
+
+        <div class="resumo-titulos">
+
+            <div class="bloco-titulo">
+                Canales por tecnología
+            </div>
+
+            <div class="bloco-subtitulo">
+                Conoce la cantidad de canales disponibles en tu paquete.
+            </div>
+
+        </div>
+
+        <div class="resumo-colunas">
+
+            <div class="resumo-coluna ativa">
+                Paquete principal
+            </div>
+
+            <div class="resumo-coluna">
+                Comparación 1
+            </div>
+
+            <div class="resumo-coluna">
+                Comparación 2
+            </div>
+
+        </div>
+
     </div>
+
 </div>
           <div id="resumoTecnologia"></div>
 <div class="lista-canais-titulo">
