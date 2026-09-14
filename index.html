@@ -994,9 +994,16 @@ select:focus {
     }
 
     #listaCanais {
-      margin-top: 12px;
+      margin-top: 0px;
     }
 
+    .tabela-canais-wrapper {
+  background: #FFFFFF;
+  border: 1px solid #E8EAF0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+    
     .cabecalho-canais {
   display: grid;
 grid-template-columns:
@@ -1013,7 +1020,7 @@ grid-template-columns:
 
   background: #F4F6F8;
 
-  border-radius: 10px 10px 0 0;
+  border-radius: 0;
 
   font-size: 16px;
   font-weight: 600;
@@ -2718,17 +2725,21 @@ const nomePacote3 =
   Lista de canales
 </div>
 
-<div class="cabecalho-canais">
-  <div>#</div>
-  <div>Canal</div>
-  <div>Género</div>
-  <div>Tecnología</div>
-  <div>Paquete principal</div>
-  <div>Comparación 1</div>
-  <div>Comparación 2</div>
-</div>
+<div class="tabela-canais-wrapper">
 
-<div id="listaCanais"></div>
+  <div class="cabecalho-canais">
+    <div>#</div>
+    <div>Canal</div>
+    <div>Género</div>
+    <div>Tecnología</div>
+    <div>Paquete principal</div>
+    <div>Comparación 1</div>
+    <div>Comparación 2</div>
+  </div>
+
+  <div id="listaCanais"></div>
+
+</div>
 
 </div>
 <div class="card-resumo-pacote">
