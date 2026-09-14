@@ -1505,8 +1505,8 @@ grid-template-columns:
 
     const TITULOS_TECNOLOGIA = {
       SD: '<strong>Canales SD</strong> (Standard Definition)</span>',
-      HD: '<strong>Canales HD</strong> <span style="font-weight:200;">(High Definition)</span>',
-      '4K': '<strong>Canales 4K</strong> <span style="font-weight:300;">(Ultra HD)</span>',
+      HD: '<strong>Canales HD</strong> (High Definition)</span>',
+      '4K': '<strong>Canales 4K</strong> (Ultra HD)</span>',
       AUDIO: '<strong>Canales de AUDIO</strong>',
       RADIO: '<strong>Canales de RADIO</strong>'
     };
@@ -2652,6 +2652,16 @@ const base = Array.from(mapaBase.entries())
   .map(entry => entry[1]);
 const totalPacotePrincipal =
     mapasPacotes[0].size;
+
+const nomePacote1 =
+    selecionados[0].pacote || 'Paquete principal';
+
+const nomePacote2 =
+    selecionados[1].pacote || 'Comparación 1';
+
+const nomePacote3 =
+    selecionados[2].pacote || 'Comparación 2';
+      
       // Renderizar resultado
       resultado.innerHTML = `
         <div class="topo-branco"></div>
@@ -2673,21 +2683,21 @@ const totalPacotePrincipal =
 
         </div>
 
-        <div class="resumo-colunas">
+<div class="resumo-colunas">
 
-            <div class="resumo-coluna ativa">
-                Paquete principal
-            </div>
+    <div class="resumo-coluna ativa">
+        ${nomePacote1}
+    </div>
 
-            <div class="resumo-coluna">
-                Comparación 1
-            </div>
+    <div class="resumo-coluna">
+        ${nomePacote2}
+    </div>
 
-            <div class="resumo-coluna">
-                Comparación 2
-            </div>
+    <div class="resumo-coluna">
+        ${nomePacote3}
+    </div>
 
-        </div>
+</div>
 
     </div>
 
