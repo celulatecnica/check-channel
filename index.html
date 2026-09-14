@@ -815,13 +815,21 @@ select:focus {
   overflow: hidden;
 }
 
-    .linha-tecnologia {
-      display: grid;
-      grid-template-columns: 1fr 140px 140px 140px;
-      align-items: center;
-      min-height: 56px;
-      border-bottom: 1px solid #E5E5E5;
-    }
+.linha-tecnologia {
+  display: grid;
+
+  grid-template-columns:
+      minmax(600px, 1fr)
+      140px
+      140px
+      140px;
+
+  align-items: center;
+
+  min-height: 56px;
+
+  border-bottom: 1px solid #E5E5E5;
+}
 
       .linha-tecnologia:last-child {
       border-bottom: none;
@@ -851,12 +859,21 @@ select:focus {
       color: #1D1D1F;
     }
 
-    .cabecalho-tecnologia {
+.cabecalho-tecnologia {
   display: grid;
-  grid-template-columns: 1fr 140px 140px 140px;
+
+  grid-template-columns:
+      minmax(600px, 1fr)
+      140px
+      140px
+      140px;
+
   min-height: 50px;
+
   align-items: center;
+
   background: #F7F8FA;
+
   border-bottom: 1px solid #E5E5E5;
 }
 
@@ -887,7 +904,6 @@ select:focus {
 
     .cabecalho-canais {
   display: grid;
-  grid-template-columns:
 grid-template-columns:
     70px
     minmax(350px, 1fr)
@@ -2638,16 +2654,21 @@ const base = Array.from(mapaBase.entries())
           linha.className = 'linha-canal-nova';
 
           const chaveRef = chaveCanal(ref);
-          const info = document.createElement('div');
-          info.className = 'info-canal';
-          info.innerHTML = `
-  <span class="info-canal-vc">${ref.vc}</span>
-  <span class="info-canal-nome">${ref.canal}</span>
-  ${criarImagemTecnologia(ref.tecnologia)}
-  <span class="info-canal-tecnologia">${ref.categoria}</span>
-`;
+        linha.innerHTML = `
+  <div>${ref.vc}</div>
 
-          linha.appendChild(info);
+  <div class="info-canal-nome">
+    ${ref.canal}
+  </div>
+
+  <div>
+    ${ref.categoria}
+  </div>
+
+  <div>
+    ${criarImagemTecnologia(ref.tecnologia)}
+  </div>
+`;
 
           mapasPacotes.forEach(mapa => {
             linha.appendChild(criarStatusPacote(mapa.has(chaveRef)));
