@@ -718,14 +718,15 @@ select:focus {
     }
 
     /* ===== RESULTADO (Fundo branco) ===== */
-    #resultado {
-      display: none;
-      width: 100%;
-      position: relative;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #ffffff;
-    }
+#resultado {
+  display: none;
+
+  width: 100vw;
+
+  margin-left: calc(50% - 50vw);
+
+  background: #ffffff;
+}
 
     #resultado::before {
       content: "";
