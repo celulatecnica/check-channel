@@ -1058,6 +1058,7 @@ select:focus {
 
     .info-canal-nome {
       display: inline-flex;
+      padding-left: 10px;
       align-items: center;
       font-size: 16px;
       font-weight: 600;
@@ -2782,13 +2783,15 @@ const nomePacote3 =
 
           const chaveRef = chaveCanal(ref);
         linha.innerHTML = `
-  <div>${ref.vc}</div>
+  <div class="info-canal-vc">
+    ${ref.vc}
+  </div>
 
   <div class="info-canal-nome">
     ${ref.canal}
   </div>
 
-  <div>
+  <div class="info-canal-categoria">
     ${ref.categoria}
   </div>
 
