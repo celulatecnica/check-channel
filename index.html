@@ -796,7 +796,6 @@ select:focus {
 
     .resumo-superior {
   display: grid;
-  grid-template-columns: 1fr 420px;
   align-items: center;
   margin-bottom: 12px;
 }
@@ -2580,6 +2579,8 @@ function ocultarResultado() {
 );
 
 const qtdPacotes = pacotesAtivos.length;
+const larguraTecnologia =
+  790 + (140 * qtdPacotes);
       const larguraTabelaCanais =
   80 +
   350 +
@@ -2699,9 +2700,22 @@ const nomePacote3 =
         <div class="topo-branco"></div>
         <div class="resultado-wrapper">
         <div class="resultado-conteudo">
-        <div class="resultado-header">
+        <div
+  class="resultado-header"
+  style="
+    width:${larguraTecnologia}px;
+    margin:0 auto;
+  "
+>
 
-    <div class="resumo-superior">
+    <div
+  class="resumo-superior"
+  style="
+     grid-template-columns:
+     790px
+     repeat(${qtdPacotes},140px);
+  "
+>
 
         <div class="resumo-titulos">
 
