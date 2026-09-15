@@ -919,18 +919,6 @@ select:focus {
 
 .linha-tecnologia {
   display: grid;
-
-  grid-template-columns:
-      minmax(400px, 1fr)
-      140px
-      140px
-      140px;
-
-  align-items: center;
-
-  min-height: 48px;
-
-  border-bottom: 1px solid #E5E5E5;
 }
 
       .linha-tecnologia:last-child {
@@ -1015,14 +1003,6 @@ select:focus {
     
     .cabecalho-canais {
   display: grid;
-  grid-template-columns:
-      80px
-      minmax(350px, 1fr)
-      150px
-      140px
-      140px
-      140px
-      140px;
   min-height: 48px;
   align-items: center;
   background: #F4F6F8;
@@ -1034,14 +1014,6 @@ select:focus {
     
 .linha-canal-nova {
   display: grid;
-  grid-template-columns:
-      80px
-      minmax(350px, 1fr)
-      150px
-      140px
-      140px
-      140px
-      140px;
   align-items: center;
   min-height: 48px;
   border-bottom: 1px solid #E5E5E5;
@@ -2496,22 +2468,7 @@ const totalFixo =
 
       const qtdPacotes = mapasPacotes.length;
 
-      const cabecalho = document.createElement('div');
-
-        cabecalho.className = 'cabecalho-tecnologia';
-
-        cabecalho.style.gridTemplateColumns =
-        `minmax(400px,1fr) repeat(${qtdPacotes},140px)`;
-
-        cabecalho.innerHTML = `
-    <div>Tecnología</div>
-    ${Array.from({ length: qtdPacotes })
-      .map((_, i) => `<div>Paquete ${i + 1}</div>`)
-      .join('')}
-`;
-
-resumo.appendChild(cabecalho);
-      
+         
         TECNOLOGIAS.forEach(tecnologia => {
           
         const linha = document.createElement('div');
@@ -2619,6 +2576,14 @@ function ocultarResultado() {
 );
 
 const qtdPacotes = pacotesAtivos.length;
+      const gridCanais =
+`
+80px
+minmax(350px,1fr)
+150px
+140px
+repeat(${qtdPacotes},140px)
+`;
       
       atualizarBarraPacotes();
 
@@ -2754,7 +2719,8 @@ const nomePacote3 =
 
 <div class="tabela-canais-wrapper">
 
-<div class="cabecalho-canais">
+<div class="cabecalho-canais"
+     style="grid-template-columns:${gridCanais}">
   <div>#</div>
   <div class="cabecalho-canal">Canal</div>
   <div class="cabecalho-genero">Género</div>
@@ -2816,7 +2782,7 @@ gerarResumoTecnologia(mapasAtivos);
         base.forEach(ref => {
           const linha = document.createElement('div');
           linha.className = 'linha-canal-nova';
-
+          linha.style.gridTemplateColumns = gridCanais;
           const chaveRef = chaveCanal(ref);
         linha.innerHTML = `
  <div class="info-canal-vc">
