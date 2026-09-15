@@ -2585,18 +2585,10 @@ function ocultarResultado() {
 const qtdPacotes = pacotesAtivos.length;
 const larguraTecnologia =
   790 + (140 * qtdPacotes);
-      const larguraTabelaCanais =
-  80 +
-  350 +
-  150 +
-  140 +
-  (140 * qtdPacotes);
-      const gridCanais =
-`
-80px
-minmax(350px,1fr)
-150px
-140px
+const larguraTabelaCanais =
+  LARGURA_BASE + (140 * qtdPacotes);
+const gridCanais = `
+790px
 repeat(${qtdPacotes},140px)
 `;
       
