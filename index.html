@@ -1011,6 +1011,31 @@ select:focus {
       color: #1D1D1F;
     }
 
+    .btn-expandir-tecnologia{
+
+    width:24px;
+    height:24px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border:1px solid #D9DDE5;
+    border-radius:50%;
+
+    background:#FFFFFF;
+
+    color:#1D1D1F;
+
+    font-size:16px;
+    font-weight:700;
+
+    cursor:pointer;
+
+    flex-shrink:0;
+
+}
+    
     .icone-tecnologia {
       width: 30px;
       height: 35px;
@@ -2556,11 +2581,20 @@ linha.style.gridTemplateColumns =
 `790px repeat(${qtdPacotes},140px)`;
 
         const descricao = document.createElement('div');
-        descricao.className = 'descricao-tecnologia';
-        descricao.innerHTML = `
-          ${ICONES_TECNOLOGIA[tecnologia]}
-          <span>${TITULOS_TECNOLOGIA[tecnologia]}</span>
-        `;
+descricao.className = 'descricao-tecnologia';
+
+descricao.innerHTML = `
+    <span class="btn-expandir-tecnologia"
+          data-tecnologia="${tecnologia}">
+        +
+    </span>
+
+    ${ICONES_TECNOLOGIA[tecnologia]}
+
+    <span>
+        ${TITULOS_TECNOLOGIA[tecnologia]}
+    </span>
+`;
 
         linha.appendChild(descricao);
 
@@ -2579,7 +2613,56 @@ linha.style.gridTemplateColumns =
         });
 
         resumo.appendChild(linha);
+          const detalhes =
+    document.createElement('div');
+
+detalhes.id =
+    `detalhe-${tecnologia}`;
+
+detalhes.style.display =
+    'none';
+
+resumo.appendChild(detalhes);
       });
+
+      resumo
+.querySelectorAll(
+    '.btn-expandir-tecnologia'
+)
+.forEach(botao => {
+
+    botao.onclick = () => {
+
+        const tecnologia =
+            botao.dataset.tecnologia;
+
+        const detalhe =
+            document.getElementById(
+                `detalhe-${tecnologia}`
+            );
+
+        if (
+            detalhe.style.display === 'none'
+        ){
+
+            detalhe.style.display =
+                'block';
+
+            botao.textContent = '-';
+
+        } else {
+
+            detalhe.style.display =
+                'none';
+
+            botao.textContent = '+';
+
+        }
+
+    };
+
+});
+      
     }
 function gerarResumoCategoriaTecnologia(mapasPacotes) {
 
