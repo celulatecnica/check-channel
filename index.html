@@ -807,7 +807,9 @@ select:focus {
 
 .resumo-colunas {
   display: grid;
-  grid-template-columns: 140px 140px 140px;
+  grid-auto-columns: 140px;
+  grid-auto-flow: column;
+  justify-content: end;
 }
 
 .resumo-coluna {
@@ -2491,10 +2493,31 @@ const totalFixo =
       if (!resumo) return;
       
       resumo.innerHTML = '';
+
+      const qtdPacotes = mapasPacotes.length;
+
+      const cabecalho = document.createElement('div');
+
+        cabecalho.className = 'cabecalho-tecnologia';
+
+        cabecalho.style.gridTemplateColumns =
+        `minmax(400px,1fr) repeat(${qtdPacotes},140px)`;
+
+        cabecalho.innerHTML = `
+    <div>Tecnología</div>
+    ${Array.from({ length: qtdPacotes })
+      .map((_, i) => `<div>Paquete ${i + 1}</div>`)
+      .join('')}
+`;
+
+resumo.appendChild(cabecalho);
       
         TECNOLOGIAS.forEach(tecnologia => {
+          
         const linha = document.createElement('div');
         linha.className = 'linha-tecnologia';
+        linha.style.gridTemplateColumns =
+        `minmax(400px,1fr) repeat(${qtdPacotes},140px)`;
 
         const descricao = document.createElement('div');
         descricao.className = 'descricao-tecnologia';
@@ -2591,6 +2614,12 @@ function ocultarResultado() {
   pacote: getElementoSeguro(`pacote${i}`)?.dataset.valor || ''
 }));
 
+      const pacotesAtivos = selecionados.filter(
+  s => s.cliente && s.pacote
+);
+
+const qtdPacotes = pacotesAtivos.length;
+      
       atualizarBarraPacotes();
 
       const paisAtivo = document.querySelector('.bandeira.active');
@@ -2679,6 +2708,16 @@ const nomePacote2 =
 
 const nomePacote3 =
     selecionados[2].pacote || 'Comparación 2';
+
+      const htmlResumoColunas = pacotesAtivos.map((p, index) => `
+    <div class="resumo-coluna ${index === 0 ? 'ativa' : ''}">
+        ${p.pacote}
+    </div>
+`).join('');
+
+      const cabecalhoPacotes = pacotesAtivos
+  .map(p => `<div>${p.pacote}</div>`)
+  .join('');
       
       // Renderizar resultado
       resultado.innerHTML = `
@@ -2702,22 +2741,10 @@ const nomePacote3 =
         </div>
 
 <div class="resumo-colunas">
-
-    <div class="resumo-coluna ativa">
-        ${nomePacote1}
-    </div>
-
-    <div class="resumo-coluna">
-        ${nomePacote2}
-    </div>
-
-    <div class="resumo-coluna">
-        ${nomePacote3}
-    </div>
-
+    ${htmlResumoColunas}
 </div>
 
-    </div>
+</div>
 
 </div>
           <div id="resumoTecnologia"></div>
@@ -2732,9 +2759,9 @@ const nomePacote3 =
   <div class="cabecalho-canal">Canal</div>
   <div class="cabecalho-genero">Género</div>
   <div>Tecnología</div>
-  <div>${nomePacote1}</div>
-  <div>${nomePacote2}</div>
-  <div>${nomePacote3}</div>
+
+  ${cabecalhoPacotes}
+
 </div>
 
   <div id="listaCanais"></div>
@@ -2776,7 +2803,11 @@ const nomePacote3 =
         }
       });
 
-      gerarResumoTecnologia(mapasPacotes);
+      const mapasAtivos = mapasPacotes.filter(
+  mapa => mapa.size > 0
+);
+
+gerarResumoTecnologia(mapasAtivos);
 
       const listaCanais = getElementoSeguro('listaCanais');
       if (listaCanais) {
@@ -2805,9 +2836,11 @@ const nomePacote3 =
 </div>
 `;
 
-          mapasPacotes.forEach(mapa => {
-            linha.appendChild(criarStatusPacote(mapa.has(chaveRef)));
-          });
+mapasAtivos.forEach(mapa => {
+  linha.appendChild(
+    criarStatusPacote(mapa.has(chaveRef))
+  );
+});
 
           listaCanais.appendChild(linha);
         });
