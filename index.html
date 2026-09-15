@@ -2958,22 +2958,7 @@ gerarResumoTecnologia(mapasAtivos);
         }
 
     }
-          const linha = document.createElement('div');
-          linha.className = 'linha-canal-nova';
-          linha.style.gridTemplateColumns = gridCanais;
-          const chaveRef = chaveCanal(ref);
-          if (somentePacote) {
-
-    const existeEmAlgumPacote =
-        mapasAtivos.some(
-            mapa => mapa.has(chaveRef)
-        );
-
-    if (!existeEmAlgumPacote) {
-        return;
-    }
-
-}
+         
         linha.innerHTML = `
  <div class="info-canal-vc">
   ${ref.vc}
