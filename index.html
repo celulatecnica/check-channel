@@ -416,7 +416,10 @@
 #btnFiltroSim.ativo,
 #btnFiltroNao.ativo{
 
-    border-color:#306BFF;
+    border:2px solid #306BFF;
+
+box-shadow:
+0 0 0 3px rgba(48,107,255,.15);
 
 }
 
@@ -2893,6 +2896,13 @@ const btnFiltroSim =
 
 const btnFiltroNao =
     document.getElementById('btnFiltroNao');  
+      if (btnFiltroSim && filtroSim) {
+    btnFiltroSim.classList.add('ativo');
+}
+
+if (btnFiltroNao && filtroNao) {
+    btnFiltroNao.classList.add('ativo');
+}
 const buscaCanal =
     document.getElementById('buscaCanal');
 
