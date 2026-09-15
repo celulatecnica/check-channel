@@ -2641,6 +2641,13 @@ function ocultarResultado() {
 );
 
 const qtdPacotes = pacotesAtivos.length;
+      if (qtdPacotes > 1) {
+
+    filtroSim = false;
+    filtroNao = false;
+
+}
+      
 const larguraTecnologia =
   790 + (140 * qtdPacotes);
 const larguraTabelaCanais =
@@ -2829,13 +2836,17 @@ const nomePacote3 =
     placeholder="Buscar canal por nombre o número..."
 >
 
-        <button id="btnFiltroSim">
+${qtdPacotes === 1 ? `
+
+<button id="btnFiltroSim">
     ✅
 </button>
 
 <button id="btnFiltroNao">
     ❌
 </button>
+
+` : ''}
 
 </div>
 
