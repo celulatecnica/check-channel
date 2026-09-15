@@ -2464,9 +2464,12 @@ const totalFixo =
       const resumo = getElementoSeguro('resumoTecnologia');
       if (!resumo) return;
       
-      resumo.innerHTML = '';
+        resumo.innerHTML = '';
+        resumo.style.width = `${larguraTabela}px`;
+        resumo.style.marginLeft = 'auto';
 
       const qtdPacotes = mapasPacotes.length;
+      const larguraTabela = 400 + (140 * qtdPacotes);
 
          
         TECNOLOGIAS.forEach(tecnologia => {
@@ -2576,6 +2579,12 @@ function ocultarResultado() {
 );
 
 const qtdPacotes = pacotesAtivos.length;
+      const larguraTabelaCanais =
+  80 +
+  350 +
+  150 +
+  140 +
+  (140 * qtdPacotes);
       const gridCanais =
 `
 80px
@@ -2717,8 +2726,13 @@ const nomePacote3 =
   Lista de canales
 </div>
 
-<div class="tabela-canais-wrapper">
-
+<div
+  class="tabela-canais-wrapper"
+  style="
+    width:${larguraTabelaCanais}px;
+    margin-left:auto;
+  "
+>
 <div class="cabecalho-canais"
      style="grid-template-columns:${gridCanais}">
   <div>#</div>
