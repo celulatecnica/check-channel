@@ -2613,16 +2613,75 @@ descricao.innerHTML = `
         });
 
         resumo.appendChild(linha);
-          const detalhes =
+const detalhes =
     document.createElement('div');
 
 detalhes.id =
     `detalhe-${tecnologia}`;
 
+detalhes.className =
+    'detalhe-tecnologia';
+
 detalhes.style.display =
     'none';
 
-resumo.appendChild(detalhes);
+          const categorias = new Map();
+
+mapasPacotes.forEach(mapa => {
+
+    mapa.forEach(item => {
+
+        if (
+            normalizarChave(item.tecnologia)
+            !== normalizarChave(tecnologia)
+        ){
+            return;
+        }
+
+        const categoria =
+            item.categoria || 'Sin categoría';
+
+        categorias.set(
+            categoria,
+            (categorias.get(categoria) || 0) + 1
+        );
+
+    });
+
+});
+
+categorias.forEach(
+    (total, categoria) => {
+
+        const linhaCategoria =
+            document.createElement('div');
+
+        linhaCategoria.style.display =
+            'flex';
+
+        linhaCategoria.style.justifyContent =
+            'space-between';
+
+        linhaCategoria.style.padding =
+            '12px 18px 12px 54px';
+
+        linhaCategoria.style.borderTop =
+            '1px solid #E5E5E5';
+
+        linhaCategoria.innerHTML = `
+
+            <span>${categoria}</span>
+
+            <strong>${total}</strong>
+
+        `;
+
+        detalhes.appendChild(
+            linhaCategoria
+        );
+
+    }
+);
       });
 
       resumo
@@ -2664,149 +2723,7 @@ resumo.appendChild(detalhes);
 });
       
     }
-function gerarResumoCategoriaTecnologia(mapasPacotes) {
 
-    const resumo =
-        document.getElementById(
-            'resumoCategoriaTecnologia'
-        );
-
-    if (!resumo) return;
-
-    resumo.innerHTML = '';
-
-    const qtdPacotes =
-        mapasPacotes.length;
-
-    const larguraTabela =
-        790 + (140 * qtdPacotes);
-
-    resumo.style.width =
-        `${larguraTabela}px`;
-
-    resumo.style.margin =
-        '25px auto 0';
-
-    resumo.style.background =
-        '#FFFFFF';
-
-    resumo.style.border =
-        '1px solid #E8EAF0';
-
-    resumo.style.borderRadius =
-        '12px';
-
-    resumo.style.overflow =
-        'hidden';
-
-    const combinacoes = new Map();
-
-    mapasPacotes.forEach(mapa => {
-
-        mapa.forEach(item => {
-
-            const chave =
-                `${item.tecnologia}|${item.categoria}`;
-
-            if (!combinacoes.has(chave)) {
-
-                combinacoes.set(
-                    chave,
-                    {
-                        tecnologia:
-                            item.tecnologia,
-
-                        categoria:
-                            item.categoria
-                    }
-                );
-            }
-
-        });
-
-    });
-
-    const listaCombinacoes =
-        [...combinacoes.values()]
-        .sort((a,b) => {
-
-            const t =
-                a.tecnologia.localeCompare(
-                    b.tecnologia
-                );
-
-            if (t !== 0) return t;
-
-            return a.categoria.localeCompare(
-                b.categoria
-            );
-
-        });
-
-    listaCombinacoes.forEach(info => {
-
-        const linha =
-            document.createElement('div');
-
-        linha.className =
-            'linha-tecnologia';
-
-        linha.style.gridTemplateColumns =
-            `790px repeat(${qtdPacotes},140px)`;
-
-        const descricao =
-            document.createElement('div');
-
-        descricao.className =
-            'descricao-tecnologia';
-
-        descricao.innerHTML =
-            `<strong>${info.tecnologia}</strong> • ${info.categoria}`;
-
-        linha.appendChild(descricao);
-
-        mapasPacotes.forEach(mapa => {
-
-            let total = 0;
-
-            mapa.forEach(item => {
-
-                if (
-                    normalizarChave(
-                        item.tecnologia
-                    ) === normalizarChave(
-                        info.tecnologia
-                    )
-                    &&
-                    normalizarChave(
-                        item.categoria
-                    ) === normalizarChave(
-                        info.categoria
-                    )
-                ) {
-                    total++;
-                }
-
-            });
-
-            const valor =
-                document.createElement('div');
-
-            valor.className =
-                'valor-tecnologia';
-
-            valor.textContent =
-                total;
-
-            linha.appendChild(valor);
-
-        });
-
-        resumo.appendChild(linha);
-
-    });
-
-}
     
     // ===== GERAR RESULTADO =====
     function obterIconeCategoria(categoria) {
@@ -3047,7 +2964,6 @@ const nomePacote3 =
 
 </div>
           <div id="resumoTecnologia"></div>
-          <div id="resumoCategoriaTecnologia"></div>
 <div
   class="cabecalho-lista-canais"
   style="
@@ -3224,9 +3140,7 @@ if (btnFiltroNao){
 );
 
 gerarResumoTecnologia(mapasAtivos);
-gerarResumoCategoriaTecnologia(
-    mapasAtivos
-);
+
 
       const listaCanais = getElementoSeguro('listaCanais');
       if (listaCanais) {
