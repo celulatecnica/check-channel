@@ -2465,11 +2465,12 @@ const totalFixo =
       if (!resumo) return;
       
         resumo.innerHTML = '';
-        resumo.style.width = `${larguraTabela}px`;
-        resumo.style.marginLeft = 'auto';
 
-      const qtdPacotes = mapasPacotes.length;
-      const larguraTabela = 400 + (140 * qtdPacotes);
+const qtdPacotes = mapasPacotes.length;
+const larguraTabela = 400 + (140 * qtdPacotes);
+
+resumo.style.width = `${larguraTabela}px`;
+resumo.style.marginLeft = 'auto';
 
          
         TECNOLOGIAS.forEach(tecnologia => {
