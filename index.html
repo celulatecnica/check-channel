@@ -391,10 +391,11 @@
     color:#1D1D1F;
 }
 
-#btnFiltroPacote{
-    height:44px;
+#btnFiltroSim,
+#btnFiltroNao{
 
-    padding:0 20px;
+    width:48px;
+    height:48px;
 
     border:none;
 
@@ -402,12 +403,12 @@
 
     background:#EFF6FF;
 
-    color:#306BFF;
-
-    font-size:15px;
-    font-weight:600;
-
     cursor:pointer;
+
+    font-size:20px;
+
+    flex-shrink:0;
+
 }
 
 .opcao-regiao {
@@ -1493,6 +1494,8 @@ select:focus {
     let regiaoAtual = 'América Latina';
     const HEADER_TOTAL = 50;
     let somentePacote = false;
+    let filtroSim = false;
+    let filtroNao = false;
     let limiteInicial = 0;
     let lastScrollY = 0;
     let ticking = false;
@@ -2826,11 +2829,15 @@ const nomePacote3 =
     placeholder="Buscar canal por nombre o número..."
 >
 
-        <button id="btnFiltroPacote">
-            Filtros
-        </button>
+        <button id="btnFiltroSim">
+    ✅
+</button>
 
-    </div>
+<button id="btnFiltroNao">
+    ❌
+</button>
+
+</div>
 
 </div>
 
@@ -2861,8 +2868,11 @@ const nomePacote3 =
         <div class="topo-branco-inferior"></div>
       `;
 
-  const btnFiltro =
-    document.getElementById('btnFiltroPacote');
+const btnFiltroSim =
+    document.getElementById('btnFiltroSim');
+
+const btnFiltroNao =
+    document.getElementById('btnFiltroNao');  
 const buscaCanal =
     document.getElementById('buscaCanal');
 
@@ -2892,24 +2902,31 @@ if (buscaCanal){
     };
 
 }
-if (btnFiltro){
+if (btnFiltroSim){
 
-  btnFiltro.onclick = () => {
+    btnFiltroSim.onclick = () => {
 
-    somentePacote = !somentePacote;
+        filtroSim = !filtroSim;
 
-    btnFiltro.style.background =
-        somentePacote
-            ? '#306BFF'
-            : '#EFF6FF';
+        filtroNao = false;
 
-    btnFiltro.style.color =
-        somentePacote
-            ? '#FFFFFF'
-            : '#306BFF';
+        gerarResultado();
 
-    gerarResultado();
-};
+    };
+
+}
+
+if (btnFiltroNao){
+
+    btnFiltroNao.onclick = () => {
+
+        filtroNao = !filtroNao;
+
+        filtroSim = false;
+
+        gerarResultado();
+
+    };
 
 }
       // Atualizar headers
@@ -2966,18 +2983,18 @@ gerarResumoTecnologia(mapasAtivos);
 
     const chaveRef = chaveCanal(ref);
 
-    if (somentePacote) {
+   const existeNoPacote =
+    mapasAtivos.some(
+        mapa => mapa.has(chaveRef)
+    );
 
-        const existeEmAlgumPacote =
-            mapasAtivos.some(
-                mapa => mapa.has(chaveRef)
-            );
+if (filtroSim && !existeNoPacote){
+    return;
+}
 
-        if (!existeEmAlgumPacote) {
-            return;
-        }
-
-    }
+if (filtroNao && existeNoPacote){
+    return;
+}
          
         linha.innerHTML = `
  <div class="info-canal-vc">
