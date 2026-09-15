@@ -352,6 +352,64 @@
   display: block;
 }
 
+.cabecalho-lista-canais{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+}
+
+.cabecalho-lista-esquerda{
+    display:flex;
+    flex-direction:column;
+}
+
+.lista-canais-subtitulo{
+    margin-top:6px;
+    font-size:16px;
+    color:#7D8593;
+}
+
+.cabecalho-lista-direita{
+    display:flex;
+    gap:12px;
+    align-items:center;
+}
+
+#buscaCanal{
+    width:370px;
+    height:44px;
+
+    padding:0 16px;
+
+    border:1px solid #D9DDE5;
+    border-radius:12px;
+
+    background:#FFFFFF;
+
+    font-size:15px;
+
+    color:#1D1D1F;
+}
+
+#btnFiltroPacote{
+    height:44px;
+
+    padding:0 20px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#EFF6FF;
+
+    color:#306BFF;
+
+    font-size:15px;
+    font-weight:600;
+
+    cursor:pointer;
+}
+
 .opcao-regiao {
   height: 55px;
   padding-left: 25px;
@@ -984,7 +1042,7 @@ select:focus {
     
     /* ===== LISTA DE CANAIS ===== */
     .lista-canais-titulo {
-      margin: 60px 0 24px;
+      margin: 0;
       padding-left: 10px;
       font-size: 21px;
       font-weight: 600;
@@ -1434,6 +1492,7 @@ select:focus {
     let dados = [];
     let regiaoAtual = 'América Latina';
     const HEADER_TOTAL = 50;
+    let somentePacote = false;
     let limiteInicial = 0;
     let lastScrollY = 0;
     let ticking = false;
@@ -2739,13 +2798,39 @@ const nomePacote3 =
 </div>
           <div id="resumoTecnologia"></div>
 <div
-  class="lista-canais-titulo"
+  class="cabecalho-lista-canais"
   style="
-    width:${larguraTabelaCanais}px;
-    margin:60px auto 24px;
+      width:${larguraTabelaCanais}px;
+      margin:60px auto 24px;
   "
 >
-  Lista de canales
+
+    <div class="cabecalho-lista-esquerda">
+
+        <div class="lista-canais-titulo">
+            Lista de canales
+        </div>
+
+        <div class="lista-canais-subtitulo">
+            Busca un canal, filtre por género o tecnología.
+        </div>
+
+    </div>
+
+    <div class="cabecalho-lista-direita">
+
+        <input
+            type="text"
+            id="buscaCanal"
+            placeholder="Buscar canal por nombre o número..."
+        >
+
+        <button id="btnFiltroPacote">
+            Filtros
+        </button>
+
+    </div>
+
 </div>
 
 <div
@@ -2775,6 +2860,38 @@ const nomePacote3 =
         <div class="topo-branco-inferior"></div>
       `;
 
+  const btnFiltro =
+    document.getElementById('btnFiltroPacote');
+const buscaCanal =
+    document.getElementById('buscaCanal');
+
+if (buscaCanal){
+
+    buscaCanal.oninput = () => {
+        gerarResultado();
+    };
+
+}
+if (btnFiltro){
+
+  btnFiltro.onclick = () => {
+
+    somentePacote = !somentePacote;
+
+    btnFiltro.style.background =
+        somentePacote
+            ? '#306BFF'
+            : '#EFF6FF';
+
+    btnFiltro.style.color =
+        somentePacote
+            ? '#FFFFFF'
+            : '#306BFF';
+
+    gerarResultado();
+};
+
+}
       // Atualizar headers
       selecionados.forEach((sel, idx) => {
         const i = idx + 1;
@@ -2798,11 +2915,65 @@ gerarResumoTecnologia(mapasAtivos);
       if (listaCanais) {
         listaCanais.innerHTML = '';
 
-        base.forEach(ref => {
+        const textoBusca =
+(
+    document.getElementById('buscaCanal')?.value || ''
+)
+.toLowerCase()
+.trim();
+        
+ base.forEach(ref => {
+
+    const nomeCanal =
+        ref.canal.toLowerCase();
+
+    const numeroCanal =
+        String(ref.vc);
+
+    if (
+        textoBusca &&
+        !nomeCanal.includes(textoBusca) &&
+        !numeroCanal.includes(textoBusca)
+    ){
+        return;
+    }
+
+    const linha = document.createElement('div');
+
+    linha.className = 'linha-canal-nova';
+
+    linha.style.gridTemplateColumns = gridCanais;
+
+    const chaveRef = chaveCanal(ref);
+
+    if (somentePacote) {
+
+        const existeEmAlgumPacote =
+            mapasAtivos.some(
+                mapa => mapa.has(chaveRef)
+            );
+
+        if (!existeEmAlgumPacote) {
+            return;
+        }
+
+    }
           const linha = document.createElement('div');
           linha.className = 'linha-canal-nova';
           linha.style.gridTemplateColumns = gridCanais;
           const chaveRef = chaveCanal(ref);
+          if (somentePacote) {
+
+    const existeEmAlgumPacote =
+        mapasAtivos.some(
+            mapa => mapa.has(chaveRef)
+        );
+
+    if (!existeEmAlgumPacote) {
+        return;
+    }
+
+}
         linha.innerHTML = `
  <div class="info-canal-vc">
   ${ref.vc}
