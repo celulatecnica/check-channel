@@ -364,9 +364,9 @@
 }
 
 .lista-canais-subtitulo{
-    margin-top:6px;
     font-size:16px;
     color:#7D8593;
+    padding-left: 10px;
 }
 
 .cabecalho-lista-direita{
@@ -2820,10 +2820,11 @@ const nomePacote3 =
     <div class="cabecalho-lista-direita">
 
         <input
-            type="text"
-            id="buscaCanal"
-            placeholder="Buscar canal por nombre o número..."
-        >
+    type="text"
+    id="buscaCanal"
+    autocomplete="off"
+    placeholder="Buscar canal por nombre o número..."
+>
 
         <button id="btnFiltroPacote">
             Filtros
@@ -2868,7 +2869,26 @@ const buscaCanal =
 if (buscaCanal){
 
     buscaCanal.oninput = () => {
-        gerarResultado();
+
+        const termo =
+            buscaCanal.value
+                .toLowerCase()
+                .trim();
+
+        document
+            .querySelectorAll('.linha-canal-nova')
+            .forEach(linha => {
+
+                const texto =
+                    linha.textContent.toLowerCase();
+
+                linha.style.display =
+                    texto.includes(termo)
+                        ? ''
+                        : 'none';
+
+            });
+
     };
 
 }
