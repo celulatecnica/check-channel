@@ -2671,6 +2671,8 @@ linhaCategoria.style.gridTemplateColumns =
       
 linhaCategoria.style.minHeight =
 '48px';
+linhaCategoria.style.alignItems =
+    'center';
 
         linhaCategoria.style.borderTop =
             '1px solid #E5E5E5';
@@ -2680,6 +2682,7 @@ linhaCategoria.style.minHeight =
 let htmlCategoria = `
     <div style="
         text-align:left;
+        padding-left:25px;
     ">
         ${categoria}
     </div>
@@ -2704,12 +2707,14 @@ let htmlCategoria = `
     });
 
     htmlCategoria += `
-        <div style="
-            text-align:center;
-        ">
-            ${totalCategoria}
-        </div>
-    `;
+    <div style="
+        display:flex;
+        align-items:center;
+        justify-content:center;
+    ">
+        ${totalCategoria}
+    </div>
+`;
 
 });
 
