@@ -2664,12 +2664,12 @@ categorias.forEach(
             document.createElement('div');
 
         linhaCategoria.style.display =
-            'flex';
+    'grid';
 
-        linhaCategoria.style.justifyContent =
-            'space-between';
-
-        linhaCategoria.style.padding =
+linhaCategoria.style.gridTemplateColumns =
+    `790px repeat(${qtdPacotes},140px)`;
+      
+      linhaCategoria.style.padding =
             '12px 18px 12px 25px';
 
         linhaCategoria.style.borderTop =
@@ -2677,14 +2677,46 @@ categorias.forEach(
       linhaCategoria.style.color =
     '#6E6E73';
 
-linhaCategoria.innerHTML = `
-
-    <span>${categoria}</span>
-
-    <span>${total}</span>
-
+let htmlCategoria = `
+    <div style="
+        padding-left:54px;
+        text-align:left;
+    ">
+        ${categoria}
+    </div>
 `;
 
+      mapasPacotes.forEach(mapa => {
+
+    let totalCategoria = 0;
+
+    mapa.forEach(item => {
+
+        if (
+            normalizarChave(item.tecnologia)
+            === normalizarChave(tecnologia)
+            &&
+            normalizarChave(item.categoria)
+            === normalizarChave(categoria)
+        ){
+            totalCategoria++;
+        }
+
+    });
+
+    htmlCategoria += `
+        <div style="
+            text-align:center;
+        ">
+            ${totalCategoria}
+        </div>
+    `;
+
+});
+
+      linhaCategoria.innerHTML =
+    htmlCategoria;
+      
         detalhes.appendChild(
             linhaCategoria
         );
