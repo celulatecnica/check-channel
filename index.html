@@ -2612,7 +2612,12 @@ descricao.innerHTML = `
           linha.appendChild(valor);
         });
 
-        resumo.appendChild(linha);
+        const blocoTecnologia =
+    document.createElement('div');
+
+blocoTecnologia.appendChild(
+    linha
+);
 const detalhes =
     document.createElement('div');
 
@@ -2682,6 +2687,15 @@ categorias.forEach(
 
     }
 );
+
+          blocoTecnologia.appendChild(
+    detalhes
+);
+
+resumo.appendChild(
+    blocoTecnologia
+);
+          
       });
 
       resumo
