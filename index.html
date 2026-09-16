@@ -1587,7 +1587,7 @@ border-bottom:none;
     </footer>
   </div>
 
-  <script>
+<script>
     // ===== CONSTANTES E VARIÁVEIS GLOBAIS =====
     let dados = [];
     let regiaoAtual = 'América Latina';
@@ -1598,12 +1598,10 @@ border-bottom:none;
     let limiteInicial = 0;
     let lastScrollY = 0;
     let ticking = false;
-
     const CONFIG = {
       debounceDelay: 100,
       scrollThrottle: 16
     };
-
     const MAPA_PAISES = {
       ARGENTINA: 'paquetes_argentina.csv',
       CHILE: 'paquetes_chile.csv',
@@ -1621,32 +1619,15 @@ border-bottom:none;
       'US VIRGIN ISLANDS': 'paquetes_puertorico_usvi.csv',
       'OTHER ISLANDS': 'paquetes_caribe.csv'
     };
-
     const REGIOES = {
-  "América Latina": [
-    'ARGENTINA',
-    'CHILE',
-    'COLOMBIA',
-    'ECUADOR',
-    'MEXICO',
-    'PERU',
-    'URUGUAY'
-  ],
-
-  "Caribe": [
-    'BARBADOS',
-    'CURAZAO',
-    'GUYANA',
-    'PUERTO RICO',
-    'SURINAME',
-    'TRINIDAD Y TOBAGO',
-    'US VIRGIN ISLANDS',
-    'OTHER ISLANDS'
-  ]
-};
-
+      "América Latina": [
+        'ARGENTINA', 'CHILE', 'COLOMBIA', 'ECUADOR', 'MEXICO', 'PERU', 'URUGUAY'
+      ],
+      "Caribe": [
+        'BARBADOS', 'CURAZAO', 'GUYANA', 'PUERTO RICO', 'SURINAME', 'TRINIDAD Y TOBAGO', 'US VIRGIN ISLANDS', 'OTHER ISLANDS'
+      ]
+    };
     const TECNOLOGIAS = ['SD', 'HD', '4K', 'AUDIO', 'RADIO'];
-
     const ICONES_TECNOLOGIA = {
       SD: '<img class="icone-tecnologia" src="icon_sd.png" alt="SD">',
       HD: '<img class="icone-tecnologia" src="icon_hd.png" alt="HD">',
@@ -1654,7 +1635,6 @@ border-bottom:none;
       AUDIO: '<img class="icone-tecnologia" src="icon_audio.png" alt="Audio">',
       RADIO: '<img class="icone-tecnologia" src="icon_radio.png" alt="Radio">'
     };
-
     const TITULOS_TECNOLOGIA = {
       SD: '<strong>Canales SD</strong> (Standard Definition)</span>',
       HD: '<strong>Canales HD</strong> (High Definition)</span>',
@@ -1667,7 +1647,6 @@ border-bottom:none;
     function normalizarTexto(valor) {
       return String(valor || '').trim();
     }
-
     function normalizarArquivo(valor) {
       return normalizarTexto(valor)
         .toLowerCase()
@@ -1675,7 +1654,6 @@ border-bottom:none;
         .replace(/[\u0300-\u036f]/g, '')
         .replace(/\s+/g, '');
     }
-
     function normalizarChave(valor) {
       return String(valor || '')
         .trim()
@@ -1689,11 +1667,9 @@ border-bottom:none;
       const valor = normalizarChave(vc);
       return !valor || ['N/A', 'NA', '-', 'S/N'].includes(valor);
     }
-
-      function disponibilidadeAtiva(valor) {
+    function disponibilidadeAtiva(valor) {
       return normalizarChave(valor) === 'SI';
     }
-    
     function chaveCanal(item) {
       const vc = normalizarTexto(item.vc);
       if (!vcInvalido(vc)) {
@@ -1708,63 +1684,54 @@ border-bottom:none;
       if (!elemento) console.warn(`Elemento não encontrado: ${id}`);
       return elemento;
     }
-
     function getResultado() {
       return getElementoSeguro('resultado');
     }
-
     function resultadoVisivel() {
       const resultado = getResultado();
       return resultado && getComputedStyle(resultado).display !== 'none';
     }
 
     // ===== CRIAR ELEMENTOS =====
-function criarStatusPacote(existe) {
-  const status = document.createElement('div');
-  status.className = 'status-pacote';
-  status.innerHTML = existe
-    ? '<img src="icon_ok.png" alt="OK">'
-    : '<img src="icon_nok.png" alt="NOK">';
-  return status;
-}
+    function criarStatusPacote(existe) {
+      const status = document.createElement('div');
+      status.className = 'status-pacote';
+      status.innerHTML = existe
+        ? '<img src="icon_ok.png" alt="OK">'
+        : '<img src="icon_nok.png" alt="NOK">';
+      return status;
+    }
 
     // ===== CSV PARSER =====
-    // ===== CSV PARSER =====
-function parseCsvTextoParaDados(texto) {
-  const registros = [];
-  const linhas = texto
-    .replace(/^\uFEFF/, '')
-    .split(/\r?\n/);
-
-  linhas.forEach((linha, i) => {
-    if (i === 0 || !linha.trim()) return;
-
-    const col = linha
-      .split(';')
-      .map(c => c.trim());
-
-    if (!col[0]) return;
-
-    registros.push({
-      pais: normalizarChave(col[0]),
-      cliente: normalizarTexto(col[1]),
-      pacote: normalizarTexto(col[2]),
-      vc: normalizarTexto(col[3]),
-      canal: normalizarTexto(col[4]),
-      tecnologia: normalizarTexto(col[5]),
-      categoria: normalizarTexto(col[6]),
-      disponibilidad: normalizarTexto(col[7])
-    });
-  });
-
-  return registros;
-}
+    function parseCsvTextoParaDados(texto) {
+      const registros = [];
+      const linhas = texto
+        .replace(/^\uFEFF/, '')
+        .split(/\r?\n/);
+      linhas.forEach((linha, i) => {
+        if (i === 0 || !linha.trim()) return;
+        const col = linha
+          .split(';')
+          .map(c => c.trim());
+        if (!col[0]) return;
+        registros.push({
+          pais: normalizarChave(col[0]),
+          cliente: normalizarTexto(col[1]),
+          pacote: normalizarTexto(col[2]),
+          vc: normalizarTexto(col[3]),
+          canal: normalizarTexto(col[4]),
+          tecnologia: normalizarTexto(col[5]),
+          categoria: normalizarTexto(col[6]),
+          disponibilidad: normalizarTexto(col[7])
+        });
+      });
+      return registros;
+    }
 
     // ===== CARREGAR CSVs =====
     async function carregarTodosOsCsv() {
       dados = [];
       const arquivosUnicos = new Set(Object.values(MAPA_PAISES));
-
       for (const nomeArquivo of arquivosUnicos) {
         const url = `paquetes/${nomeArquivo}`;
         try {
@@ -1774,990 +1741,646 @@ function parseCsvTextoParaDados(texto) {
             continue;
           }
           const buffer = await response.arrayBuffer();
-
           let texto = new TextDecoder('utf-8').decode(buffer);
-
           if (texto.includes('\uFFFD')) {
             texto = new TextDecoder('windows-1252').decode(buffer);
           }
-
           const registros = parseCsvTextoParaDados(texto);
           dados.push(...registros);    
         } catch (e) {
           console.error(`Falha ao buscar CSV: ${url}`, e);
         }
       }
-
       inicializar();
     }
 
-function abrirMenuSePossuirOpcoes(idSeletor, idMenu) {
-
-    const seletor = document.getElementById(idSeletor);
-    const menu = document.getElementById(idMenu);
-
-    if (!seletor || !menu) return;
-
-    seletor.addEventListener('click', () => {
-
+    function abrirMenuSePossuirOpcoes(idSeletor, idMenu) {
+      const seletor = document.getElementById(idSeletor);
+      const menu = document.getElementById(idMenu);
+      if (!seletor || !menu) return;
+      seletor.addEventListener('click', () => {
         if (!menu.children.length) return;
-
         const menuJaEstavaAberto = menu.classList.contains('aberto');
-
         document.querySelectorAll('.menu-custom.aberto').forEach(outroMenu => {
-            outroMenu.classList.remove('aberto');
+          outroMenu.classList.remove('aberto');
         });
-
         if (!menuJaEstavaAberto) {
-            menu.classList.add('aberto');
+          menu.classList.add('aberto');
         }
-
-    });
-
-}
+      });
+    }
 
     function limparSelecoes() {
-
-  document.querySelectorAll('.menu-custom').forEach(menu => {
-    menu.classList.remove('aberto');
-    menu.innerHTML = '';
-  });
-
-  [1, 2, 3].forEach(i => {
-
-    const cliente = document.getElementById(`cliente${i}`);
-    const pacote = document.getElementById(`pacote${i}`);
-
-    if (cliente) {
-      cliente.dataset.valor = '';
-
-      const textoCliente = cliente.querySelector('.seletor-regiao-texto');
-
-      if (textoCliente) {
-        textoCliente.textContent = 'Tipo de cliente';
+      document.querySelectorAll('.menu-custom').forEach(menu => {
+        menu.classList.remove('aberto');
+        menu.innerHTML = '';
+      });
+      [1, 2, 3].forEach(i => {
+        const cliente = document.getElementById(`cliente${i}`);
+        const pacote = document.getElementById(`pacote${i}`);
+        if (cliente) {
+          cliente.dataset.valor = '';
+          const textoCliente = cliente.querySelector('.seletor-regiao-texto');
+          if (textoCliente) {
+            textoCliente.textContent = 'Tipo de cliente';
+          }
+        }
+        if (pacote) {
+          pacote.dataset.valor = '';
+          const textoPacote = pacote.querySelector('.seletor-regiao-texto');
+          if (textoPacote) {
+            textoPacote.textContent = 'Paquete';
+          }
+        }
+      });
+      document.querySelectorAll('.bandeira').forEach(bandeira => {
+        bandeira.classList.remove('active');
+      });
+      const resultado = document.getElementById('resultado');
+      if (resultado) {
+        resultado.innerHTML = '';
+        resultado.style.display = 'none';
       }
+      const barraEstatica = document.getElementById('barraPacotesEstatica');
+      if (barraEstatica) {
+        barraEstatica.style.display = 'none';
+      }
+      const linhaSeparadora = document.querySelector('.linha-separadora-pacotes');
+      if (linhaSeparadora) {
+        linhaSeparadora.style.display = 'none';
+      }
+      document.querySelectorAll('.top-bar').forEach(barra => {
+        barra.classList.remove('scrolled');
+      });
+      const barraPacotes = document.getElementById('topbarPacotes');
+      if (barraPacotes) {
+        barraPacotes.classList.remove('visible');
+      }
+      atualizarBarraPacotes();
+      atualizarEtapasPacotes();
+      atualizarEstadoInicial();
     }
 
-    if (pacote) {
-      pacote.dataset.valor = '';
-
-      const textoPacote = pacote.querySelector('.seletor-regiao-texto');
-
-      if (textoPacote) {
-        textoPacote.textContent = 'Paquete';
-      }
-    }
-
-  });
-
-  document.querySelectorAll('.bandeira').forEach(bandeira => {
-    bandeira.classList.remove('active');
-  });
-
-  const resultado = document.getElementById('resultado');
-
-  if (resultado) {
-    resultado.innerHTML = '';
-    resultado.style.display = 'none';
-  }
-
-  const barraEstatica = document.getElementById('barraPacotesEstatica');
-
-  if (barraEstatica) {
-    barraEstatica.style.display = 'none';
-  }
-
-  const linhaSeparadora = document.querySelector(
-    '.linha-separadora-pacotes'
-  );
-
-  if (linhaSeparadora) {
-    linhaSeparadora.style.display = 'none';
-  }
-
-  document.querySelectorAll('.top-bar').forEach(barra => {
-    barra.classList.remove('scrolled');
-  });
-
-  const barraPacotes = document.getElementById('topbarPacotes');
-
-  if (barraPacotes) {
-    barraPacotes.classList.remove('visible');
-  }
-
-atualizarBarraPacotes();
-atualizarEtapasPacotes();
-atualizarEstadoInicial();
-}
-    
     // ===== INICIALIZAÇÃO =====
     function inicializar() {
       carregarBandeiras();
       prepararEventosSelects();
       atualizarBarraPacotes();
       atualizarEstadoInicial();
-
       abrirMenuSePossuirOpcoes('cliente1', 'menuCliente1');
-abrirMenuSePossuirOpcoes('cliente2', 'menuCliente2');
-abrirMenuSePossuirOpcoes('cliente3', 'menuCliente3');
-
-abrirMenuSePossuirOpcoes('pacote1', 'menuPacote1');
-abrirMenuSePossuirOpcoes('pacote2', 'menuPacote2');
-abrirMenuSePossuirOpcoes('pacote3', 'menuPacote3');
-
+      abrirMenuSePossuirOpcoes('cliente2', 'menuCliente2');
+      abrirMenuSePossuirOpcoes('cliente3', 'menuCliente3');
+      abrirMenuSePossuirOpcoes('pacote1', 'menuPacote1');
+      abrirMenuSePossuirOpcoes('pacote2', 'menuPacote2');
+      abrirMenuSePossuirOpcoes('pacote3', 'menuPacote3');
       atualizarEtapasPacotes();
     }
 
-    function prepararDropdownCliente1() {
-
-    const seletor =
-        document.getElementById('cliente1');
-
-    const menu =
-        document.getElementById('menuCliente1');
-
-    if (!seletor || !menu) return;
-
-seletor.addEventListener('click', () => {
-
-    if (!menu.children.length) return;
-
-    menu.classList.toggle('aberto');
-
-});
-
-}
-
-function prepararDropdownPacote1() {
-
-    const seletor =
-        document.getElementById('pacote1');
-
-    const menu =
-        document.getElementById('menuPacote1');
-
-    if (!seletor || !menu) return;
-
-    seletor.addEventListener('click', () => {
-
-        if (!menu.children.length) return;
-
-        menu.classList.toggle('aberto');
-
-    });
-
-}
-    
     // ===== BANDEIRAS =====
- function carregarBandeiras() {
-  const container = document.getElementById('bandeiras');
-
-  container.innerHTML = `
-    <div class="seletor-regiao" id="seletorRegiao">
-      <div class="seletor-regiao-esquerda">
-        <img src="icon_globe.webp" class="seletor-regiao-icone">
-        <span class="seletor-regiao-texto" id="textoRegiao">
-          América Latina
-        </span>
-      </div>
-
-      <span class="seletor-regiao-seta"></span>
-    </div>
-
-    <div class="menu-regioes" id="menuRegioes">
-      <div class="opcao-regiao" data-regiao="América Latina">
-        América Latina
-      </div>
-
-      <div class="opcao-regiao" data-regiao="Caribe">
-        Caribe
-      </div>
-    </div>
-
-    <div class="grupo-bandeiras" id="listaPaises"></div>
-  `;
-
-  document
-    .getElementById('seletorRegiao')
-    .addEventListener('click', () => {
-
-      document
-        .getElementById('menuRegioes')
-        .classList.toggle('aberto');
-
+    function carregarBandeiras() {
+      const container = document.getElementById('bandeiras');
+      container.innerHTML = `
+        <div class="seletor-regiao" id="seletorRegiao">
+          <div class="seletor-regiao-esquerda">
+            <img src="icon_globe.webp" class="seletor-regiao-icone">
+            <span class="seletor-regiao-texto" id="textoRegiao">
+              América Latina
+            </span>
+          </div>
+          <span class="seletor-regiao-seta"></span>
+        </div>
+        <div class="menu-regioes" id="menuRegioes"></div>
+        <div class="grupo-bandeiras" id="listaPaises"></div>
+      `;
       document
         .getElementById('seletorRegiao')
-        .classList.toggle('aberto');
-    });
-
- 
-
-atualizarMenuRegioes();
-
-renderizarPaises(regiaoAtual);
-}
+        .addEventListener('click', () => {
+          document
+            .getElementById('menuRegioes')
+            .classList.toggle('aberto');
+          document
+            .getElementById('seletorRegiao')
+            .classList.toggle('aberto');
+        });
+      atualizarMenuRegioes();
+      renderizarPaises(regiaoAtual);
+    }
 
     function atualizarMenuRegioes() {
-
-  const menu = document.getElementById('menuRegioes');
-
-  menu.innerHTML = '';
-
-  Object.keys(REGIOES)
-    .filter(regiao => regiao !== regiaoAtual)
-    .forEach(regiao => {
-
-      const opcao = document.createElement('div');
-
-      opcao.className = 'opcao-regiao';
-
-      opcao.textContent = regiao;
-
- opcao.addEventListener('click', () => {
-
-  limparSelecoes();
-  ocultarResultado();
-
-  regiaoAtual = regiao;
-
-  document.getElementById('textoRegiao').textContent = regiao;
-
-        document
-          .getElementById('menuRegioes')
-          .classList.remove('aberto');
-
-        document
-          .getElementById('seletorRegiao')
-          .classList.remove('aberto');
-
-        atualizarMenuRegioes();
-
-        renderizarPaises(regiao);
-
-      });
-
-      menu.appendChild(opcao);
-
-    });
-
-}
+      const menu = document.getElementById('menuRegioes');
+      menu.innerHTML = '';
+      Object.keys(REGIOES)
+        .filter(regiao => regiao !== regiaoAtual)
+        .forEach(regiao => {
+          const opcao = document.createElement('div');
+          opcao.className = 'opcao-regiao';
+          opcao.textContent = regiao;
+          opcao.addEventListener('click', () => {
+            limparSelecoes();
+            ocultarResultado();
+            regiaoAtual = regiao;
+            document.getElementById('textoRegiao').textContent = regiao;
+            document.getElementById('menuRegioes').classList.remove('aberto');
+            document.getElementById('seletorRegiao').classList.remove('aberto');
+            atualizarMenuRegioes();
+            renderizarPaises(regiao);
+          });
+          menu.appendChild(opcao);
+        });
+    }
 
     function renderizarPaises(regiao) {
-
-  const lista = document.getElementById('listaPaises');
-
-  lista.innerHTML = '';
-
-  REGIOES[regiao].forEach(pais => {
-
-    const existe = dados.some(
-      d => normalizarChave(d.pais) === normalizarChave(pais)
-    );
-
-    if (!existe) return;
-
-    const bandeira = document.createElement('div');
-
-    bandeira.className = 'bandeira';
-    bandeira.dataset.pais = pais;
-
-    if (pais !== 'OTHER ISLANDS') {
-
-      const img = document.createElement('img');
-
-      img.src = `flags/${normalizarArquivo(pais)}.png`;
-
-      img.alt = pais;
-
-      bandeira.appendChild(img);
-    }
-
-    const nome = document.createElement('div');
-
-    nome.className = 'nome-pais';
-
-    nome.textContent = pais;
-
-    bandeira.appendChild(nome);
-
-    bandeira.addEventListener('click', () =>
-      selecionarPais(pais, bandeira)
-    );
-
-    lista.appendChild(bandeira);
-
-  });
-
-}
-
-function limparCard(i) {
-
-  const seletorCliente = document.getElementById(`cliente${i}`);
-  const seletorPacote = document.getElementById(`pacote${i}`);
-  const menuCliente = document.getElementById(`menuCliente${i}`);
-  const menuPacote = document.getElementById(`menuPacote${i}`);
-
-  if (seletorCliente) {
-    seletorCliente.dataset.valor = '';
-
-    const textoCliente = seletorCliente.querySelector(
-      '.seletor-regiao-texto'
-    );
-
-    if (textoCliente) {
-      textoCliente.textContent = 'Tipo de cliente';
-    }
-  }
-
-  if (seletorPacote) {
-    seletorPacote.dataset.valor = '';
-
-    const textoPacote = seletorPacote.querySelector(
-      '.seletor-regiao-texto'
-    );
-
-    if (textoPacote) {
-      textoPacote.textContent = 'Paquete';
-    }
-  }
-
-  if (menuCliente) {
-    menuCliente.classList.remove('aberto');
-    menuCliente.innerHTML = '';
-  }
-
-  if (menuPacote) {
-    menuPacote.classList.remove('aberto');
-    menuPacote.innerHTML = '';
-  }
-
-  const paisAtivo = document.querySelector('.bandeira.active');
-
-  if (!paisAtivo || !menuCliente) {
-    return;
-  }
-
-  const pais = paisAtivo.dataset.pais;
-
-  const clientesDoPais = [...new Set(
-  dados
-    .filter(d =>
-      normalizarChave(d.pais) === normalizarChave(pais)
-    )
-    .map(d => d.cliente)
-    .filter(Boolean)
-)].sort((a, b) => a.localeCompare(b, 'pt-BR'));
-
-const clientePrincipal =
-  document.getElementById('cliente1')?.dataset.valor || '';
-
-const clientePrincipalEhDGO =
-  normalizarChave(clientePrincipal) === 'DGO';
-
-const clientesPermitidos =
-  i === 1
-    ? clientesDoPais
-    : clientePrincipalEhDGO
-      ? clientesDoPais.filter(cliente =>
-          normalizarChave(cliente) === 'DGO'
-        )
-      : clientesDoPais.filter(cliente =>
-          normalizarChave(cliente) !== 'DGO'
+      const lista = document.getElementById('listaPaises');
+      lista.innerHTML = '';
+      REGIOES[regiao].forEach(pais => {
+        const existe = dados.some(
+          d => normalizarChave(d.pais) === normalizarChave(pais)
         );
-
-clientesPermitidos.forEach(cliente => {
-
-  const opcaoCliente = document.createElement('div');
-
-  opcaoCliente.className = 'opcao-custom';
-  opcaoCliente.textContent = cliente;
-
-  opcaoCliente.addEventListener('click', () => {
-    selecionarClienteNoCard(
-      i,
-      cliente,
-      pais,
-      clientesPermitidos
-    );
-  });
-
-  menuCliente.appendChild(opcaoCliente);
-});
-}
-
-function atualizarEtapasPacotes() {
-
-  const cards = document.querySelectorAll('.grid-pacotes .card-pacote');
-
-  const paisSelecionado = Boolean(
-    document.querySelector('.bandeira.active')
-  );
-
-  const pacote1Selecionado = Boolean(
-    document.getElementById('pacote1')?.dataset.valor
-  );
-
-  const pacote2Selecionado = Boolean(
-    document.getElementById('pacote2')?.dataset.valor
-  );
-
-  if (cards[0]) {
-    cards[0].classList.toggle(
-      'bloqueado',
-      !paisSelecionado
-    );
-  }
-
-  if (cards[1]) {
-    cards[1].classList.toggle(
-      'bloqueado',
-      !paisSelecionado || !pacote1Selecionado
-    );
-  }
-
-  if (cards[2]) {
-    cards[2].classList.toggle(
-      'bloqueado',
-      !paisSelecionado ||
-      !pacote1Selecionado ||
-      !pacote2Selecionado
-    );
-  }
-}
-
-function prepararCardComparacao(i) {
-
-  const paisAtivo = document.querySelector('.bandeira.active');
-  const clientePrincipal = document.getElementById('cliente1')?.dataset.valor || '';
-
-  if (!paisAtivo || !clientePrincipal || i === 1) {
-    return;
-  }
-
-  const pais = paisAtivo.dataset.pais;
-
-  const clientesDoPais = [...new Set(
-    dados
-      .filter(d =>
-        normalizarChave(d.pais) === normalizarChave(pais)
-      )
-      .map(d => d.cliente)
-      .filter(Boolean)
-  )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
-
-  const clientePrincipalEhDGO =
-    normalizarChave(clientePrincipal) === 'DGO';
-
-  if (clientePrincipalEhDGO) {
-
-    selecionarClienteNoCard(
-      i,
-      'DGO',
-      pais,
-      clientesDoPais
-    );
-
-    return;
-  }
-
-  const clientesPermitidos = clientesDoPais.filter(cliente =>
-    normalizarChave(cliente) !== 'DGO'
-  );
-
-  const seletorCliente = document.getElementById(`cliente${i}`);
-  const seletorPacote = document.getElementById(`pacote${i}`);
-  const menuCliente = document.getElementById(`menuCliente${i}`);
-  const menuPacote = document.getElementById(`menuPacote${i}`);
-
-  if (
-    !seletorCliente ||
-    !seletorPacote ||
-    !menuCliente ||
-    !menuPacote
-  ) {
-    return;
-  }
-
-  seletorCliente.dataset.valor = '';
-  seletorPacote.dataset.valor = '';
-
-  const textoCliente = seletorCliente.querySelector(
-    '.seletor-regiao-texto'
-  );
-
-  const textoPacote = seletorPacote.querySelector(
-    '.seletor-regiao-texto'
-  );
-
-  if (textoCliente) {
-    textoCliente.textContent = 'Tipo de cliente';
-  }
-
-  if (textoPacote) {
-    textoPacote.textContent = 'Paquete';
-  }
-
-  menuCliente.classList.remove('aberto');
-  menuPacote.classList.remove('aberto');
-
-  menuCliente.innerHTML = '';
-  menuPacote.innerHTML = '';
-
-  clientesPermitidos.forEach(cliente => {
-
-    const opcaoCliente = document.createElement('div');
-
-    opcaoCliente.className = 'opcao-custom';
-    opcaoCliente.textContent = cliente;
-
-    opcaoCliente.addEventListener('click', () => {
-      selecionarClienteNoCard(
-        i,
-        cliente,
-        pais,
-        clientesPermitidos
-      );
-    });
-
-    menuCliente.appendChild(opcaoCliente);
-  });
-}
-
-function selecionarClienteNoCard(i, cliente, pais, clientes) {
-
-  const seletorCliente = document.getElementById(`cliente${i}`);
-  const seletorPacote = document.getElementById(`pacote${i}`);
-  const menuCliente = document.getElementById(`menuCliente${i}`);
-  const menuPacote = document.getElementById(`menuPacote${i}`);
-
-  if (
-    !seletorCliente ||
-    !seletorPacote ||
-    !menuCliente ||
-    !menuPacote
-  ) {
-    return;
-  }
-
-  if (i === 1) {
-  limparCard(2);
-  limparCard(3);
-  ocultarResultado();
-}
-
-if (i === 2) {
-  limparCard(3);
-  ocultarResultado();
-}
-  
-  seletorCliente.dataset.valor = cliente;
-
-  const textoCliente = seletorCliente.querySelector(
-    '.seletor-regiao-texto'
-  );
-
-  if (textoCliente) {
-    textoCliente.textContent = cliente;
-  }
-
-menuCliente.classList.remove('aberto');
-menuCliente.innerHTML = '';
-
-const clienteEhDGO =
-  normalizarChave(cliente) === 'DGO';
-
-if (!clienteEhDGO) {
-
-  clientes
-    .filter(outroCliente =>
-      normalizarChave(outroCliente) !== normalizarChave(cliente) &&
-      normalizarChave(outroCliente) !== 'DGO'
-    )
-    .forEach(outroCliente => {
-
-      const opcaoCliente = document.createElement('div');
-
-      opcaoCliente.className = 'opcao-custom';
-      opcaoCliente.textContent = outroCliente;
-
-      opcaoCliente.addEventListener('click', () => {
-        selecionarClienteNoCard(
-          i,
-          outroCliente,
-          pais,
-          clientes
+        if (!existe) return;
+        const bandeira = document.createElement('div');
+        bandeira.className = 'bandeira';
+        bandeira.dataset.pais = pais;
+        if (pais !== 'OTHER ISLANDS') {
+          const img = document.createElement('img');
+          img.src = `flags/${normalizarArquivo(pais)}.png`;
+          img.alt = pais;
+          bandeira.appendChild(img);
+        }
+        const nome = document.createElement('div');
+        nome.className = 'nome-pais';
+        nome.textContent = pais;
+        bandeira.appendChild(nome);
+        bandeira.addEventListener('click', () =>
+          selecionarPais(pais, bandeira)
         );
+        lista.appendChild(bandeira);
       });
+    }
 
-      menuCliente.appendChild(opcaoCliente);
-    });
-}
+    function limparCard(i) {
+      const seletorCliente = document.getElementById(`cliente${i}`);
+      const seletorPacote = document.getElementById(`pacote${i}`);
+      const menuCliente = document.getElementById(`menuCliente${i}`);
+      const menuPacote = document.getElementById(`menuPacote${i}`);
+      
+      if (seletorCliente) {
+        seletorCliente.dataset.valor = '';
+        const textoCliente = seletorCliente.querySelector('.seletor-regiao-texto');
+        if (textoCliente) {
+          textoCliente.textContent = 'Tipo de cliente';
+        }
+      }
+      if (seletorPacote) {
+        seletorPacote.dataset.valor = '';
+        const textoPacote = seletorPacote.querySelector('.seletor-regiao-texto');
+        if (textoPacote) {
+          textoPacote.textContent = 'Paquete';
+        }
+      }
+      if (menuCliente) {
+        menuCliente.classList.remove('aberto');
+        menuCliente.innerHTML = '';
+      }
+      if (menuPacote) {
+        menuPacote.classList.remove('aberto');
+        menuPacote.innerHTML = '';
+      }
+    }
 
-  seletorPacote.dataset.valor = '';
-
-  const textoPacote = seletorPacote.querySelector(
-    '.seletor-regiao-texto'
-  );
-
-  if (textoPacote) {
-    textoPacote.textContent = 'Paquete';
-  }
-
-  menuPacote.classList.remove('aberto');
-  menuPacote.innerHTML = '';
-
-  const pacotes = [...new Set(
-    dados
-      .filter(d =>
-        normalizarChave(d.pais) === normalizarChave(pais) &&
-        d.cliente === cliente
-      )
-      .map(d => d.pacote)
-      .filter(Boolean)
-  )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
-
-  pacotes.forEach(pacote => {
-
-    const opcaoPacote = document.createElement('div');
-
-    opcaoPacote.className = 'opcao-custom';
-    opcaoPacote.textContent = pacote;
-
-    opcaoPacote.addEventListener('click', () => {
-
-      seletorPacote.dataset.valor = pacote;
-
-      const textoPacoteSelecionado = seletorPacote.querySelector(
-        '.seletor-regiao-texto'
+    function atualizarEtapasPacotes() {
+      const cards = document.querySelectorAll('.grid-pacotes .card-pacote');
+      const paisSelecionado = Boolean(
+        document.querySelector('.bandeira.active')
       );
+      const pacote1Selecionado = Boolean(
+        document.getElementById('pacote1')?.dataset.valor
+      );
+      const pacote2Selecionado = Boolean(
+        document.getElementById('pacote2')?.dataset.valor
+      );
+      if (cards[0]) {
+        cards[0].classList.toggle('bloqueado', !paisSelecionado);
+      }
+      if (cards[1]) {
+        cards[1].classList.toggle(
+          'bloqueado',
+          !paisSelecionado || !pacote1Selecionado
+        );
+      }
+      if (cards[2]) {
+        cards[2].classList.toggle(
+          'bloqueado',
+          !paisSelecionado || !pacote1Selecionado || !pacote2Selecionado
+        );
+      }
+    }
 
-      if (textoPacoteSelecionado) {
-        textoPacoteSelecionado.textContent = pacote;
+    function prepararCardComparacao(i) {
+      const paisAtivo = document.querySelector('.bandeira.active');
+      const clientePrincipal = document.getElementById('cliente1')?.dataset.valor || '';
+      if (!paisAtivo || !clientePrincipal || i === 1) {
+        return;
+      }
+      const pais = paisAtivo.dataset.pais;
+      const clientesDoPais = [...new Set(
+        dados
+          .filter(d => normalizarChave(d.pais) === normalizarChave(pais))
+          .map(d => d.cliente)
+          .filter(Boolean)
+      )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
+      const clientePrincipalEhDGO = normalizarChave(clientePrincipal) === 'DGO';
+      if (clientePrincipalEhDGO) {
+        selecionarClienteNoCard(i, 'DGO', pais, clientesDoPais);
+        return;
+      }
+      const clientesPermitidos = clientesDoPais.filter(cliente =>
+        normalizarChave(cliente) !== 'DGO'
+      );
+      
+      const seletorCliente = document.getElementById(`cliente${i}`);
+      const seletorPacote = document.getElementById(`pacote${i}`);
+      const menuCliente = document.getElementById(`menuCliente${i}`);
+      const menuPacote = document.getElementById(`menuPacote${i}`);
+      
+      if (!seletorCliente || !seletorPacote || !menuCliente || !menuPacote) {
+        return;
+      }
+
+      seletorCliente.dataset.valor = '';
+      seletorPacote.dataset.valor = '';
+      
+      const textoCliente = seletorCliente.querySelector('.seletor-regiao-texto');
+      const textoPacote = seletorPacote.querySelector('.seletor-regiao-texto');
+      
+      if (textoCliente) {
+        textoCliente.textContent = 'Tipo de cliente';
+      }
+      if (textoPacote) {
+        textoPacote.textContent = 'Paquete';
+      }
+
+      menuCliente.classList.remove('aberto');
+      menuPacote.classList.remove('aberto');
+      menuCliente.innerHTML = '';
+      menuPacote.innerHTML = '';
+
+      clientesPermitidos.forEach(cliente => {
+        const opcaoCliente = document.createElement('div');
+        opcaoCliente.className = 'opcao-custom';
+        opcaoCliente.textContent = cliente;
+        opcaoCliente.addEventListener('click', () => {
+          selecionarClienteNoCard(i, cliente, pais, clientesPermitidos);
+        });
+        menuCliente.appendChild(opcaoCliente);
+      });
+    }
+
+    function selecionarClienteNoCard(i, cliente, pais, clientes) {
+      const seletorCliente = document.getElementById(`cliente${i}`);
+      const seletorPacote = document.getElementById(`pacote${i}`);
+      const menuCliente = document.getElementById(`menuCliente${i}`);
+      const menuPacote = document.getElementById(`menuPacote${i}`);
+      
+      if (!seletorCliente || !seletorPacote || !menuCliente || !menuPacote) {
+        return;
+      }
+
+      if (i === 1) {
+        limparCard(2);
+        limparCard(3);
+        ocultarResultado();
+      }
+      if (i === 2) {
+        limparCard(3);
+        ocultarResultado();
+      }
+
+      seletorCliente.dataset.valor = cliente;
+      const textoCliente = seletorCliente.querySelector('.seletor-regiao-texto');
+      if (textoCliente) {
+        textoCliente.textContent = cliente;
+      }
+
+      menuCliente.classList.remove('aberto');
+      menuCliente.innerHTML = '';
+
+      const clienteEhDGO = normalizarChave(cliente) === 'DGO';
+      if (!clienteEhDGO) {
+        clientes
+          .filter(outroCliente =>
+            normalizarChave(outroCliente) !== normalizarChave(cliente) &&
+            normalizarChave(outroCliente) !== 'DGO'
+          )
+          .forEach(outroCliente => {
+            const opcaoCliente = document.createElement('div');
+            opcaoCliente.className = 'opcao-custom';
+            opcaoCliente.textContent = outroCliente;
+            opcaoCliente.addEventListener('click', () => {
+              selecionarClienteNoCard(i, outroCliente, pais, clientes);
+            });
+            menuCliente.appendChild(opcaoCliente);
+          });
+      }
+
+      seletorPacote.dataset.valor = '';
+      const textoPacote = seletorPacote.querySelector('.seletor-regiao-texto');
+      if (textoPacote) {
+        textoPacote.textContent = 'Paquete';
       }
 
       menuPacote.classList.remove('aberto');
+      menuPacote.innerHTML = '';
 
-if (i === 1) {
-  limparCard(2);
-  limparCard(3);
+      const pacotes = [...new Set(
+        dados
+          .filter(d =>
+            normalizarChave(d.pais) === normalizarChave(pais) &&
+            d.cliente === cliente
+          )
+          .map(d => d.pacote)
+          .filter(Boolean)
+      )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
-  prepararCardComparacao(2);
-}
-
-if (i === 2) {
-  limparCard(3);
-
-  prepararCardComparacao(3);
-}
-
-atualizarBarraPacotes();
-atualizarEtapasPacotes();
-gerarResultado();
-    });
-
-    menuPacote.appendChild(opcaoPacote);
-  });
-
-atualizarBarraPacotes();
-atualizarEtapasPacotes();
-gerarResultado();
-}
-    
-    // ===== SELEÇÃO DE PAÍS =====
-function selecionarPais(pais, elemento) {
-
-  const paisAtual = document.querySelector('.bandeira.active');
-
-  if (paisAtual && paisAtual.dataset.pais !== pais) {
-    limparSelecoes();
-  }
-
-  document.querySelectorAll('.bandeira').forEach(bandeira => {
-    bandeira.classList.remove('active');
-  });
-
-  elemento.classList.add('active');
-  ocultarResultado();
-  
-  const clientes = [...new Set(
-    dados
-      .filter(d =>
-        normalizarChave(d.pais) === normalizarChave(pais)
-      )
-      .map(d => d.cliente)
-      .filter(Boolean)
-  )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
-
-  [1, 2, 3].forEach(i => {
-
-    const seletorCliente = document.getElementById(`cliente${i}`);
-    const seletorPacote = document.getElementById(`pacote${i}`);
-    const menuCliente = document.getElementById(`menuCliente${i}`);
-    const menuPacote = document.getElementById(`menuPacote${i}`);
-
-    if (
-      !seletorCliente ||
-      !seletorPacote ||
-      !menuCliente ||
-      !menuPacote
-    ) {
-      return;
-    }
-
-    seletorCliente.dataset.valor = '';
-    seletorPacote.dataset.valor = '';
-
-    const textoCliente = seletorCliente.querySelector(
-      '.seletor-regiao-texto'
-    );
-
-    const textoPacote = seletorPacote.querySelector(
-      '.seletor-regiao-texto'
-    );
-
-    if (textoCliente) {
-      textoCliente.textContent = 'Tipo de cliente';
-    }
-
-    if (textoPacote) {
-      textoPacote.textContent = 'Paquete';
-    }
-
-    menuCliente.classList.remove('aberto');
-    menuPacote.classList.remove('aberto');
-
-    menuCliente.innerHTML = '';
-    menuPacote.innerHTML = '';
-
-    clientes.forEach(cliente => {
-
-      const opcaoCliente = document.createElement('div');
-
-      opcaoCliente.className = 'opcao-custom';
-      opcaoCliente.textContent = cliente;
-
-      opcaoCliente.addEventListener('click', () => {
-        selecionarClienteNoCard(
-          i,
-          cliente,
-          pais,
-          clientes
-        );
+      pacotes.forEach(pacote => {
+        const opcaoPacote = document.createElement('div');
+        opcaoPacote.className = 'opcao-custom';
+        opcaoPacote.textContent = pacote;
+        opcaoPacote.addEventListener('click', () => {
+          seletorPacote.dataset.valor = pacote;
+          const textoPacoteSelecionado = seletorPacote.querySelector('.seletor-regiao-texto');
+          if (textoPacoteSelecionado) {
+            textoPacoteSelecionado.textContent = pacote;
+          }
+          menuPacote.classList.remove('aberto');
+          
+          if (i === 1) {
+            limparCard(2);
+            limparCard(3);
+            prepararCardComparacao(2);
+          }
+          if (i === 2) {
+            limparCard(3);
+            prepararCardComparacao(3);
+          }
+          
+          atualizarBarraPacotes();
+          atualizarEtapasPacotes();
+          gerarResultado();
+        });
+        menuPacote.appendChild(opcaoPacote);
       });
 
-      menuCliente.appendChild(opcaoCliente);
-    });
-  });
+      atualizarBarraPacotes();
+      atualizarEtapasPacotes();
+      gerarResultado();
+    }
 
-  atualizarBarraPacotes();
-  atualizarEtapasPacotes();
-  atualizarEstadoInicial();
-}
+    // ===== SELEÇÃO DE PAÍS =====
+    function selecionarPais(pais, elemento) {
+      const paisAtual = document.querySelector('.bandeira.active');
+      if (paisAtual && paisAtual.dataset.pais !== pais) {
+        limparSelecoes();
+      }
+      document.querySelectorAll('.bandeira').forEach(bandeira => {
+        bandeira.classList.remove('active');
+      });
+      elemento.classList.add('active');
+      ocultarResultado();
 
-// ===== BARRA DE PACOTES =====
-function atualizarBarraPacotes() {      const paisAtivo = document.querySelector('.bandeira.active');
-      const pais = paisAtivo ? paisAtivo.dataset.pais : '';
+      const clientes = [...new Set(
+        dados
+          .filter(d => normalizarChave(d.pais) === normalizarChave(pais))
+          .map(d => d.cliente)
+          .filter(Boolean)
+      )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
       [1, 2, 3].forEach(i => {
-        const clienteSelect = getElementoSeguro(`cliente${i}`);
-        const pacoteSelect = getElementoSeguro(`pacote${i}`);
-        const headerFixo =
-    document.getElementById(`pacoteHeader${i}`);
+        const seletorCliente = document.getElementById(`cliente${i}`);
+        const seletorPacote = document.getElementById(`pacote${i}`);
+        const menuCliente = document.getElementById(`menuCliente${i}`);
+        const menuPacote = document.getElementById(`menuPacote${i}`);
+        
+        if (!seletorCliente || !seletorPacote || !menuCliente || !menuPacote) {
+          return;
+        }
 
-const totalFixo =
-    document.getElementById(`pacoteTotal${i}`);
+        seletorCliente.dataset.valor = '';
+        seletorPacote.dataset.valor = '';
+        
+        const textoCliente = seletorCliente.querySelector('.seletor-regiao-texto');
+        const textoPacote = seletorPacote.querySelector('.seletor-regiao-texto');
+        
+        if (textoCliente) {
+          textoCliente.textContent = 'Tipo de cliente';
+        }
+        if (textoPacote) {
+          textoPacote.textContent = 'Paquete';
+        }
+
+        menuCliente.classList.remove('aberto');
+        menuPacote.classList.remove('aberto');
+        menuCliente.innerHTML = '';
+        menuPacote.innerHTML = '';
+
+        clientes.forEach(cliente => {
+          const opcaoCliente = document.createElement('div');
+          opcaoCliente.className = 'opcao-custom';
+          opcaoCliente.textContent = cliente;
+          opcaoCliente.addEventListener('click', () => {
+            selecionarClienteNoCard(i, cliente, pais, clientes);
+          });
+          menuCliente.appendChild(opcaoCliente);
+        });
+      });
+
+      atualizarBarraPacotes();
+      atualizarEtapasPacotes();
+      atualizarEstadoInicial();
+    }
+
+    // ===== BARRA DE PACOTES =====
+    function atualizarBarraPacotes() {
+      const paisAtivo = document.querySelector('.bandeira.active');
+      const pais = paisAtivo ? paisAtivo.dataset.pais : '';
+      
+      [1, 2, 3].forEach(i => {
+        const clienteSelect = document.getElementById(`cliente${i}`);
+        const pacoteSelect = document.getElementById(`pacote${i}`);
         const headerEst = getElementoSeguro(`pacoteHeaderEst${i}`);
         const totalEst = getElementoSeguro(`pacoteTotalEst${i}`);
 
-        if (!clienteSelect || !pacoteSelect || !headerFixo || !totalFixo) return;
+        if (!clienteSelect || !pacoteSelect || !headerEst || !totalEst) return;
 
         const cliente = clienteSelect.dataset.valor || '';
         const pacote = pacoteSelect.dataset.valor || '';
 
         if (!pais || !cliente || !pacote) {
-          [headerFixo, headerEst].forEach(el => {
-            if (el) {
-              el.textContent = 'Paquete';
-              el.classList.add('vazio');
-            }
-          });
-          [totalFixo, totalEst].forEach(el => {
-            if (el) {
-              el.textContent = '0 canale(s)';
-              el.classList.add('vazio');
-            }
-          });
+          headerEst.textContent = 'Paquete';
+          headerEst.classList.add('vazio');
+          totalEst.textContent = '0 canale(s)';
+          totalEst.classList.add('vazio');
           return;
         }
 
         const canaisUnicos = new Set(
-  dados
-    .filter(d =>
-      normalizarChave(d.pais) === normalizarChave(pais) &&
-      d.cliente === cliente &&
-      d.pacote === pacote &&
-      disponibilidadeAtiva(d.disponibilidad)
-    )
-    .map(d => chaveCanal(d))
-);
+          dados
+            .filter(d =>
+              normalizarChave(d.pais) === normalizarChave(pais) &&
+              d.cliente === cliente &&
+              d.pacote === pacote &&
+              disponibilidadeAtiva(d.disponibilidad)
+            )
+            .map(d => chaveCanal(d))
+        );
 
         const total = canaisUnicos.size;
         const textoTotal = `${total} ${total === 1 ? 'canal' : 'canales'}`;
         const htmlPacote = pacote.replace(' PLUS ', '<br>PLUS ');
 
-        [headerFixo, headerEst].forEach(el => {
-          if (el) {
-            el.innerHTML = htmlPacote;
-            el.classList.remove('vazio');
-          }
+        headerEst.innerHTML = htmlPacote;
+        headerEst.classList.remove('vazio');
+        totalEst.textContent = textoTotal;
+        totalEst.classList.remove('vazio');
+      });
+    }
+
+    // ===== GERAR RESUMO TECNOLOGIA ===== (SEM DUPLICAÇÃO)
+    function gerarResumoTecnologia(mapasPacotes) {
+      const resumo = getElementoSeguro('resumoTecnologia');
+      if (!resumo) return;
+
+      resumo.innerHTML = '';
+      const qtdPacotes = mapasPacotes.length;
+      const larguraTabela = 790 + (140 * qtdPacotes);
+      resumo.style.width = `${larguraTabela}px`;
+      resumo.style.margin = '0 auto';
+
+      TECNOLOGIAS.forEach(tecnologia => {
+        const linha = document.createElement('div');
+        linha.className = 'linha-tecnologia';
+        linha.style.gridTemplateColumns = `790px repeat(${qtdPacotes}, 140px)`;
+
+        const descricao = document.createElement('div');
+        descricao.className = 'descricao-tecnologia';
+
+        // Criar botão de expansão
+        const btnExpandir = document.createElement('button');
+        btnExpandir.className = 'btn-expandir-tecnologia';
+        btnExpandir.dataset.tecnologia = tecnologia;
+        btnExpandir.type = 'button';
+
+        const imgBotao = document.createElement('img');
+        imgBotao.src = 'icon_plus.png';
+        imgBotao.alt = 'Expandir';
+        imgBotao.className = 'icone-plus';
+        btnExpandir.appendChild(imgBotao);
+
+        // Icone da tecnologia
+        const spanIcone = document.createElement('span');
+        spanIcone.innerHTML = ICONES_TECNOLOGIA[tecnologia];
+
+        // Texto da tecnologia
+        const spanTexto = document.createElement('span');
+        spanTexto.innerHTML = TITULOS_TECNOLOGIA[tecnologia];
+
+        descricao.appendChild(btnExpandir);
+        descricao.appendChild(spanIcone);
+        descricao.appendChild(spanTexto);
+        linha.appendChild(descricao);
+
+        // Adicionar valores dos pacotes
+        mapasPacotes.forEach(mapa => {
+          let total = 0;
+          mapa.forEach(item => {
+            if (String(item.tecnologia || '').toUpperCase().includes(tecnologia)) {
+              total++;
+            }
+          });
+          const valor = document.createElement('div');
+          valor.className = 'valor-tecnologia';
+          valor.textContent = total;
+          linha.appendChild(valor);
         });
 
-        [totalFixo, totalEst].forEach(el => {
-          if (el) {
-            el.textContent = textoTotal;
-            el.classList.remove('vazio');
+        const blocoTecnologia = document.createElement('div');
+        blocoTecnologia.appendChild(linha);
+
+        const detalhes = document.createElement('div');
+        detalhes.id = `detalhe-${tecnologia}`;
+        detalhes.className = 'detalhe-tecnologia';
+        detalhes.style.background = '#F4F6F8';
+        detalhes.style.display = 'none';
+
+        // Categorias
+        const categorias = new Map();
+        mapasPacotes.forEach(mapa => {
+          mapa.forEach(item => {
+            if (normalizarChave(item.tecnologia) !== normalizarChave(tecnologia)) {
+              return;
+            }
+            const categoria = item.categoria || 'Sin categoría';
+            categorias.set(categoria, (categorias.get(categoria) || 0) + 1);
+          });
+        });
+
+        categorias.forEach((total, categoria) => {
+          const linhaCategoria = document.createElement('div');
+          linhaCategoria.style.display = 'grid';
+          linhaCategoria.style.gridTemplateColumns = `790px repeat(${qtdPacotes}, 140px)`;
+          linhaCategoria.style.minHeight = '48px';
+          linhaCategoria.style.alignItems = 'center';
+          linhaCategoria.style.borderTop = '1px solid #E5E5E5';
+          linhaCategoria.style.color = '#6E6E73';
+
+          let htmlCategoria = `<div style="text-align:left; padding-left:25px;">${categoria}</div>`;
+          
+          mapasPacotes.forEach(mapa => {
+            let totalCategoria = 0;
+            mapa.forEach(item => {
+              if (
+                normalizarChave(item.tecnologia) === normalizarChave(tecnologia) &&
+                normalizarChave(item.categoria) === normalizarChave(categoria)
+              ) {
+                totalCategoria++;
+              }
+            });
+            htmlCategoria += `<div style="display:flex; align-items:center; justify-content:center;">${totalCategoria}</div>`;
+          });
+
+          linhaCategoria.innerHTML = htmlCategoria;
+          detalhes.appendChild(linhaCategoria);
+        });
+
+        blocoTecnologia.appendChild(detalhes);
+        resumo.appendChild(blocoTecnologia);
+      });
+
+      // Event listeners para os botões
+      resumo.querySelectorAll('.btn-expandir-tecnologia').forEach(botao => {
+        botao.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+
+          const tecnologia = botao.dataset.tecnologia;
+          const detalhe = document.getElementById(`detalhe-${tecnologia}`);
+          const imgIcon = botao.querySelector('img');
+
+          if (detalhe.style.display === 'none') {
+            detalhe.style.display = 'block';
+            imgIcon.src = 'icon_minus.png';
+            imgIcon.className = 'icone-minus';
+            botao.setAttribute('aria-expanded', 'true');
+          } else {
+            detalhe.style.display = 'none';
+            imgIcon.src = 'icon_plus.png';
+            imgIcon.className = 'icone-plus';
+            botao.setAttribute('aria-expanded', 'false');
           }
         });
       });
     }
 
-    // ===== GERAR RESUMO TECNOLOGIA =====
-    function gerarResumoTecnologia(mapasPacotes) {function gerarResumoTecnologia(mapasPacotes) {
-  const resumo = getElementoSeguro('resumoTecnologia');
-  if (!resumo) return;
-
-  resumo.innerHTML = '';
-  const qtdPacotes = mapasPacotes.length;
-  const larguraTabela = 790 + (140 * qtdPacotes);
-  resumo.style.width = `${larguraTabela}px`;
-  resumo.style.margin = '0 auto';
-
-  TECNOLOGIAS.forEach(tecnologia => {
-    const linha = document.createElement('div');
-    linha.className = 'linha-tecnologia';
-    linha.style.gridTemplateColumns = `790px repeat(${qtdPacotes}, 140px)`;
-
-    const descricao = document.createElement('div');
-    descricao.className = 'descricao-tecnologia';
-
-    // Criar botão de expansão
-    const btnExpandir = document.createElement('button');
-    btnExpandir.className = 'btn-expandir-tecnologia';
-    btnExpandir.dataset.tecnologia = tecnologia;
-    btnExpandir.type = 'button';
-    
-    const imgBotao = document.createElement('img');
-    imgBotao.src = 'icon_plus.png';
-    imgBotao.alt = 'Expandir';
-    imgBotao.className = 'icone-plus';
-    btnExpandir.appendChild(imgBotao);
-
-    // Icone da tecnologia
-    const spanIcone = document.createElement('span');
-    spanIcone.innerHTML = ICONES_TECNOLOGIA[tecnologia];
-
-    // Texto da tecnologia
-    const spanTexto = document.createElement('span');
-    spanTexto.innerHTML = TITULOS_TECNOLOGIA[tecnologia];
-
-    descricao.appendChild(btnExpandir);
-    descricao.appendChild(spanIcone);
-    descricao.appendChild(spanTexto);
-    linha.appendChild(descricao);
-
-    // Adicionar valores dos pacotes
-    mapasPacotes.forEach(mapa => {
-      let total = 0;
-      mapa.forEach(item => {
-        if (String(item.tecnologia || '').toUpperCase().includes(tecnologia)) {
-          total++;
-        }
-      });
-      const valor = document.createElement('div');
-      valor.className = 'valor-tecnologia';
-      valor.textContent = total;
-      linha.appendChild(valor);
-    });
-
-    const blocoTecnologia = document.createElement('div');
-    blocoTecnologia.appendChild(linha);
-
-    const detalhes = document.createElement('div');
-    detalhes.id = `detalhe-${tecnologia}`;
-    detalhes.className = 'detalhe-tecnologia';
-    detalhes.style.background = '#F4F6F8';
-    detalhes.style.display = 'none';
-
-    // Categorias
-    const categorias = new Map();
-    mapasPacotes.forEach(mapa => {
-      mapa.forEach(item => {
-        if (normalizarChave(item.tecnologia) !== normalizarChave(tecnologia)) {
-          return;
-        }
-        const categoria = item.categoria || 'Sin categoría';
-        categorias.set(categoria, (categorias.get(categoria) || 0) + 1);
-      });
-    });
-
-    categorias.forEach((total, categoria) => {
-      const linhaCategoria = document.createElement('div');
-      linhaCategoria.style.display = 'grid';
-      linhaCategoria.style.gridTemplateColumns = `790px repeat(${qtdPacotes}, 140px)`;
-      linhaCategoria.style.minHeight = '48px';
-      linhaCategoria.style.alignItems = 'center';
-      linhaCategoria.style.borderTop = '1px solid #E5E5E5';
-      linhaCategoria.style.color = '#6E6E73';
-
-      let htmlCategoria = `<div style="text-align:left; padding-left:25px;">${categoria}</div>`;
-      
-      mapasPacotes.forEach(mapa => {
-        let totalCategoria = 0;
-        mapa.forEach(item => {
-          if (
-            normalizarChave(item.tecnologia) === normalizarChave(tecnologia) &&
-            normalizarChave(item.categoria) === normalizarChave(categoria)
-          ) {
-            totalCategoria++;
-          }
-        });
-        htmlCategoria += `<div style="display:flex; align-items:center; justify-content:center;">${totalCategoria}</div>`;
-      });
-
-      linhaCategoria.innerHTML = htmlCategoria;
-      detalhes.appendChild(linhaCategoria);
-    });
-
-    blocoTecnologia.appendChild(detalhes);
-    resumo.appendChild(blocoTecnologia);
-  });
-
-  // Event listeners para os botões
-  resumo.querySelectorAll('.btn-expandir-tecnologia').forEach(botao => {
-    botao.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      
-      const tecnologia = botao.dataset.tecnologia;
-      const detalhe = document.getElementById(`detalhe-${tecnologia}`);
-      const imgIcon = botao.querySelector('img');
-      
-      if (detalhe.style.display === 'none') {
-        detalhe.style.display = 'block';
-        imgIcon.src = 'icon_minus.png';
-        imgIcon.className = 'icone-minus';
-        botao.setAttribute('aria-expanded', 'true');
-      } else {
-        detalhe.style.display = 'none';
-        imgIcon.src = 'icon_plus.png';
-        imgIcon.className = 'icone-plus';
-        botao.setAttribute('aria-expanded', 'false');
-      }
-    });
-  });
-}
-
-    
     // ===== GERAR RESULTADO =====
     function obterIconeCategoria(categoria) {
       return categoria
@@ -2767,492 +2390,264 @@ const totalFixo =
         .replace(/\s+/g, '-');
     }
 
-function criarImagemTecnologia(tecnologia) {
-  const tecnologiaNormalizada = normalizarChave(tecnologia);
+    function criarImagemTecnologia(tecnologia) {
+      const tecnologiaNormalizada = normalizarChave(tecnologia);
+      if (tecnologiaNormalizada === 'SD') {
+        return '<img class="icone-tecnologia" src="icon_sd.png" alt="SD">';
+      }
+      if (tecnologiaNormalizada === 'HD') {
+        return '<img class="icone-tecnologia" src="icon_hd.png" alt="HD">';
+      }
+      if (tecnologiaNormalizada === '4K') {
+        return '<img class="icone-tecnologia" src="icon_4k.png" alt="4K">';
+      }
+      return tecnologia;
+    }
 
-  if (tecnologiaNormalizada === 'SD') {
-    return '<img class="icone-tecnologia" src="icon_sd.png" alt="SD">';
-  }
-  if (tecnologiaNormalizada === 'HD') {
-    return '<img class="icone-tecnologia" src="icon_hd.png" alt="SD">';
-  }
-  if (tecnologiaNormalizada === '4K') {
-    return '<img class="icone-tecnologia" src="icon_4k.png" alt="SD">';
-  }
+    function ocultarResultado() {
+      const resultado = document.getElementById('resultado');
+      if (resultado) {
+        resultado.innerHTML = '';
+        resultado.style.display = 'none';
+      }
+      const barraEstatica = document.getElementById('barraPacotesEstatica');
+      if (barraEstatica) {
+        barraEstatica.style.display = 'none';
+      }
+      const linhaSeparadora = document.querySelector('.linha-separadora-pacotes');
+      if (linhaSeparadora) {
+        linhaSeparadora.style.display = 'none';
+      }
+      const barraPacotes = document.getElementById('topbarPacotes');
+      if (barraPacotes) {
+        barraPacotes.classList.remove('visible');
+      }
+      atualizarBarraPacotes();
+      atualizarEstadoInicial();
+    }
 
-  return tecnologia;
-}
-    
-function ocultarResultado() {
-
-  const resultado = document.getElementById('resultado');
-
-  if (resultado) {
-    resultado.innerHTML = '';
-    resultado.style.display = 'none';
-  }
-
-  const barraEstatica =
-    document.getElementById('barraPacotesEstatica');
-
-  if (barraEstatica) {
-    barraEstatica.style.display = 'none';
-  }
-
-  const linhaSeparadora =
-    document.querySelector('.linha-separadora-pacotes');
-
-  if (linhaSeparadora) {
-    linhaSeparadora.style.display = 'none';
-  }
-
-  const barraPacotes =
-    document.getElementById('topbarPacotes');
-
-  if (barraPacotes) {
-    barraPacotes.classList.remove('visible');
-  }
-
-  atualizarBarraPacotes();
-  atualizarEstadoInicial();
-}
-    
-    function gerarResultado() {  
+    function gerarResultado() {
       const resultado = getResultado();
       if (!resultado) return;
 
       const selecionados = [1, 2, 3].map(i => ({
-  cliente: getElementoSeguro(`cliente${i}`)?.dataset.valor || '',
-  pacote: getElementoSeguro(`pacote${i}`)?.dataset.valor || ''
-}));
+        cliente: document.getElementById(`cliente${i}`)?.dataset.valor || '',
+        pacote: document.getElementById(`pacote${i}`)?.dataset.valor || ''
+      }));
 
-      const pacotesAtivos = selecionados.filter(
-  s => s.cliente && s.pacote
-);
+      const pacotesAtivos = selecionados.filter(s => s.cliente && s.pacote);
+      const qtdPacotes = pacotesAtivos.length;
 
-const qtdPacotes = pacotesAtivos.length;
       if (qtdPacotes > 1) {
+        filtroSim = false;
+        filtroNao = false;
+      }
 
-    filtroSim = false;
-    filtroNao = false;
+      const larguraTecnologia = 790 + (140 * qtdPacotes);
+      const larguraTabelaCanais = 790 + (140 * qtdPacotes);
+      const gridCanais = `80px 430px 140px 140px repeat(${qtdPacotes}, 140px)`;
 
-}
-      
-const larguraTecnologia =
-  790 + (140 * qtdPacotes);
-const larguraTabelaCanais =
-  790 + (140 * qtdPacotes);
-const gridCanais = `
-80px
-430px
-140px
-140px
-repeat(${qtdPacotes},140px)
-`;
-      
       atualizarBarraPacotes();
 
       const paisAtivo = document.querySelector('.bandeira.active');
-
       if (!paisAtivo || !selecionados.some(s => s.cliente && s.pacote)) {
         resultado.style.display = 'none';
-        getElementoSeguro('barraPacotesEstatica').style.display = 'none';
-        document.querySelector('.linha-separadora-pacotes').style.display = 'none';
         atualizarEstadoInicial();
         return;
       }
 
       const pais = paisAtivo.dataset.pais;
 
-// Criar mapas com somente os canais disponíveis em cada pacote
-const mapasPacotes = selecionados.map(sel => {
-  const mapa = new Map();
+      // Criar mapas com somente os canais disponíveis em cada pacote
+      const mapasPacotes = selecionados.map(sel => {
+        const mapa = new Map();
+        if (!sel.cliente || !sel.pacote) {
+          return mapa;
+        }
+        dados
+          .filter(d =>
+            normalizarChave(d.pais) === normalizarChave(pais) &&
+            d.cliente === sel.cliente &&
+            d.pacote === sel.pacote &&
+            disponibilidadeAtiva(d.disponibilidad)
+          )
+          .forEach(item => {
+            mapa.set(chaveCanal(item), item);
+          });
+        return mapa;
+      });
 
-  if (!sel.cliente || !sel.pacote) {
-    return mapa;
-  }
+      // Mapa base para montar a lista de canais
+      const mapaBase = new Map();
+      dados
+        .filter(d => normalizarChave(d.pais) === normalizarChave(pais))
+        .forEach(item => {
+          const chave = chaveCanal(item);
+          const vcEhInvalido = vcInvalido(item.vc);
+          const existeEmPacoteSelecionado = mapasPacotes.some(mapa => mapa.has(chave));
 
-  dados
-    .filter(d =>
-      normalizarChave(d.pais) === normalizarChave(pais) &&
-      d.cliente === sel.cliente &&
-      d.pacote === sel.pacote &&
-      disponibilidadeAtiva(d.disponibilidad)
-    )
-    .forEach(item => {
-      mapa.set(chaveCanal(item), item);
-    });
+          if (!vcEhInvalido || existeEmPacoteSelecionado) {
+            if (!mapaBase.has(chave)) {
+              mapaBase.set(chave, item);
+            }
+          }
+        });
 
-  return mapa;
-});
+      // Ordenar
+      const base = Array.from(mapaBase.entries())
+        .sort((a, b) => {
+          const itemA = a[1];
+          const itemB = b[1];
+          const numA = parseInt(itemA.vc, 10);
+          const numB = parseInt(itemB.vc, 10);
+          const vcA = Number.isNaN(numA) ? 999999 : numA;
+          const vcB = Number.isNaN(numB) ? 999999 : numB;
+          if (vcA !== vcB) return vcA - vcB;
+          return normalizarTexto(itemA.canal)
+            .localeCompare(normalizarTexto(itemB.canal), 'pt-BR');
+        })
+        .map(entry => entry[1]);
 
-// Mapa base para montar a lista de canais
-const mapaBase = new Map();
-
-dados
-  .filter(d =>
-    normalizarChave(d.pais) === normalizarChave(pais)
-  )
-  .forEach(item => {
-    const chave = chaveCanal(item);
-    const vcEhInvalido = vcInvalido(item.vc);
-
-    const existeEmPacoteSelecionado = mapasPacotes.some(mapa =>
-      mapa.has(chave)
-    );
-
-    // Canal com VC válido aparece sempre.
-    // Canal com VC N/A só aparece se estiver disponível
-    // em pelo menos um dos pacotes selecionados.
-    if (!vcEhInvalido || existeEmPacoteSelecionado) {
-      if (!mapaBase.has(chave)) {
-        mapaBase.set(chave, item);
-      }
-    }
-  });
-
-// Ordenar
-const base = Array.from(mapaBase.entries())
-  .sort((a, b) => {
-    const itemA = a[1];
-    const itemB = b[1];
-    const numA = parseInt(itemA.vc, 10);
-    const numB = parseInt(itemB.vc, 10);
-    const vcA = Number.isNaN(numA) ? 999999 : numA;
-    const vcB = Number.isNaN(numB) ? 999999 : numB;
-
-    if (vcA !== vcB) return vcA - vcB;
-
-    return normalizarTexto(itemA.canal)
-      .localeCompare(normalizarTexto(itemB.canal), 'pt-BR');
-  })
-  .map(entry => entry[1]);
-const totalPacotePrincipal =
-    mapasPacotes[0].size;
-
-const nomePacote1 =
-    selecionados[0].pacote || 'Paquete principal';
-
-const nomePacote2 =
-    selecionados[1].pacote || 'Comparación 1';
-
-const nomePacote3 =
-    selecionados[2].pacote || 'Comparación 2';
-
-      const htmlResumoColunas = pacotesAtivos.map((p, index) => `
-    <div class="resumo-coluna ${index === 0 ? 'ativa' : ''}">
-        ${p.pacote}
-    </div>
-`).join('');
+      const htmlResumoColunas = pacotesAtivos
+        .map((p, index) => `<div class="resumo-coluna ${index === 0 ? 'ativa' : ''}">${p.pacote}</div>`)
+        .join('');
 
       const cabecalhoPacotes = pacotesAtivos
-  .map(p => `<div>${p.pacote}</div>`)
-  .join('');
-      
+        .map(p => `<div>${p.pacote}</div>`)
+        .join('');
+
       // Renderizar resultado
       resultado.innerHTML = `
         <div class="topo-branco"></div>
         <div class="resultado-wrapper">
-        <div class="resultado-conteudo">
-        <div
-  class="resultado-header"
-  style="
-    width:${larguraTecnologia}px;
-    margin:0 auto;
-  "
->
-
-    <div
-  class="resumo-superior"
-  style="
-     grid-template-columns:
-     790px
-     repeat(${qtdPacotes},140px);
-  "
->
-
-        <div class="resumo-titulos">
-
-            <div class="bloco-titulo">
-                Canales por tecnología
+          <div class="resultado-conteudo">
+            <div class="resultado-header" style="width:${larguraTecnologia}px; margin:0 auto;">
+              <div class="resumo-superior" style="grid-template-columns: 790px repeat(${qtdPacotes}, 140px);">
+                <div class="resumo-titulos">
+                  <div class="bloco-titulo">Canales por tecnología</div>
+                  <div class="bloco-subtitulo">Descubra cuántos canales están disponibles en los paquetes seleccionados.</div>
+                </div>
+                <div class="resumo-colunas" style="width:${140 * qtdPacotes}px; justify-content:end;">
+                  ${htmlResumoColunas}
+                </div>
+              </div>
             </div>
-
-            <div class="bloco-subtitulo">
-                Descubra cuántos canales están disponibles en los paquetes seleccionados.
+            <div id="resumoTecnologia"></div>
+            <div class="cabecalho-lista-canais" style="width:${larguraTabelaCanais}px; margin:60px auto 24px;">
+              <div class="cabecalho-lista-esquerda">
+                <div class="lista-canais-titulo">Lista de canales</div>
+                <div class="lista-canais-subtitulo">Busca un canal, filtre por género o tecnología.</div>
+              </div>
+              <div class="cabecalho-lista-direita">
+                <input type="text" id="buscaCanal" autocomplete="off" placeholder="Buscar canal por nombre o número...">
+                ${qtdPacotes === 1 ? `
+                  <button id="btnFiltroSim"><img src="icon_ok.png" alt="OK"></button>
+                  <button id="btnFiltroNao"><img src="icon_nok.png" alt="OK"></button>
+                ` : ''}
+              </div>
             </div>
-
-        </div>
-
-<div
-  class="resumo-colunas"
-  style="
-    width:${140 * qtdPacotes}px;
-    justify-content:end;
-  "
->
-    ${htmlResumoColunas}
-</div>
-
-</div>
-
-</div>
-          <div id="resumoTecnologia"></div>
-<div
-  class="cabecalho-lista-canais"
-  style="
-      width:${larguraTabelaCanais}px;
-      margin:60px auto 24px;
-  "
->
-
-    <div class="cabecalho-lista-esquerda">
-
-        <div class="lista-canais-titulo">
-            Lista de canales
-        </div>
-
-        <div class="lista-canais-subtitulo">
-            Busca un canal, filtre por género o tecnología.
-        </div>
-
-    </div>
-
-    <div class="cabecalho-lista-direita">
-
-        <input
-    type="text"
-    id="buscaCanal"
-    autocomplete="off"
-    placeholder="Buscar canal por nombre o número..."
->
-
-${qtdPacotes === 1 ? `
-
-<button id="btnFiltroSim">
-    <img src="icon_ok.png" alt="OK">
-</button>
-
-<button id="btnFiltroNao">
-    <img src="icon_nok.png" alt="OK">
-</button>
-
-` : ''}
-
-</div>
-
-</div>
-
-<div
-  class="tabela-canais-wrapper"
-  style="
-    width:${larguraTabelaCanais}px;
-    margin:0 auto;
-  "
->
-<div class="cabecalho-canais"
-     style="grid-template-columns:${gridCanais}">
-  <div>#</div>
-  <div class="cabecalho-canal">Canal</div>
-  <div class="cabecalho-genero">Género</div>
-  <div>Tecnología</div>
-
-  ${cabecalhoPacotes}
-
-</div>
-
-  <div id="listaCanais"></div>
-
-</div>
-
-</div>
+            <div class="tabela-canais-wrapper" style="width:${larguraTabelaCanais}px; margin:0 auto;">
+              <div class="cabecalho-canais" style="grid-template-columns: ${gridCanais}">
+                <div>#</div>
+                <div class="cabecalho-canal">Canal</div>
+                <div class="cabecalho-genero">Género</div>
+                <div>Tecnología</div>
+                ${cabecalhoPacotes}
+              </div>
+              <div id="listaCanais"></div>
+            </div>
+          </div>
         </div>
         <div class="topo-branco-inferior"></div>
       `;
 
-const btnFiltroSim =
-    document.getElementById('btnFiltroSim');
+      const btnFiltroSim = document.getElementById('btnFiltroSim');
+      const btnFiltroNao = document.getElementById('btnFiltroNao');
 
-const btnFiltroNao =
-    document.getElementById('btnFiltroNao');  
       if (btnFiltroSim && filtroSim) {
-    btnFiltroSim.classList.add('ativo');
-}
+        btnFiltroSim.classList.add('ativo');
+      }
+      if (btnFiltroNao && filtroNao) {
+        btnFiltroNao.classList.add('ativo');
+      }
 
-if (btnFiltroNao && filtroNao) {
-    btnFiltroNao.classList.add('ativo');
-}
-const buscaCanal =
-    document.getElementById('buscaCanal');
+      const buscaCanal = document.getElementById('buscaCanal');
+      if (buscaCanal) {
+        buscaCanal.oninput = () => {
+          const termo = buscaCanal.value.toLowerCase().trim();
+          document.querySelectorAll('.linha-canal-nova').forEach(linha => {
+            const texto = linha.textContent.toLowerCase();
+            linha.style.display = texto.includes(termo) ? '' : 'none';
+          });
+        };
+      }
 
-if (buscaCanal){
+      if (btnFiltroSim) {
+        btnFiltroSim.onclick = () => {
+          filtroSim = !filtroSim;
+          filtroNao = false;
+          btnFiltroSim.classList.toggle('ativo', filtroSim);
+          btnFiltroNao.classList.remove('ativo');
+          gerarResultado();
+        };
+      }
 
-    buscaCanal.oninput = () => {
+      if (btnFiltroNao) {
+        btnFiltroNao.onclick = () => {
+          filtroNao = !filtroNao;
+          filtroSim = false;
+          btnFiltroNao.classList.toggle('ativo', filtroNao);
+          btnFiltroSim.classList.remove('ativo');
+          gerarResultado();
+        };
+      }
 
-        const termo =
-            buscaCanal.value
-                .toLowerCase()
-                .trim();
-
-        document
-            .querySelectorAll('.linha-canal-nova')
-            .forEach(linha => {
-
-                const texto =
-                    linha.textContent.toLowerCase();
-
-                linha.style.display =
-                    texto.includes(termo)
-                        ? ''
-                        : 'none';
-
-            });
-
-    };
-
-}
-if (btnFiltroSim){
-
-    btnFiltroSim.onclick = () => {
-
-        filtroSim = !filtroSim;
-
-        filtroNao = false;
-
-        btnFiltroSim.classList.toggle(
-            'ativo',
-            filtroSim
-        );
-
-        btnFiltroNao.classList.remove(
-            'ativo'
-        );
-
-        gerarResultado();
-
-    };
-
-}
-
-if (btnFiltroNao){
-
-    btnFiltroNao.onclick = () => {
-
-        filtroNao = !filtroNao;
-
-        filtroSim = false;
-
-        btnFiltroNao.classList.toggle(
-            'ativo',
-            filtroNao
-        );
-
-        btnFiltroSim.classList.remove(
-            'ativo'
-        );
-
-        gerarResultado();
-
-    };
-
-}
-      // Atualizar headers
-      selecionados.forEach((sel, idx) => {
-        const i = idx + 1;
-        const headPacote = getElementoSeguro(`headPacote${i}`);
-        const headTotal = getElementoSeguro(`headTotal${i}`);
-
-        if (headPacote) headPacote.textContent = sel.pacote;
-        if (headTotal) {
-          const total = mapasPacotes[idx].size;
-          headTotal.textContent = `${total} ${total === 1 ? 'canal' : 'canales'}`;
-        }
-      });
-
-      const mapasAtivos = mapasPacotes.filter(
-  mapa => mapa.size > 0
-);
-
-gerarResumoTecnologia(mapasAtivos);
-
+      const mapasAtivos = mapasPacotes.filter(mapa => mapa.size > 0);
+      gerarResumoTecnologia(mapasAtivos);
 
       const listaCanais = getElementoSeguro('listaCanais');
       if (listaCanais) {
         listaCanais.innerHTML = '';
+        const textoBusca = (document.getElementById('buscaCanal')?.value || '').toLowerCase().trim();
 
-        const textoBusca =
-(
-    document.getElementById('buscaCanal')?.value || ''
-)
-.toLowerCase()
-.trim();
-        
- base.forEach(ref => {
+        base.forEach(ref => {
+          const nomeCanal = ref.canal.toLowerCase();
+          const numeroCanal = String(ref.vc);
 
-    const nomeCanal =
-        ref.canal.toLowerCase();
+          if (textoBusca && !nomeCanal.includes(textoBusca) && !numeroCanal.includes(textoBusca)) {
+            return;
+          }
 
-    const numeroCanal =
-        String(ref.vc);
+          const linha = document.createElement('div');
+          linha.className = 'linha-canal-nova';
+          linha.style.gridTemplateColumns = gridCanais;
 
-    if (
-        textoBusca &&
-        !nomeCanal.includes(textoBusca) &&
-        !numeroCanal.includes(textoBusca)
-    ){
-        return;
-    }
+          const chaveRef = chaveCanal(ref);
+          const existeNoPacote = mapasAtivos.some(mapa => mapa.has(chaveRef));
 
-    const linha = document.createElement('div');
+          if (filtroSim && !existeNoPacote) {
+            return;
+          }
+          if (filtroNao && existeNoPacote) {
+            return;
+          }
 
-    linha.className = 'linha-canal-nova';
+          linha.innerHTML = `
+            <div class="info-canal-vc">${ref.vc}</div>
+            <div class="info-canal-nome">${ref.canal}</div>
+            <div class="info-canal-categoria">${ref.categoria}</div>
+            <div class="info-canal-tecnologia">${criarImagemTecnologia(ref.tecnologia)}</div>
+          `;
 
-    linha.style.gridTemplateColumns = gridCanais;
-
-    const chaveRef = chaveCanal(ref);
-
-   const existeNoPacote =
-    mapasAtivos.some(
-        mapa => mapa.has(chaveRef)
-    );
-
-if (filtroSim && !existeNoPacote){
-    return;
-}
-
-if (filtroNao && existeNoPacote){
-    return;
-}
-         
-        linha.innerHTML = `
- <div class="info-canal-vc">
-  ${ref.vc}
-</div>
-
-<div class="info-canal-nome">
-  ${ref.canal}
-</div>
-
-<div class="info-canal-categoria">
-  ${ref.categoria}
-</div>
-
-<div class="info-canal-tecnologia">
-  ${criarImagemTecnologia(ref.tecnologia)}
-</div>
-`;
-
-mapasAtivos.forEach(mapa => {
-  linha.appendChild(
-    criarStatusPacote(mapa.has(chaveRef))
-  );
-});
+          mapasAtivos.forEach(mapa => {
+            linha.appendChild(criarStatusPacote(mapa.has(chaveRef)));
+          });
 
           listaCanais.appendChild(linha);
         });
       }
 
       resultado.style.display = 'block';
-
       atualizarBarraPacotes();
       atualizarEstadoInicial();
     }
@@ -3260,24 +2655,23 @@ mapasAtivos.forEach(mapa => {
     // ===== EVENTOS DOS SELECTS =====
     function prepararEventosSelects() {
       [1, 2, 3].forEach(i => {
-        const selectCliente = getElementoSeguro(`cliente${i}`);
-        const selectPacote = getElementoSeguro(`pacote${i}`);
+        const selectCliente = document.getElementById(`cliente${i}`);
+        const selectPacote = document.getElementById(`pacote${i}`);
 
         if (selectCliente) {
           selectCliente.addEventListener('change', function () {
             const cliente = this.value;
             const ativo = document.querySelector('.bandeira.active');
             if (!ativo) return;
-
             const pais = ativo.dataset.pais;
             const pacotes = [...new Set(
-dados
-  .filter(d =>
-    normalizarChave(d.pais) === normalizarChave(pais) &&
-    d.cliente === cliente
-  )
-  .map(d => d.pacote)
-  .filter(Boolean)
+              dados
+                .filter(d =>
+                  normalizarChave(d.pais) === normalizarChave(pais) &&
+                  d.cliente === cliente
+                )
+                .map(d => d.pacote)
+                .filter(Boolean)
             )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
             if (selectPacote) {
@@ -3309,16 +2703,13 @@ dados
     // ===== SCROLL HANDLER =====
     function atualizarEstadoCabecalho() {
       const topbars = document.querySelectorAll('.top-bar');
-
       if (!resultadoVisivel()) {
-    topbars.forEach(el => el.classList.remove('scrolled'));
-    return;
-}
-
+        topbars.forEach(el => el.classList.remove('scrolled'));
+        return;
+      }
       const resultado = getResultado();
       const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
       const triggerClaro = resultado.offsetTop - 100;
-
       const barraEstatica = getElementoSeguro('barraPacotesEstatica');
 
       if (y >= triggerClaro) {
@@ -3326,7 +2717,6 @@ dados
       } else {
         topbars.forEach(el => el.classList.remove('scrolled'));
       }
-
     }
 
     function calcularLimiteInicial() {
@@ -3343,24 +2733,19 @@ dados
     // Throttled scroll handler
     function handleScroll() {
       lastScrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-
       if (!ticking) {
         window.requestAnimationFrame(() => {
           const scrollY = lastScrollY;
           const topMain = getElementoSeguro('topbarMain');
           const topSub = getElementoSeguro('topbarSub');
-
           let progresso = scrollY / 70;
           if (progresso > 1) progresso = 1;
           const movimento = -50 * progresso;
-
           if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
           if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
-   
           atualizarEstadoCabecalho();
           ticking = false;
         });
-
         ticking = true;
       }
     }
