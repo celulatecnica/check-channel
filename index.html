@@ -163,6 +163,12 @@
       transition: background 0.3s ease;
     }
 
+    .icone-status{
+  width:20px;
+  height:20px;
+  object-fit:contain;
+}
+    
     /* ===== PACOTES (Header) ===== */
     .pacote-resumo-bloco {
       height: 100%;
@@ -1659,12 +1665,16 @@ select:focus {
     }
 
     // ===== CRIAR ELEMENTOS =====
-    function criarStatusPacote(existe) {
-      const status = document.createElement('div');
-      status.className = 'status-pacote';
-      status.textContent = existe ? '✅' : '❌';
-      return status;
-    }
+function criarStatusPacote(existe) {
+  const status = document.createElement('div');
+  status.className = 'status-pacote';
+
+  status.innerHTML = existe
+    ? <img src="icon_ok.png" class="icone-status">
+    : <img src="icon_nok.png" class="icone-status">
+
+  return status;
+}
 
     // ===== CSV PARSER =====
     // ===== CSV PARSER =====
