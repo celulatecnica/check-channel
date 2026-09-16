@@ -1668,11 +1668,9 @@ select:focus {
 function criarStatusPacote(existe) {
   const status = document.createElement('div');
   status.className = 'status-pacote';
-
   status.innerHTML = existe
-    ? <img src="icon_ok.png">
-    : <img src="icon_nok.png">
-
+    ? '<img src="icon_ok.png" alt="OK">'
+    : '<img src="icon_nok.png" alt="NOK">';
   return status;
 }
 
