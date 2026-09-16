@@ -72,7 +72,7 @@
     /* BARRA 3 - Pacotes selecionados */
 .top-bar-pacotes{
   position:fixed;
-  top:100px;
+  top:50px;
   left:0;
   width:100%;
   height:70px;
@@ -2828,6 +2828,13 @@ if(totalFixo){
           const movimento = -50 * progresso;
           if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
           if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
+          const topPacotes =
+    document.getElementById('topbarPacotes');
+
+if(topPacotes){
+    topPacotes.style.transform =
+        `translateY(${movimento}px)`;
+}
           atualizarEstadoCabecalho();
           controlarBarraPacoteFixa();
           ticking = false;
