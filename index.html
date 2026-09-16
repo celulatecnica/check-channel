@@ -70,46 +70,44 @@
     }
 
     /* BARRA 3 - Pacotes selecionados */
-/* ✅ DEPOIS - position sticky */
-.top-bar-pacotes{
+/* ✅ NOVO CSS - Sticky dentro do resultado */
+.top-bar-pacotes {
   position: sticky;
-  top: 100px;  /* Fica abaixo das barras principais */
+  top: 100px;
   left: 0;
   width: 100%;
   height: 70px;
-  display: none;
-  background: rgba(15,15,15,.92);
+  background: rgba(15, 15, 15, 0.92);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
   border-bottom: 1px solid #2A2A2A;
-  z-index: 998;
+  z-index: 100;
+  margin: 0;
+  padding: 0;
 }
 
-.top-bar-pacotes.visible {
-  display: block;
-}
-
-.top-bar-pacotes.visible{
-  display:block;
-}
-
-.top-bar-pacotes-inner{
-  width: 950px;  /* ✅ Mesmo tamanho do container principal */
+.top-bar-pacotes-inner {
+  width: 950px;
   max-width: calc(100% - 32px);
   margin: 0 auto;
   height: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;  /* ✅ Centraliza horizontalmente */
+  justify-content: center;
 }
 
-#barraPacotesFixa{
-  display: flex;  /* ✅ ALTERADO de grid */
+#barraPacotesFixa {
+  display: flex;
   align-items: center;
-  justify-content: center;  /* ✅ Centralizado */
-  gap: 24px;  /* ✅ ADICIONADO */
+  justify-content: center;
+  gap: 24px;
   height: 100%;
   width: 100%;
+}
+
+#barraPacotesFixa .pacote-resumo-bloco {
+  width: 140px;
+  flex-shrink: 0;
 }
 
 #barraPacotesFixa .pacote-resumo-bloco{
@@ -1428,14 +1426,7 @@ border-bottom:none;
     </div>
   </div>
 
-  <div class="top-bar top-bar-pacotes" id="topbarPacotes">
-    <div class="top-bar-pacotes-inner">
-
-    <div id="barraPacotesFixa"></div>
-
-</div>
-</div>
-  
+   
     <!-- ✅ BANNER -->
   <img id="banner" src="banner.png" alt="Banner">
 
@@ -2344,6 +2335,30 @@ function atualizarBarraPacotes() {
     }
   });
 }
+
+  }
+
+// ✅ ADICIONE AQUI - Logo após atualizarBarraPacotes fechar
+
+function atualizarBarraPacotesNoResultado() {
+  const resultado = document.getElementById('resultado');
+  if (!resultado) return;
+  
+  const barraResultado = document.getElementById('topbarPacotes');
+  
+  // Se a barra não existe no resultado, criar
+  if (!barraResultado || barraResultado.parentElement.id !== 'resultado') {
+    // Já será criada no gerarResultado()
+    return;
+  }
+  
+  // Atualizar conteúdo da barra
+  const barraFixa = barraResultado.querySelector('#barraPacotesFixa');
+  if (barraFixa) {
+    atualizarBarraPacotes(); // Reutilizar lógica existente
+  }
+}
+  
     // ===== GERAR RESUMO TECNOLOGIA ===== (SEM DUPLICAÇÃO)
     function gerarResumoTecnologia(mapasPacotes) {
       const resumo = getElementoSeguro('resumoTecnologia');
@@ -2620,9 +2635,18 @@ function atualizarBarraPacotes() {
         .join('');
 
       // Renderizar resultado
-      resultado.innerHTML = `
-        <div class="topo-branco"></div>
-        <div class="resultado-wrapper">
+      // Renderizar resultado
+resultado.innerHTML = `
+  <div class="topo-branco"></div>
+  
+  <!-- ✅ BARRA STICKY AQUI DENTRO -->
+  <div class="top-bar-pacotes" id="topbarPacotes">
+    <div class="top-bar-pacotes-inner">
+      <div id="barraPacotesFixa"></div>
+    </div>
+  </div>
+  
+  <div class="resultado-wrapper">
           <div class="resultado-conteudo">
             <div class="resultado-header" style="width:${larguraTecnologia}px; margin:0 auto;">
               <div class="resumo-superior" style="grid-template-columns: 790px repeat(${qtdPacotes}, 140px);">
