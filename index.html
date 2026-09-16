@@ -162,6 +162,20 @@
       background: #ffffff;
       transition: background 0.3s ease;
     }
+
+    .icone-plus{
+    width:20px;
+    height:20px;
+    object-fit:contain;
+    display:block;
+}
+
+.icone-minus{
+    width:10px;
+    height:10px;
+    object-fit:contain;
+    display:block;
+}
     
     /* ===== PACOTES (Header) ===== */
     .pacote-resumo-bloco {
@@ -1054,13 +1068,6 @@ border-bottom:none;
 
     flex-shrink:0;
 
-}
-
-    .btn-expandir-tecnologia img{
-    width:20px;
-    height:20px;
-    object-fit:contain;
-    display:block;
 }
     
     .icone-tecnologia {
@@ -2620,7 +2627,7 @@ linha.style.gridTemplateColumns =
 descricao.className = 'descricao-tecnologia';
 
 descricao.innerHTML = `
-    <span class="btn-expandir-tecnologia"
+    <span class="icon-plus"
           data-tecnologia="${tecnologia}">
         <img src="icon_plus.png" alt="OK">
     </span>
