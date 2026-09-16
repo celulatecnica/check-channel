@@ -70,21 +70,46 @@
     }
 
     /* BARRA 3 - Pacotes selecionados */
-.top-bar-pacotes {
-  display: none !important;
+.top-bar-pacotes{
+  position:fixed;
+  top:100px;
+  left:0;
+  width:100%;
+  height:70px;
+
+  display:none;
+
+  background:rgba(15,15,15,.92);
+
+  backdrop-filter:blur(30px);
+  -webkit-backdrop-filter:blur(30px);
+
+  border-bottom:1px solid #2A2A2A;
+
+  z-index:998;
 }
 
-    .top-bar-pacotes.visible {
-      opacity: 1;
-      pointer-events: auto;
-    }
+.top-bar-pacotes.visible{
+  display:block;
+}
 
-    .top-bar-pacotes-inner {
-      display: grid;
-      grid-template-columns: 55% 15% 15% 15%;
-      height: 100%;
-      align-items: center;
-    }
+.top-bar-pacotes-inner{
+  width:930px;
+  max-width:calc(100% - 32px);
+
+  margin:0 auto;
+  height:100%;
+
+  display:grid;
+
+  grid-template-columns:
+      790px
+      140px
+      140px
+      140px;
+
+  align-items:center;
+}
 
     /* ===== SCROLL - ESTADO CLARO ===== */
     .top-bar-main.scrolled,
@@ -1402,6 +1427,29 @@ border-bottom:none;
     </div>
   </div>
 
+  <div class="top-bar top-bar-pacotes" id="topbarPacotes">
+    <div class="top-bar-pacotes-inner">
+
+        <div></div>
+
+        <div class="pacote-resumo-bloco">
+            <div class="pacote-resumo vazio" id="pacoteHeader1">Paquete</div>
+            <div class="pacote-total vazio" id="pacoteTotal1">0 canales</div>
+        </div>
+
+        <div class="pacote-resumo-bloco">
+            <div class="pacote-resumo vazio" id="pacoteHeader2">Paquete</div>
+            <div class="pacote-total vazio" id="pacoteTotal2">0 canales</div>
+        </div>
+
+        <div class="pacote-resumo-bloco">
+            <div class="pacote-resumo vazio" id="pacoteHeader3">Paquete</div>
+            <div class="pacote-total vazio" id="pacoteTotal3">0 canales</div>
+        </div>
+
+    </div>
+</div>
+  
     <!-- ✅ BANNER -->
   <img id="banner" src="banner.png" alt="Banner">
 
@@ -2220,8 +2268,17 @@ border-bottom:none;
       [1, 2, 3].forEach(i => {
         const clienteSelect = document.getElementById(`cliente${i}`);
         const pacoteSelect = document.getElementById(`pacote${i}`);
-        const headerEst = getElementoSeguro(`pacoteHeaderEst${i}`);
-        const totalEst = getElementoSeguro(`pacoteTotalEst${i}`);
+const headerEst =
+    getElementoSeguro(`pacoteHeaderEst${i}`);
+
+const totalEst =
+    getElementoSeguro(`pacoteTotalEst${i}`);
+
+const headerFixo =
+    getElementoSeguro(`pacoteHeader${i}`);
+
+const totalFixo =
+    getElementoSeguro(`pacoteTotal${i}`);
 
         if (!clienteSelect || !pacoteSelect || !headerEst || !totalEst) return;
 
@@ -2251,10 +2308,21 @@ border-bottom:none;
         const textoTotal = `${total} ${total === 1 ? 'canal' : 'canales'}`;
         const htmlPacote = pacote.replace(' PLUS ', '<br>PLUS ');
 
-        headerEst.innerHTML = htmlPacote;
-        headerEst.classList.remove('vazio');
-        totalEst.textContent = textoTotal;
-        totalEst.classList.remove('vazio');
+headerEst.innerHTML = htmlPacote;
+headerEst.classList.remove('vazio');
+
+totalEst.textContent = textoTotal;
+totalEst.classList.remove('vazio');
+
+if(headerFixo){
+    headerFixo.innerHTML = htmlPacote;
+    headerFixo.classList.remove('vazio');
+}
+
+if(totalFixo){
+    totalFixo.textContent = textoTotal;
+    totalFixo.classList.remove('vazio');
+}
       });
     }
 
@@ -2761,12 +2829,36 @@ border-bottom:none;
           if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
           if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
           atualizarEstadoCabecalho();
+          controlarBarraPacoteFixa();
           ticking = false;
         });
         ticking = true;
       }
     }
 
+  function controlarBarraPacoteFixa(){
+
+    const barra =
+        document.getElementById('topbarPacotes');
+
+    const referencia =
+        document.querySelector('.resumo-colunas');
+
+    if(!barra || !referencia){
+        barra?.classList.remove('visible');
+        return;
+    }
+
+    const topo =
+        referencia.getBoundingClientRect().top;
+
+    if(topo <= 100){
+        barra.classList.add('visible');
+    }else{
+        barra.classList.remove('visible');
+    }
+}
+  
     // ===== EVENT LISTENERS =====
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('load', atualizarEstadoInicial);
