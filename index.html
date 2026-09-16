@@ -311,6 +311,24 @@
   text-align: left;
 }
 
+/* ✅ Estado vazio (placeholder) */
+.seletor-custom[data-valor=""] .seletor-regiao-texto {
+  color: #525A65;
+  opacity: 0.6;
+}
+
+/* ✅ Estado selecionado */
+.seletor-custom:not([data-valor=""]) .seletor-regiao-texto {
+  color: #E4E7EB;
+  opacity: 1;
+}
+
+/* ✅ Ao abrir o menu */
+.seletor-custom.aberto .seletor-regiao-texto {
+  color: #E4E7EB;
+  opacity: 1;
+}
+
 .seletor-regiao-seta {
   width: 24px;
   height: 24px;
