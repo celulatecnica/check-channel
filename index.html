@@ -993,7 +993,7 @@ select:focus {
   display: grid;
   grid-auto-columns: 140px;
   grid-auto-flow: column;
-  justify-content: end;
+  justify-content: start;
 }
 
 .resumo-coluna {
@@ -2613,7 +2613,7 @@ if(barraFixa){
                   <div class="bloco-titulo">Canales por tecnología</div>
                   <div class="bloco-subtitulo">Descubra cuántos canales están disponibles en los paquetes seleccionados.</div>
                 </div>
-                <div class="resumo-colunas" style="width:${140 * qtdPacotes}px; justify-content:end;">
+                <div class="resumo-colunas" style="width:${140 * qtdPacotes}px;">
                   ${htmlResumoColunas}
                 </div>
               </div>
