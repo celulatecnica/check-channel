@@ -1372,12 +1372,6 @@ border-bottom:none;
   overflow: hidden;
 }
 
-  border: 1px solid rgba(82,89,97,1);
-  border-radius: 12px;
-
-  overflow: hidden;
-}
-
     .opcao-custom:hover {
   background: rgba(255,255,255,.05);
 }
@@ -2259,6 +2253,13 @@ if(barraFixa){
     function atualizarBarraPacotes() {
       const paisAtivo = document.querySelector('.bandeira.active');
       const pais = paisAtivo ? paisAtivo.dataset.pais : '';
+
+      const barraFixa =
+    document.getElementById('barraPacotesFixa');
+
+if(barraFixa){
+    barraFixa.innerHTML = '';
+}
       
       [1, 2, 3].forEach(i => {
         const clienteSelect = document.getElementById(`cliente${i}`);
