@@ -70,23 +70,23 @@
     }
 
     /* BARRA 3 - Pacotes selecionados */
+/* ✅ DEPOIS - position sticky */
 .top-bar-pacotes{
-  position:fixed;
-  top:50px;
-  left:0;
-  width:100%;
-  height:70px;
+  position: sticky;
+  top: 100px;  /* Fica abaixo das barras principais */
+  left: 0;
+  width: 100%;
+  height: 70px;
+  display: none;
+  background: rgba(15,15,15,.92);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border-bottom: 1px solid #2A2A2A;
+  z-index: 998;
+}
 
-  display:none;
-
-  background:rgba(15,15,15,.92);
-
-  backdrop-filter:blur(30px);
-  -webkit-backdrop-filter:blur(30px);
-
-  border-bottom:1px solid #2A2A2A;
-
-  z-index:998;
+.top-bar-pacotes.visible {
+  display: block;
 }
 
 .top-bar-pacotes.visible{
@@ -2833,51 +2833,25 @@ function atualizarBarraPacotes() {
       atualizarEstadoCabecalho();
     }
 
-    // Throttled scroll handler
-    function handleScroll() {
-      lastScrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const scrollY = lastScrollY;
-          const topMain = getElementoSeguro('topbarMain');
-          const topSub = getElementoSeguro('topbarSub');
-          let progresso = scrollY / 70;
-          if (progresso > 1) progresso = 1;
-          const movimento = -50 * progresso;
-          if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
-          if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
-          
-          atualizarEstadoCabecalho();
-          controlarBarraPacoteFixa();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    }
-
-  function controlarBarraPacoteFixa(){
-
-    const barra =
-        document.getElementById('topbarPacotes');
-
-    const referencia =
-        document.querySelector('.resumo-colunas');
-
-    if(!barra || !referencia){
-        barra?.classList.remove('visible');
-        return;
-    }
-
-    const topo =
-        referencia.getBoundingClientRect().top;
-
-    if(topo <= 100){
-        barra.classList.add('visible');
-    }else{
-        barra.classList.remove('visible');
-    }
+  function handleScroll() {
+  lastScrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+  if (!ticking) {
+    window.requestAnimationFrame(() => {
+      const scrollY = lastScrollY;
+      const topMain = getElementoSeguro('topbarMain');
+      const topSub = getElementoSeguro('topbarSub');
+      let progresso = scrollY / 70;
+      if (progresso > 1) progresso = 1;
+      const movimento = -50 * progresso;
+      if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
+      if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
+      atualizarEstadoCabecalho();
+      // Removido: controlarBarraPacoteFixa()
+      ticking = false;
+    });
+    ticking = true;
+  }
 }
-  
     // ===== EVENT LISTENERS =====
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('load', atualizarEstadoInicial);
