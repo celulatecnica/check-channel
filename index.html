@@ -84,9 +84,13 @@
   z-index: 100;
   margin: 0 !important;
   padding: 0 !important;
-  display: block !important;  /* ✅ FORÇA EXIBIÇÃO */
+  display: none;
 }
 
+    .top-bar-pacotes.visible{
+  display:block;
+}
+    
 .top-bar-pacotes-inner {
   width:1210px;
   max-width:1210px;
@@ -2847,12 +2851,38 @@ resultado.innerHTML = `
       if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
       if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
       atualizarEstadoCabecalho();
-      // Removido: controlarBarraPacoteFixa()
+      controlarBarraPacoteFixa();
       ticking = false;
     });
     ticking = true;
   }
 }
+
+  function controlarBarraPacoteFixa(){
+
+    const barra =
+        document.querySelector(
+            '#resultado .top-bar-pacotes'
+        );
+
+    const referencia =
+        document.querySelector('.resumo-colunas');
+
+    if(!barra || !referencia){
+        return;
+    }
+
+    const topo =
+        referencia.getBoundingClientRect().top;
+
+    if(topo <= 100){
+        barra.classList.add('visible');
+    }else{
+        barra.classList.remove('visible');
+    }
+
+}
+  
     // ===== EVENT LISTENERS =====
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('load', atualizarEstadoInicial);
