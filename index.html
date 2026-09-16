@@ -2255,7 +2255,7 @@ if(barraFixa){
       atualizarEstadoInicial();
     }
 
-    // ===== BARRA DE PACOTES =====
+// ===== BARRA DE PACOTES =====
 function atualizarBarraPacotes() {
   const paisAtivo = document.querySelector('.bandeira.active');
   const pais = paisAtivo ? paisAtivo.dataset.pais : '';
@@ -2266,7 +2266,6 @@ function atualizarBarraPacotes() {
   }
 
   let qtdPacotes = 0;
-  const ordemBarra = [];
   
   [1,2,3].forEach(i => {
     const pacote = document.getElementById(`pacote${i}`)?.dataset.valor || '';
@@ -2276,7 +2275,7 @@ function atualizarBarraPacotes() {
   });
 
   if(barraFixa){
-    // ✅ CENTRALIZAR: Usar flex em vez de grid
+    // ✅ CENTRALIZAR: Usar flex
     barraFixa.style.display = 'flex';
     barraFixa.style.alignItems = 'center';
     barraFixa.style.justifyContent = 'center';
@@ -2324,27 +2323,27 @@ function atualizarBarraPacotes() {
     totalEst.textContent = textoTotal;
     totalEst.classList.remove('vazio');
 
-    // ✅ Criar elemento do pacote
+    // ✅ Criar elemento do pacote dinamicamente
     const pacoteBloco = document.createElement('div');
     pacoteBloco.className = 'pacote-resumo-bloco';
     pacoteBloco.style.flexShrink = '0';
-    
+
     const pacoteResumo = document.createElement('div');
     pacoteResumo.className = 'pacote-resumo';
     pacoteResumo.innerHTML = htmlPacote;
-    
+
     const pacoteTotal = document.createElement('div');
     pacoteTotal.className = 'pacote-total';
     pacoteTotal.textContent = textoTotal;
-    
+
     pacoteBloco.appendChild(pacoteResumo);
     pacoteBloco.appendChild(pacoteTotal);
-    
+
     if(barraFixa){
       barraFixa.appendChild(pacoteBloco);
     }
   });
-};
+}
     }
     // ===== GERAR RESUMO TECNOLOGIA ===== (SEM DUPLICAÇÃO)
     function gerarResumoTecnologia(mapasPacotes) {
