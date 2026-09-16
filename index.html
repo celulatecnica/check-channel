@@ -94,20 +94,12 @@
 }
 
 .top-bar-pacotes-inner{
-  width:930px;
-  max-width:calc(100% - 32px);
+  max-width:none;
 
   margin:0 auto;
   height:100%;
 
   display:grid;
-
-  grid-template-columns:
-      790px
-      140px
-      140px
-      140px;
-
   align-items:center;
 }
 
@@ -2284,12 +2276,22 @@ const totalFixo =
         const pacote = pacoteSelect.dataset.valor || '';
 
         if (!pais || !cliente || !pacote) {
+
+          const bloco =
+              headerFixo?.closest('.pacote-resumo-bloco');
+      
+          if(bloco){
+              bloco.style.display = 'none';
+          }
+
           headerEst.textContent = 'Paquete';
           headerEst.classList.add('vazio');
+
           totalEst.textContent = '0 canale(s)';
           totalEst.classList.add('vazio');
+
           return;
-        }
+      }
 
         const canaisUnicos = new Set(
           dados
@@ -2320,6 +2322,13 @@ if(headerFixo){
 if(totalFixo){
     totalFixo.textContent = textoTotal;
     totalFixo.classList.remove('vazio');
+}
+const bloco =
+    headerFixo?.closest('.pacote-resumo-bloco');
+
+if(bloco){
+    bloco.style.display =
+        pacote ? 'flex' : 'none';
 }
       });
     }
@@ -2520,6 +2529,16 @@ if(totalFixo){
 
       const pacotesAtivos = selecionados.filter(s => s.cliente && s.pacote);
       const qtdPacotes = pacotesAtivos.length;
+
+      const barraPacotes = document.querySelector('.top-bar-pacotes-inner');
+
+      if(barraPacotes){
+          barraPacotes.style.gridTemplateColumns =
+              `790px repeat(${qtdPacotes}, 140px)`;
+
+          barraPacotes.style.width =
+              `${790 + (140 * qtdPacotes)}px`;
+      }
 
       if (qtdPacotes > 1) {
         filtroSim = false;
