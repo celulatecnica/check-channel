@@ -243,6 +243,15 @@
       margin-bottom: 47px;
     }
 
+    #btnFiltroSim img,
+#btnFiltroNao img{
+    width:20px;
+    height:20px;
+    object-fit:contain;
+    display:block;
+    margin:auto;
+}
+    
     /* ===== SELETOR DE REGIÃO ===== */
     
 .seletor-regiao-icone {
@@ -3055,11 +3064,11 @@ const nomePacote3 =
 ${qtdPacotes === 1 ? `
 
 <button id="btnFiltroSim">
-    ✅
+    <img src="icon_ok.png" alt="OK">
 </button>
 
 <button id="btnFiltroNao">
-    ❌
+    <img src="icon_nok.png" alt="OK">
 </button>
 
 ` : ''}
