@@ -104,18 +104,18 @@
 }
 
 #barraPacotesFixa{
-  display: grid;
+  display: flex;  /* ✅ ALTERADO de grid */
   align-items: center;
-  justify-content: center;  /* ✅ Muda de 'start' para 'center' */
-  justify-items: center;
+  justify-content: center;  /* ✅ Centralizado */
+  gap: 24px;  /* ✅ ADICIONADO */
   height: 100%;
-  width: 100%;  /* ✅ Ocupa toda a largura disponível */
+  width: 100%;
 }
 
 #barraPacotesFixa .pacote-resumo-bloco{
   width: 140px;
   justify-self: center;
-  margin: 0 12px;  /* ✅ Adicionar margem lateral */
+  flex-shrink: 0;  /* ✅ ADICIONADO */
 }
 
     /* ===== SCROLL - ESTADO CLARO ===== */
@@ -2256,35 +2256,94 @@ if(barraFixa){
     }
 
     // ===== BARRA DE PACOTES =====
-    function atualizarBarraPacotes() {
-      const paisAtivo = document.querySelector('.bandeira.active');
-      const pais = paisAtivo ? paisAtivo.dataset.pais : '';
-
-      const barraFixa =
-    document.getElementById('barraPacotesFixa');
-
-if(barraFixa){
+function atualizarBarraPacotes() {
+  const paisAtivo = document.querySelector('.bandeira.active');
+  const pais = paisAtivo ? paisAtivo.dataset.pais : '';
+  const barraFixa = document.getElementById('barraPacotesFixa');
+  
+  if(barraFixa){
     barraFixa.innerHTML = '';
-}
-      let qtdPacotes = 0;
-const ordemBarra = [];
-[1,2,3].forEach(i => {
-    const pacote =
-        document.getElementById(`pacote${i}`)?.dataset.valor || '';
+  }
 
+  let qtdPacotes = 0;
+  const ordemBarra = [];
+  
+  [1,2,3].forEach(i => {
+    const pacote = document.getElementById(`pacote${i}`)?.dataset.valor || '';
     if(pacote){
-        qtdPacotes++;
+      qtdPacotes++;
     }
-});
+  });
 
-if(barraFixa){
+  if(barraFixa){
+    // ✅ CENTRALIZAR: Usar flex em vez de grid
+    barraFixa.style.display = 'flex';
+    barraFixa.style.alignItems = 'center';
+    barraFixa.style.justifyContent = 'center';
+    barraFixa.style.gap = '24px';
+    barraFixa.style.height = '100%';
+    barraFixa.style.width = '100%';
+  }
 
-    barraFixa.style.gridTemplateColumns =
-        `80px 430px 140px 140px repeat(${qtdPacotes}, 140px)`;
+  [1, 2, 3].forEach(i => {
+    const clienteSelect = document.getElementById(`cliente${i}`);
+    const pacoteSelect = document.getElementById(`pacote${i}`);
+    const headerEst = getElementoSeguro(`pacoteHeaderEst${i}`);
+    const totalEst = getElementoSeguro(`pacoteTotalEst${i}`);
 
-    barraFixa.innerHTML =
-        '<div></div><div></div><div></div><div></div>';
+    if (!clienteSelect || !pacoteSelect || !headerEst || !totalEst) return;
 
+    const cliente = clienteSelect.dataset.valor || '';
+    const pacote = pacoteSelect.dataset.valor || '';
+
+    if (!pais || !cliente || !pacote) {
+      headerEst.textContent = 'Paquete';
+      headerEst.classList.add('vazio');
+      totalEst.textContent = '0 canale(s)';
+      totalEst.classList.add('vazio');
+      return;
+    }
+
+    const canaisUnicos = new Set(
+      dados
+        .filter(d =>
+          normalizarChave(d.pais) === normalizarChave(pais) &&
+          d.cliente === cliente &&
+          d.pacote === pacote &&
+          disponibilidadeAtiva(d.disponibilidad)
+        )
+        .map(d => chaveCanal(d))
+    );
+
+    const total = canaisUnicos.size;
+    const textoTotal = `${total} ${total === 1 ? 'canal' : 'canales'}`;
+    const htmlPacote = pacote.replace(' PLUS ', '<br>PLUS ');
+
+    headerEst.innerHTML = htmlPacote;
+    headerEst.classList.remove('vazio');
+    totalEst.textContent = textoTotal;
+    totalEst.classList.remove('vazio');
+
+    // ✅ Criar elemento do pacote
+    const pacoteBloco = document.createElement('div');
+    pacoteBloco.className = 'pacote-resumo-bloco';
+    pacoteBloco.style.flexShrink = '0';
+    
+    const pacoteResumo = document.createElement('div');
+    pacoteResumo.className = 'pacote-resumo';
+    pacoteResumo.innerHTML = htmlPacote;
+    
+    const pacoteTotal = document.createElement('div');
+    pacoteTotal.className = 'pacote-total';
+    pacoteTotal.textContent = textoTotal;
+    
+    pacoteBloco.appendChild(pacoteResumo);
+    pacoteBloco.appendChild(pacoteTotal);
+    
+    if(barraFixa){
+      barraFixa.appendChild(pacoteBloco);
+    }
+  });
 }
 
      
