@@ -2271,10 +2271,13 @@ const ordemBarra = [];
 });
 
 if(barraFixa){
-    barraFixa.style.gridTemplateColumns =
-        `790px repeat(${qtdPacotes}, 140px)`;
 
-    barraFixa.innerHTML = '<div></div>';
+    barraFixa.style.gridTemplateColumns =
+        `80px 430px 140px 140px repeat(${qtdPacotes}, 140px)`;
+
+    barraFixa.innerHTML =
+        '<div></div><div></div><div></div><div></div>';
+
 }
 
      
@@ -2341,9 +2344,9 @@ ordemBarra.unshift(`
 
       if(barraFixa){
 
-          barraFixa.innerHTML =
-              '<div></div>' +
-              ordemBarra.join('');
+barraFixa.innerHTML =
+    '<div></div><div></div><div></div><div></div>' +
+    ordemBarra.join('');
 
       }
 
