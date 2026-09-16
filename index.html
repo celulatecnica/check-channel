@@ -2319,33 +2319,37 @@ border-bottom:none;
           });
         });
 
-        categorias.forEach((total, categoria) => {
-          const linhaCategoria = document.createElement('div');
-          linhaCategoria.style.display = 'grid';
-          linhaCategoria.style.gridTemplateColumns = `790px repeat(${qtdPacotes}, 140px)`;
-          linhaCategoria.style.minHeight = '48px';
-          linhaCategoria.style.alignItems = 'center';
-          linhaCategoria.style.borderTop = '1px solid #E5E5E5';
-          linhaCategoria.style.color = '#6E6E73';
+        // ✅ DEPOIS - Com ordenação alfabética
+        const categoriasOrdenadas = Array.from(categorias.entries())
+        .sort((a, b) => a[0].localeCompare(b[0], 'pt-BR'));
 
-          let htmlCategoria = `<div style="text-align:left; padding-left:25px;">${categoria}</div>`;
-          
-          mapasPacotes.forEach(mapa => {
-            let totalCategoria = 0;
-            mapa.forEach(item => {
-              if (
-                normalizarChave(item.tecnologia) === normalizarChave(tecnologia) &&
-                normalizarChave(item.categoria) === normalizarChave(categoria)
-              ) {
-                totalCategoria++;
-              }
-            });
-            htmlCategoria += `<div style="display:flex; align-items:center; justify-content:center;">${totalCategoria}</div>`;
-          });
+      categoriasOrdenadas.forEach(([categoria, total]) => {
+      const linhaCategoria = document.createElement('div');
+      linhaCategoria.style.display = 'grid';
+      linhaCategoria.style.gridTemplateColumns = `790px repeat(${qtdPacotes}, 140px)`;
+      linhaCategoria.style.minHeight = '48px';
+      linhaCategoria.style.alignItems = 'center';
+      linhaCategoria.style.borderTop = '1px solid #E5E5E5';
+      linhaCategoria.style.color = '#6E6E73';
 
-          linhaCategoria.innerHTML = htmlCategoria;
-          detalhes.appendChild(linhaCategoria);
+        let htmlCategoria = `<div style="text-align:left; padding-left:25px;">${categoria}</div>`;
+  
+        mapasPacotes.forEach(mapa => {
+        let totalCategoria = 0;
+        mapa.forEach(item => {
+          if (
+            normalizarChave(item.tecnologia) === normalizarChave(tecnologia) &&
+            normalizarChave(item.categoria) === normalizarChave(categoria)
+          ) {
+            totalCategoria++;
+          }
         });
+        htmlCategoria += `<div style="display:flex; align-items:center; justify-content:center;">${totalCategoria}</div>`;
+      });
+
+        linhaCategoria.innerHTML = htmlCategoria;
+        detalhes.appendChild(linhaCategoria);
+      });
 
         blocoTecnologia.appendChild(detalhes);
         resumo.appendChild(blocoTecnologia);
