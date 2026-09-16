@@ -2623,10 +2623,6 @@ barrasFixas.forEach(barra => {
 resultado.innerHTML = `
   <div class="topo-branco"></div>
   <div class="top-bar-pacotes">
-    <div class="top-bar-pacotes-inner">
-      <div id="barraPacotesFixa"></div>
-    </div>
-  </div>
   <div class="resultado-wrapper">
           <div class="resultado-conteudo">
             <div class="resultado-header" style="width:${larguraTecnologia}px; margin:0 auto;">
@@ -2872,14 +2868,17 @@ resultado.innerHTML = `
         return;
     }
 
-    const topo =
-        referencia.getBoundingClientRect().top;
+    const resultado =
+    document.getElementById('resultado');
 
-    if(topo <= 100){
-        barra.classList.add('visible');
-    }else{
-        barra.classList.remove('visible');
-    }
+const inicio =
+    resultado.offsetTop + 150;
+
+if(window.scrollY >= inicio){
+    barra.classList.add('visible');
+}else{
+    barra.classList.remove('visible');
+}
 
 }
   
