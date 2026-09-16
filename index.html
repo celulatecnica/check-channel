@@ -82,8 +82,9 @@
   -webkit-backdrop-filter: blur(30px);
   border-bottom: 1px solid #2A2A2A;
   z-index: 100;
-  margin: 0;
-  padding: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: block !important;  /* ✅ FORÇA EXIBIÇÃO */
 }
 
 .top-bar-pacotes-inner {
@@ -108,12 +109,6 @@
 #barraPacotesFixa .pacote-resumo-bloco {
   width: 140px;
   flex-shrink: 0;
-}
-
-#barraPacotesFixa .pacote-resumo-bloco{
-  width: 140px;
-  justify-self: center;
-  flex-shrink: 0;  /* ✅ ADICIONADO */
 }
 
     /* ===== SCROLL - ESTADO CLARO ===== */
@@ -2250,42 +2245,47 @@ if(barraFixa){
 function atualizarBarraPacotes() {
   const paisAtivo = document.querySelector('.bandeira.active');
   const pais = paisAtivo ? paisAtivo.dataset.pais : '';
-  const barraFixa = document.getElementById('barraPacotesFixa');
   
-  if(barraFixa){
-    barraFixa.innerHTML = '';
-  }
-
+  // Buscar barra em AMBOS os locais
+  const barraFixa1 = document.getElementById('barraPacotesFixa');
+  const barraFixa2 = document.querySelector('#resultado #barraPacotesFixa');
+  const barrasFixas = [barraFixa1, barraFixa2].filter(b => b);
+  
+  if (!barrasFixas.length) return;
+  
+  // Limpar ambas
+  barrasFixas.forEach(barra => {
+    if (barra) barra.innerHTML = '';
+  });
+  
   let qtdPacotes = 0;
-  
   [1,2,3].forEach(i => {
     const pacote = document.getElementById(`pacote${i}`)?.dataset.valor || '';
-    if(pacote){
-      qtdPacotes++;
-    }
+    if(pacote) qtdPacotes++;
   });
-
-  if(barraFixa){
-    // ✅ CENTRALIZAR: Usar flex
+  
+  // Atualizar ambas barras
+  barrasFixas.forEach(barraFixa => {
+    if(!barraFixa) return;
     barraFixa.style.display = 'flex';
     barraFixa.style.alignItems = 'center';
     barraFixa.style.justifyContent = 'center';
     barraFixa.style.gap = '24px';
     barraFixa.style.height = '100%';
     barraFixa.style.width = '100%';
-  }
-
+  });
+  
   [1, 2, 3].forEach(i => {
     const clienteSelect = document.getElementById(`cliente${i}`);
     const pacoteSelect = document.getElementById(`pacote${i}`);
     const headerEst = getElementoSeguro(`pacoteHeaderEst${i}`);
     const totalEst = getElementoSeguro(`pacoteTotalEst${i}`);
-
+    
     if (!clienteSelect || !pacoteSelect || !headerEst || !totalEst) return;
-
+    
     const cliente = clienteSelect.dataset.valor || '';
     const pacote = pacoteSelect.dataset.valor || '';
-
+    
     if (!pais || !cliente || !pacote) {
       headerEst.textContent = 'Paquete';
       headerEst.classList.add('vazio');
@@ -2293,7 +2293,7 @@ function atualizarBarraPacotes() {
       totalEst.classList.add('vazio');
       return;
     }
-
+    
     const canaisUnicos = new Set(
       dados
         .filter(d =>
@@ -2304,61 +2304,44 @@ function atualizarBarraPacotes() {
         )
         .map(d => chaveCanal(d))
     );
-
+    
     const total = canaisUnicos.size;
     const textoTotal = `${total} ${total === 1 ? 'canal' : 'canales'}`;
     const htmlPacote = pacote.replace(' PLUS ', '<br>PLUS ');
-
+    
     headerEst.innerHTML = htmlPacote;
     headerEst.classList.remove('vazio');
     totalEst.textContent = textoTotal;
     totalEst.classList.remove('vazio');
-
-    // ✅ Criar elemento do pacote dinamicamente
+    
+    // Criar elemento
     const pacoteBloco = document.createElement('div');
     pacoteBloco.className = 'pacote-resumo-bloco';
     pacoteBloco.style.flexShrink = '0';
-
+    
     const pacoteResumo = document.createElement('div');
     pacoteResumo.className = 'pacote-resumo';
     pacoteResumo.innerHTML = htmlPacote;
-
+    
     const pacoteTotal = document.createElement('div');
     pacoteTotal.className = 'pacote-total';
     pacoteTotal.textContent = textoTotal;
-
+    
     pacoteBloco.appendChild(pacoteResumo);
     pacoteBloco.appendChild(pacoteTotal);
-
-    if(barraFixa){
-      barraFixa.appendChild(pacoteBloco);
-    }
+    
+    // Adicionar em AMBAS as barras
+    barrasFixas.forEach(barraFixa => {
+      if(barraFixa) {
+        barraFixa.appendChild(pacoteBloco.cloneNode(true));
+      }
+    });
   });
 }
 
   }
 
-// ✅ ADICIONE AQUI - Logo após atualizarBarraPacotes fechar
-
-function atualizarBarraPacotesNoResultado() {
-  const resultado = document.getElementById('resultado');
-  if (!resultado) return;
-  
-  const barraResultado = document.getElementById('topbarPacotes');
-  
-  // Se a barra não existe no resultado, criar
-  if (!barraResultado || barraResultado.parentElement.id !== 'resultado') {
-    // Já será criada no gerarResultado()
-    return;
-  }
-  
-  // Atualizar conteúdo da barra
-  const barraFixa = barraResultado.querySelector('#barraPacotesFixa');
-  if (barraFixa) {
-    atualizarBarraPacotes(); // Reutilizar lógica existente
-  }
-}
-  
+ 
     // ===== GERAR RESUMO TECNOLOGIA ===== (SEM DUPLICAÇÃO)
     function gerarResumoTecnologia(mapasPacotes) {
       const resumo = getElementoSeguro('resumoTecnologia');
@@ -2638,14 +2621,11 @@ function atualizarBarraPacotesNoResultado() {
       // Renderizar resultado
 resultado.innerHTML = `
   <div class="topo-branco"></div>
-  
-  <!-- ✅ BARRA STICKY AQUI DENTRO -->
-  <div class="top-bar-pacotes" id="topbarPacotes">
+  <div class="top-bar-pacotes">
     <div class="top-bar-pacotes-inner">
       <div id="barraPacotesFixa"></div>
     </div>
   </div>
-  
   <div class="resultado-wrapper">
           <div class="resultado-conteudo">
             <div class="resultado-header" style="width:${larguraTecnologia}px; margin:0 auto;">
