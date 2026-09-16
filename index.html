@@ -73,7 +73,7 @@
 /* ✅ NOVO CSS - Sticky dentro do resultado */
 .top-bar-pacotes{
   position:fixed;
-  top:50px;
+  top:100px;
   left:0;
   width:100%;
   height:70px;
@@ -1415,11 +1415,6 @@ border-bottom:none;
 
   <!-- ✅ BARRA 2 - TÍTULO E MENU -->
   <div class="top-bar top-bar-sub" id="topbarSub">
-    <div class="top-bar top-bar-pacotes" id="topbarPacotes">
-    <div class="top-bar-pacotes-inner">
-        <div id="barraPacotesFixa"></div>
-    </div>
-</div>
     <div class="top-bar-inner">
       <div class="titulo-pequeno">Check Channel</div>
       <div class="menu-header">
@@ -1428,7 +1423,6 @@ border-bottom:none;
       </div>
     </div>
   </div>
-
    
     <!-- ✅ BANNER -->
   <img id="banner" src="banner.png" alt="Banner">
@@ -2240,12 +2234,6 @@ border-bottom:none;
       // ✅ Atualizar estilo
       barrasFixas.forEach(barraFixa => {
         if (!barraFixa) return;
-        barraFixa.style.display = 'flex';
-        barraFixa.style.alignItems = 'center';
-        barraFixa.style.justifyContent = 'center';
-        barraFixa.style.gap = '24px';
-        barraFixa.style.height = '100%';
-        barraFixa.style.width = '100%';
       });
       
       // ✅ Adicionar pacotes
@@ -2549,12 +2537,7 @@ border-bottom:none;
       // ✅ Renderizar resultado COM BARRA DE PACOTES CORRIGIDA
       resultado.innerHTML = `
         <div class="topo-branco"></div>
-        <div class="top-bar-pacotes">
-          <div class="top-bar-pacotes-inner">
-            <div id="barraPacotesFixa"></div>
-          </div>
-        </div>
-        <div class="resultado-wrapper">
+         <div class="resultado-wrapper">
           <div class="resultado-conteudo">
             <div class="resultado-header" style="width:${larguraTecnologia}px; margin:0 auto;">
               <div class="resumo-superior" style="grid-template-columns: 790px repeat(${qtdPacotes}, 140px);">
