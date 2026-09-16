@@ -94,23 +94,28 @@
 }
 
 .top-bar-pacotes-inner{
-  width:1210px;
-  max-width:1210px;
-  margin:0 auto;
-  height:100%;
+  width: 950px;  /* ✅ Mesmo tamanho do container principal */
+  max-width: calc(100% - 32px);
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;  /* ✅ Centraliza horizontalmente */
 }
 
 #barraPacotesFixa{
-  display:grid;
-  align-items:center;
-  justify-content:start;
-  justify-items:center;
-  height:100%;
+  display: grid;
+  align-items: center;
+  justify-content: center;  /* ✅ Muda de 'start' para 'center' */
+  justify-items: center;
+  height: 100%;
+  width: 100%;  /* ✅ Ocupa toda a largura disponível */
 }
 
 #barraPacotesFixa .pacote-resumo-bloco{
-  width:140px;
-  justify-self:center;
+  width: 140px;
+  justify-self: center;
+  margin: 0 12px;  /* ✅ Adicionar margem lateral */
 }
 
     /* ===== SCROLL - ESTADO CLARO ===== */
