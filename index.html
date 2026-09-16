@@ -70,50 +70,22 @@
     }
 
     /* BARRA 3 - Pacotes selecionados */
-/* ✅ NOVO CSS - Sticky dentro do resultado */
-.top-bar-pacotes{
-  position:fixed;
-  top:100px;
-  left:0;
-  width:100%;
-  height:70px;
-
-  display:none;
-
-  background:rgba(15,15,15,.92);
-
-  backdrop-filter:blur(30px);
-  -webkit-backdrop-filter:blur(30px);
-
-  border-bottom:1px solid #2A2A2A;
-
-  z-index:998;
+.top-bar-pacotes {
+  display: none !important;
 }
 
-    .top-bar-pacotes.visible{
-  display:block;
-}
-    
-.top-bar-pacotes-inner {
-  width:1210px;
-  max-width:1210px;
-  margin: 0 auto;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+    .top-bar-pacotes.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
 
-#barraPacotesFixa{
-  display:grid;
-  align-items:center;
-  height:100%;
-}
+    .top-bar-pacotes-inner {
+      display: grid;
+      grid-template-columns: 55% 15% 15% 15%;
+      height: 100%;
+      align-items: center;
+    }
 
-#barraPacotesFixa .pacote-resumo-bloco{
-  width:140px;
-  justify-self:center;
-}
     /* ===== SCROLL - ESTADO CLARO ===== */
     .top-bar-main.scrolled,
     .top-bar-sub.scrolled {
@@ -202,7 +174,7 @@
     }
 
     .pacote-resumo {
-      width: auto;
+      width: 100%;
       height: 48px;
       display: flex;
       align-items: center;
@@ -995,7 +967,7 @@ select:focus {
   display: grid;
   grid-auto-columns: 140px;
   grid-auto-flow: column;
-  justify-content: start;
+  justify-content: end;
 }
 
 .resumo-coluna {
@@ -1374,6 +1346,12 @@ border-bottom:none;
   overflow: hidden;
 }
 
+  border: 1px solid rgba(82,89,97,1);
+  border-radius: 12px;
+
+  overflow: hidden;
+}
+
     .opcao-custom:hover {
   background: rgba(255,255,255,.05);
 }
@@ -1423,7 +1401,7 @@ border-bottom:none;
       </div>
     </div>
   </div>
-   
+
     <!-- ✅ BANNER -->
   <img id="banner" src="banner.png" alt="Banner">
 
@@ -1810,10 +1788,6 @@ border-bottom:none;
         menu.classList.remove('aberto');
         menu.innerHTML = '';
       });
-      const barraFixa = document.getElementById('barraPacotesFixa');
-      if (barraFixa) {
-        barraFixa.innerHTML = '';
-      }
       [1, 2, 3].forEach(i => {
         const cliente = document.getElementById(`cliente${i}`);
         const pacote = document.getElementById(`pacote${i}`);
@@ -1961,6 +1935,7 @@ border-bottom:none;
       const seletorPacote = document.getElementById(`pacote${i}`);
       const menuCliente = document.getElementById(`menuCliente${i}`);
       const menuPacote = document.getElementById(`menuPacote${i}`);
+      
       if (seletorCliente) {
         seletorCliente.dataset.valor = '';
         const textoCliente = seletorCliente.querySelector('.seletor-regiao-texto');
@@ -2026,6 +2001,7 @@ border-bottom:none;
           .map(d => d.cliente)
           .filter(Boolean)
       )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
       const clientePrincipalEhDGO = normalizarChave(clientePrincipal) === 'DGO';
       if (clientePrincipalEhDGO) {
         selecionarClienteNoCard(i, 'DGO', pais, clientesDoPais);
@@ -2034,27 +2010,34 @@ border-bottom:none;
       const clientesPermitidos = clientesDoPais.filter(cliente =>
         normalizarChave(cliente) !== 'DGO'
       );
+      
       const seletorCliente = document.getElementById(`cliente${i}`);
       const seletorPacote = document.getElementById(`pacote${i}`);
       const menuCliente = document.getElementById(`menuCliente${i}`);
       const menuPacote = document.getElementById(`menuPacote${i}`);
+      
       if (!seletorCliente || !seletorPacote || !menuCliente || !menuPacote) {
         return;
       }
+
       seletorCliente.dataset.valor = '';
       seletorPacote.dataset.valor = '';
+      
       const textoCliente = seletorCliente.querySelector('.seletor-regiao-texto');
       const textoPacote = seletorPacote.querySelector('.seletor-regiao-texto');
+      
       if (textoCliente) {
         textoCliente.textContent = 'Tipo de cliente';
       }
       if (textoPacote) {
         textoPacote.textContent = 'Paquete';
       }
+
       menuCliente.classList.remove('aberto');
       menuPacote.classList.remove('aberto');
       menuCliente.innerHTML = '';
       menuPacote.innerHTML = '';
+
       clientesPermitidos.forEach(cliente => {
         const opcaoCliente = document.createElement('div');
         opcaoCliente.className = 'opcao-custom';
@@ -2071,9 +2054,11 @@ border-bottom:none;
       const seletorPacote = document.getElementById(`pacote${i}`);
       const menuCliente = document.getElementById(`menuCliente${i}`);
       const menuPacote = document.getElementById(`menuPacote${i}`);
+      
       if (!seletorCliente || !seletorPacote || !menuCliente || !menuPacote) {
         return;
       }
+
       if (i === 1) {
         limparCard(2);
         limparCard(3);
@@ -2083,13 +2068,16 @@ border-bottom:none;
         limparCard(3);
         ocultarResultado();
       }
+
       seletorCliente.dataset.valor = cliente;
       const textoCliente = seletorCliente.querySelector('.seletor-regiao-texto');
       if (textoCliente) {
         textoCliente.textContent = cliente;
       }
+
       menuCliente.classList.remove('aberto');
       menuCliente.innerHTML = '';
+
       const clienteEhDGO = normalizarChave(cliente) === 'DGO';
       if (!clienteEhDGO) {
         clientes
@@ -2107,13 +2095,16 @@ border-bottom:none;
             menuCliente.appendChild(opcaoCliente);
           });
       }
+
       seletorPacote.dataset.valor = '';
       const textoPacote = seletorPacote.querySelector('.seletor-regiao-texto');
       if (textoPacote) {
         textoPacote.textContent = 'Paquete';
       }
+
       menuPacote.classList.remove('aberto');
       menuPacote.innerHTML = '';
+
       const pacotes = [...new Set(
         dados
           .filter(d =>
@@ -2123,6 +2114,7 @@ border-bottom:none;
           .map(d => d.pacote)
           .filter(Boolean)
       )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
       pacotes.forEach(pacote => {
         const opcaoPacote = document.createElement('div');
         opcaoPacote.className = 'opcao-custom';
@@ -2134,6 +2126,7 @@ border-bottom:none;
             textoPacoteSelecionado.textContent = pacote;
           }
           menuPacote.classList.remove('aberto');
+          
           if (i === 1) {
             limparCard(2);
             limparCard(3);
@@ -2143,12 +2136,14 @@ border-bottom:none;
             limparCard(3);
             prepararCardComparacao(3);
           }
+          
           atualizarBarraPacotes();
           atualizarEtapasPacotes();
           gerarResultado();
         });
         menuPacote.appendChild(opcaoPacote);
       });
+
       atualizarBarraPacotes();
       atualizarEtapasPacotes();
       gerarResultado();
@@ -2165,34 +2160,42 @@ border-bottom:none;
       });
       elemento.classList.add('active');
       ocultarResultado();
+
       const clientes = [...new Set(
         dados
           .filter(d => normalizarChave(d.pais) === normalizarChave(pais))
           .map(d => d.cliente)
           .filter(Boolean)
       )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
       [1, 2, 3].forEach(i => {
         const seletorCliente = document.getElementById(`cliente${i}`);
         const seletorPacote = document.getElementById(`pacote${i}`);
         const menuCliente = document.getElementById(`menuCliente${i}`);
         const menuPacote = document.getElementById(`menuPacote${i}`);
+        
         if (!seletorCliente || !seletorPacote || !menuCliente || !menuPacote) {
           return;
         }
+
         seletorCliente.dataset.valor = '';
         seletorPacote.dataset.valor = '';
+        
         const textoCliente = seletorCliente.querySelector('.seletor-regiao-texto');
         const textoPacote = seletorPacote.querySelector('.seletor-regiao-texto');
+        
         if (textoCliente) {
           textoCliente.textContent = 'Tipo de cliente';
         }
         if (textoPacote) {
           textoPacote.textContent = 'Paquete';
         }
+
         menuCliente.classList.remove('aberto');
         menuPacote.classList.remove('aberto');
         menuCliente.innerHTML = '';
         menuPacote.innerHTML = '';
+
         clientes.forEach(cliente => {
           const opcaoCliente = document.createElement('div');
           opcaoCliente.className = 'opcao-custom';
@@ -2203,51 +2206,28 @@ border-bottom:none;
           menuCliente.appendChild(opcaoCliente);
         });
       });
+
       atualizarBarraPacotes();
       atualizarEtapasPacotes();
       atualizarEstadoInicial();
     }
 
-    // ===== BARRA DE PACOTES ===== ✅ CORRIGIDA
+    // ===== BARRA DE PACOTES =====
     function atualizarBarraPacotes() {
       const paisAtivo = document.querySelector('.bandeira.active');
       const pais = paisAtivo ? paisAtivo.dataset.pais : '';
       
-      // Buscar barra em AMBOS os locais
-      const barraFixa1 = document.getElementById('barraPacotesFixa');
-      const barraFixa2 = document.querySelector('#resultado #barraPacotesFixa');
-      const barrasFixas = [barraFixa1, barraFixa2].filter(b => b);
-      
-      if (!barrasFixas.length) return;
-      
-      // ✅ Limpar ambas
-      barrasFixas.forEach(barra => {
-        if (barra) barra.innerHTML = '';
-      });
-      
-      let qtdPacotes = 0;
-      [1, 2, 3].forEach(i => {
-        const pacote = document.getElementById(`pacote${i}`)?.dataset.valor || '';
-        if (pacote) qtdPacotes++;
-      });
-      
-      // ✅ Atualizar estilo
-      barrasFixas.forEach(barraFixa => {
-        if (!barraFixa) return;
-      });
-      
-      // ✅ Adicionar pacotes
       [1, 2, 3].forEach(i => {
         const clienteSelect = document.getElementById(`cliente${i}`);
         const pacoteSelect = document.getElementById(`pacote${i}`);
         const headerEst = getElementoSeguro(`pacoteHeaderEst${i}`);
         const totalEst = getElementoSeguro(`pacoteTotalEst${i}`);
-        
+
         if (!clienteSelect || !pacoteSelect || !headerEst || !totalEst) return;
-        
+
         const cliente = clienteSelect.dataset.valor || '';
         const pacote = pacoteSelect.dataset.valor || '';
-        
+
         if (!pais || !cliente || !pacote) {
           headerEst.textContent = 'Paquete';
           headerEst.classList.add('vazio');
@@ -2255,7 +2235,7 @@ border-bottom:none;
           totalEst.classList.add('vazio');
           return;
         }
-        
+
         const canaisUnicos = new Set(
           dados
             .filter(d =>
@@ -2266,76 +2246,62 @@ border-bottom:none;
             )
             .map(d => chaveCanal(d))
         );
-        
+
         const total = canaisUnicos.size;
         const textoTotal = `${total} ${total === 1 ? 'canal' : 'canales'}`;
         const htmlPacote = pacote.replace(' PLUS ', '<br>PLUS ');
-        
+
         headerEst.innerHTML = htmlPacote;
         headerEst.classList.remove('vazio');
         totalEst.textContent = textoTotal;
         totalEst.classList.remove('vazio');
-        
-        // Criar elemento
-        const pacoteBloco = document.createElement('div');
-        pacoteBloco.className = 'pacote-resumo-bloco';
-        pacoteBloco.style.flexShrink = '0';
-        
-        const pacoteResumo = document.createElement('div');
-        pacoteResumo.className = 'pacote-resumo';
-        pacoteResumo.innerHTML = htmlPacote;
-        
-        const pacoteTotal = document.createElement('div');
-        pacoteTotal.className = 'pacote-total';
-        pacoteTotal.textContent = textoTotal;
-        
-        pacoteBloco.appendChild(pacoteResumo);
-        pacoteBloco.appendChild(pacoteTotal);
-        
-        // Adicionar em AMBAS as barras
-        barrasFixas.forEach(barraFixa => {
-          if (barraFixa) {
-            barraFixa.appendChild(pacoteBloco.cloneNode(true));
-          }
-        });
       });
     }
 
-    // ===== GERAR RESUMO TECNOLOGIA =====
+    // ===== GERAR RESUMO TECNOLOGIA ===== (SEM DUPLICAÇÃO)
     function gerarResumoTecnologia(mapasPacotes) {
       const resumo = getElementoSeguro('resumoTecnologia');
       if (!resumo) return;
+
       resumo.innerHTML = '';
       const qtdPacotes = mapasPacotes.length;
       const larguraTabela = 790 + (140 * qtdPacotes);
       resumo.style.width = `${larguraTabela}px`;
       resumo.style.margin = '0 auto';
+
       TECNOLOGIAS.forEach(tecnologia => {
         const linha = document.createElement('div');
         linha.className = 'linha-tecnologia';
         linha.style.gridTemplateColumns = `790px repeat(${qtdPacotes}, 140px)`;
+
         const descricao = document.createElement('div');
         descricao.className = 'descricao-tecnologia';
+
         // Criar botão de expansão
         const btnExpandir = document.createElement('button');
         btnExpandir.className = 'btn-expandir-tecnologia';
         btnExpandir.dataset.tecnologia = tecnologia;
         btnExpandir.type = 'button';
+
         const imgBotao = document.createElement('img');
         imgBotao.src = 'icon_plus.png';
         imgBotao.alt = 'Expandir';
         imgBotao.className = 'icone-plus';
         btnExpandir.appendChild(imgBotao);
+
         // Icone da tecnologia
         const spanIcone = document.createElement('span');
         spanIcone.innerHTML = ICONES_TECNOLOGIA[tecnologia];
+
         // Texto da tecnologia
         const spanTexto = document.createElement('span');
         spanTexto.innerHTML = TITULOS_TECNOLOGIA[tecnologia];
+
         descricao.appendChild(btnExpandir);
         descricao.appendChild(spanIcone);
         descricao.appendChild(spanTexto);
         linha.appendChild(descricao);
+
         // Adicionar valores dos pacotes
         mapasPacotes.forEach(mapa => {
           let total = 0;
@@ -2349,13 +2315,16 @@ border-bottom:none;
           valor.textContent = total;
           linha.appendChild(valor);
         });
+
         const blocoTecnologia = document.createElement('div');
         blocoTecnologia.appendChild(linha);
+
         const detalhes = document.createElement('div');
         detalhes.id = `detalhe-${tecnologia}`;
         detalhes.className = 'detalhe-tecnologia';
         detalhes.style.background = '#F4F6F8';
         detalhes.style.display = 'none';
+
         // Categorias
         const categorias = new Map();
         mapasPacotes.forEach(mapa => {
@@ -2367,44 +2336,53 @@ border-bottom:none;
             categorias.set(categoria, (categorias.get(categoria) || 0) + 1);
           });
         });
-        // Com ordenação alfabética
+
+        // ✅ DEPOIS - Com ordenação alfabética
         const categoriasOrdenadas = Array.from(categorias.entries())
-          .sort((a, b) => a[0].localeCompare(b[0], 'pt-BR'));
-        categoriasOrdenadas.forEach(([categoria, total]) => {
-          const linhaCategoria = document.createElement('div');
-          linhaCategoria.style.display = 'grid';
-          linhaCategoria.style.gridTemplateColumns = `790px repeat(${qtdPacotes}, 140px)`;
-          linhaCategoria.style.minHeight = '48px';
-          linhaCategoria.style.alignItems = 'center';
-          linhaCategoria.style.borderTop = '1px solid #E5E5E5';
-          linhaCategoria.style.color = '#6E6E73';
-          let htmlCategoria = `<div style="text-align:left; padding-left:25px;">${categoria}</div>`;
-          mapasPacotes.forEach(mapa => {
-            let totalCategoria = 0;
-            mapa.forEach(item => {
-              if (
-                normalizarChave(item.tecnologia) === normalizarChave(tecnologia) &&
-                normalizarChave(item.categoria) === normalizarChave(categoria)
-              ) {
-                totalCategoria++;
-              }
-            });
-            htmlCategoria += `<div style="display:flex; align-items:center; justify-content:center;">${totalCategoria}</div>`;
-          });
-          linhaCategoria.innerHTML = htmlCategoria;
-          detalhes.appendChild(linhaCategoria);
+        .sort((a, b) => a[0].localeCompare(b[0], 'pt-BR'));
+
+      categoriasOrdenadas.forEach(([categoria, total]) => {
+      const linhaCategoria = document.createElement('div');
+      linhaCategoria.style.display = 'grid';
+      linhaCategoria.style.gridTemplateColumns = `790px repeat(${qtdPacotes}, 140px)`;
+      linhaCategoria.style.minHeight = '48px';
+      linhaCategoria.style.alignItems = 'center';
+      linhaCategoria.style.borderTop = '1px solid #E5E5E5';
+      linhaCategoria.style.color = '#6E6E73';
+
+        let htmlCategoria = `<div style="text-align:left; padding-left:25px;">${categoria}</div>`;
+  
+        mapasPacotes.forEach(mapa => {
+        let totalCategoria = 0;
+        mapa.forEach(item => {
+          if (
+            normalizarChave(item.tecnologia) === normalizarChave(tecnologia) &&
+            normalizarChave(item.categoria) === normalizarChave(categoria)
+          ) {
+            totalCategoria++;
+          }
         });
+        htmlCategoria += `<div style="display:flex; align-items:center; justify-content:center;">${totalCategoria}</div>`;
+      });
+
+        linhaCategoria.innerHTML = htmlCategoria;
+        detalhes.appendChild(linhaCategoria);
+      });
+
         blocoTecnologia.appendChild(detalhes);
         resumo.appendChild(blocoTecnologia);
       });
+
       // Event listeners para os botões
       resumo.querySelectorAll('.btn-expandir-tecnologia').forEach(botao => {
         botao.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
+
           const tecnologia = botao.dataset.tecnologia;
           const detalhe = document.getElementById(`detalhe-${tecnologia}`);
           const imgIcon = botao.querySelector('img');
+
           if (detalhe.style.display === 'none') {
             detalhe.style.display = 'block';
             imgIcon.src = 'icon_minus.png';
@@ -2420,7 +2398,15 @@ border-bottom:none;
       });
     }
 
-    // ===== HELPERS PARA RESULTADO =====
+    // ===== GERAR RESULTADO =====
+    function obterIconeCategoria(categoria) {
+      return categoria
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/\s+/g, '-');
+    }
+
     function criarImagemTecnologia(tecnologia) {
       const tecnologiaNormalizada = normalizarChave(tecnologia);
       if (tecnologiaNormalizada === 'SD') {
@@ -2457,31 +2443,38 @@ border-bottom:none;
       atualizarEstadoInicial();
     }
 
-    // ===== GERAR RESULTADO ===== ✅ CORRIGIDO
     function gerarResultado() {
       const resultado = getResultado();
       if (!resultado) return;
+
       const selecionados = [1, 2, 3].map(i => ({
         cliente: document.getElementById(`cliente${i}`)?.dataset.valor || '',
         pacote: document.getElementById(`pacote${i}`)?.dataset.valor || ''
       }));
+
       const pacotesAtivos = selecionados.filter(s => s.cliente && s.pacote);
       const qtdPacotes = pacotesAtivos.length;
+
       if (qtdPacotes > 1) {
         filtroSim = false;
         filtroNao = false;
       }
+
       const larguraTecnologia = 790 + (140 * qtdPacotes);
       const larguraTabelaCanais = 790 + (140 * qtdPacotes);
       const gridCanais = `80px 430px 140px 140px repeat(${qtdPacotes}, 140px)`;
+
       atualizarBarraPacotes();
+
       const paisAtivo = document.querySelector('.bandeira.active');
       if (!paisAtivo || !selecionados.some(s => s.cliente && s.pacote)) {
         resultado.style.display = 'none';
         atualizarEstadoInicial();
         return;
       }
+
       const pais = paisAtivo.dataset.pais;
+
       // Criar mapas com somente os canais disponíveis em cada pacote
       const mapasPacotes = selecionados.map(sel => {
         const mapa = new Map();
@@ -2500,6 +2493,7 @@ border-bottom:none;
           });
         return mapa;
       });
+
       // Mapa base para montar a lista de canais
       const mapaBase = new Map();
       dados
@@ -2508,12 +2502,14 @@ border-bottom:none;
           const chave = chaveCanal(item);
           const vcEhInvalido = vcInvalido(item.vc);
           const existeEmPacoteSelecionado = mapasPacotes.some(mapa => mapa.has(chave));
+
           if (!vcEhInvalido || existeEmPacoteSelecionado) {
             if (!mapaBase.has(chave)) {
               mapaBase.set(chave, item);
             }
           }
         });
+
       // Ordenar
       const base = Array.from(mapaBase.entries())
         .sort((a, b) => {
@@ -2528,16 +2524,19 @@ border-bottom:none;
             .localeCompare(normalizarTexto(itemB.canal), 'pt-BR');
         })
         .map(entry => entry[1]);
+
       const htmlResumoColunas = pacotesAtivos
         .map((p, index) => `<div class="resumo-coluna ${index === 0 ? 'ativa' : ''}">${p.pacote}</div>`)
         .join('');
+
       const cabecalhoPacotes = pacotesAtivos
         .map(p => `<div>${p.pacote}</div>`)
         .join('');
-      // ✅ Renderizar resultado COM BARRA DE PACOTES CORRIGIDA
+
+      // Renderizar resultado
       resultado.innerHTML = `
         <div class="topo-branco"></div>
-         <div class="resultado-wrapper">
+        <div class="resultado-wrapper">
           <div class="resultado-conteudo">
             <div class="resultado-header" style="width:${larguraTecnologia}px; margin:0 auto;">
               <div class="resumo-superior" style="grid-template-columns: 790px repeat(${qtdPacotes}, 140px);">
@@ -2545,7 +2544,7 @@ border-bottom:none;
                   <div class="bloco-titulo">Canales por tecnología</div>
                   <div class="bloco-subtitulo">Descubra cuántos canales están disponibles en los paquetes seleccionados.</div>
                 </div>
-                <div class="resumo-colunas" style="width:${140 * qtdPacotes}px;">
+                <div class="resumo-colunas" style="width:${140 * qtdPacotes}px; justify-content:end;">
                   ${htmlResumoColunas}
                 </div>
               </div>
@@ -2578,14 +2577,17 @@ border-bottom:none;
         </div>
         <div class="topo-branco-inferior"></div>
       `;
+
       const btnFiltroSim = document.getElementById('btnFiltroSim');
       const btnFiltroNao = document.getElementById('btnFiltroNao');
+
       if (btnFiltroSim && filtroSim) {
         btnFiltroSim.classList.add('ativo');
       }
       if (btnFiltroNao && filtroNao) {
         btnFiltroNao.classList.add('ativo');
       }
+
       const buscaCanal = document.getElementById('buscaCanal');
       if (buscaCanal) {
         buscaCanal.oninput = () => {
@@ -2596,6 +2598,7 @@ border-bottom:none;
           });
         };
       }
+
       if (btnFiltroSim) {
         btnFiltroSim.onclick = () => {
           filtroSim = !filtroSim;
@@ -2605,6 +2608,7 @@ border-bottom:none;
           gerarResultado();
         };
       }
+
       if (btnFiltroNao) {
         btnFiltroNao.onclick = () => {
           filtroNao = !filtroNao;
@@ -2614,50 +2618,63 @@ border-bottom:none;
           gerarResultado();
         };
       }
+
       const mapasAtivos = mapasPacotes.filter(mapa => mapa.size > 0);
       gerarResumoTecnologia(mapasAtivos);
+
       const listaCanais = getElementoSeguro('listaCanais');
       if (listaCanais) {
         listaCanais.innerHTML = '';
         const textoBusca = (document.getElementById('buscaCanal')?.value || '').toLowerCase().trim();
+
         base.forEach(ref => {
           const nomeCanal = ref.canal.toLowerCase();
           const numeroCanal = String(ref.vc);
+
           if (textoBusca && !nomeCanal.includes(textoBusca) && !numeroCanal.includes(textoBusca)) {
             return;
           }
+
           const linha = document.createElement('div');
           linha.className = 'linha-canal-nova';
           linha.style.gridTemplateColumns = gridCanais;
+
           const chaveRef = chaveCanal(ref);
           const existeNoPacote = mapasAtivos.some(mapa => mapa.has(chaveRef));
+
           if (filtroSim && !existeNoPacote) {
             return;
           }
           if (filtroNao && existeNoPacote) {
             return;
           }
+
           linha.innerHTML = `
             <div class="info-canal-vc">${ref.vc}</div>
             <div class="info-canal-nome">${ref.canal}</div>
             <div class="info-canal-categoria">${ref.categoria}</div>
             <div class="info-canal-tecnologia">${criarImagemTecnologia(ref.tecnologia)}</div>
           `;
+
           mapasAtivos.forEach(mapa => {
             linha.appendChild(criarStatusPacote(mapa.has(chaveRef)));
           });
+
           listaCanais.appendChild(linha);
         });
       }
+
       resultado.style.display = 'block';
       atualizarBarraPacotes();
       atualizarEstadoInicial();
     }
+
     // ===== EVENTOS DOS SELECTS =====
     function prepararEventosSelects() {
       [1, 2, 3].forEach(i => {
         const selectCliente = document.getElementById(`cliente${i}`);
         const selectPacote = document.getElementById(`pacote${i}`);
+
         if (selectCliente) {
           selectCliente.addEventListener('change', function () {
             const cliente = this.value;
@@ -2673,6 +2690,7 @@ border-bottom:none;
                 .map(d => d.pacote)
                 .filter(Boolean)
             )].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
             if (selectPacote) {
               selectPacote.innerHTML = '<option value="" disabled selected>Paquete</option>';
               selectPacote.classList.remove('ativo');
@@ -2683,11 +2701,13 @@ border-bottom:none;
                 selectPacote.appendChild(option);
               });
             }
+
             this.classList.toggle('ativo', this.value !== '');
             atualizarBarraPacotes();
             gerarResultado();
           });
         }
+
         if (selectPacote) {
           selectPacote.addEventListener('change', function () {
             this.classList.toggle('ativo', this.value !== '');
@@ -2696,6 +2716,7 @@ border-bottom:none;
         }
       });
     }
+
     // ===== SCROLL HANDLER =====
     function atualizarEstadoCabecalho() {
       const topbars = document.querySelectorAll('.top-bar');
@@ -2707,38 +2728,52 @@ border-bottom:none;
       const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
       const triggerClaro = resultado.offsetTop - 100;
       const barraEstatica = getElementoSeguro('barraPacotesEstatica');
+
       if (y >= triggerClaro) {
         topbars.forEach(el => el.classList.add('scrolled'));
       } else {
         topbars.forEach(el => el.classList.remove('scrolled'));
       }
     }
+
     function calcularLimiteInicial() {
       const banner = getElementoSeguro('banner');
       if (!banner) return;
       limiteInicial = Math.max(0, banner.offsetHeight - HEADER_TOTAL);
     }
+
     function atualizarEstadoInicial() {
       calcularLimiteInicial();
       atualizarEstadoCabecalho();
     }
+
+    // Throttled scroll handler
     function handleScroll() {
       lastScrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
       if (!ticking) {
         window.requestAnimationFrame(() => {
+          const scrollY = lastScrollY;
+          const topMain = getElementoSeguro('topbarMain');
+          const topSub = getElementoSeguro('topbarSub');
+          let progresso = scrollY / 70;
+          if (progresso > 1) progresso = 1;
+          const movimento = -50 * progresso;
+          if (topMain) topMain.style.transform = `translateY(${movimento}px)`;
+          if (topSub) topSub.style.transform = `translateY(${movimento}px)`;
           atualizarEstadoCabecalho();
           ticking = false;
         });
         ticking = true;
       }
     }
+
     // ===== EVENT LISTENERS =====
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('load', atualizarEstadoInicial);
     window.addEventListener('resize', atualizarEstadoInicial);
+
     // ===== INICIAR =====
     carregarTodosOsCsv();
   </script>
-    
 </body>
 </html>
