@@ -1823,22 +1823,7 @@ if(barraFixa){
     barraFixa.innerHTML = '';
 }
 
-      let qtdPacotes = 0;
-
-[1,2,3].forEach(i=>{
-    const pacote =
-        document.getElementById(`pacote${i}`)?.dataset.valor || '';
-
-    if(pacote){
-        qtdPacotes++;
-    }
-});
-
-barraFixa.style.gridTemplateColumns =
-    `790px repeat(${qtdPacotes}, 140px)`;
-
-barraFixa.innerHTML = '<div></div>';
-      
+            
       [1, 2, 3].forEach(i => {
         const cliente = document.getElementById(`cliente${i}`);
         const pacote = document.getElementById(`pacote${i}`);
@@ -2274,7 +2259,25 @@ barraFixa.innerHTML = '<div></div>';
 if(barraFixa){
     barraFixa.innerHTML = '';
 }
-      
+      let qtdPacotes = 0;
+const ordemBarra = [];
+[1,2,3].forEach(i => {
+    const pacote =
+        document.getElementById(`pacote${i}`)?.dataset.valor || '';
+
+    if(pacote){
+        qtdPacotes++;
+    }
+});
+
+if(barraFixa){
+    barraFixa.style.gridTemplateColumns =
+        `790px repeat(${qtdPacotes}, 140px)`;
+
+    barraFixa.innerHTML = '<div></div>';
+}
+
+     
       [1, 2, 3].forEach(i => {
         const clienteSelect = document.getElementById(`cliente${i}`);
         const pacoteSelect = document.getElementById(`pacote${i}`);
@@ -2324,23 +2327,27 @@ headerEst.classList.remove('vazio');
 totalEst.textContent = textoTotal;
 totalEst.classList.remove('vazio');
 
-if(barraFixa){
-
-    barraFixa.innerHTML += `
-        <div class="pacote-resumo-bloco">
-            <div class="pacote-resumo">
-                ${htmlPacote}
-            </div>
-            <div class="pacote-total">
-                ${textoTotal}
-            </div>
+ordemBarra.unshift(`
+    <div class="pacote-resumo-bloco">
+        <div class="pacote-resumo">
+            ${htmlPacote}
         </div>
-    `;
-
-}
+        <div class="pacote-total">
+            ${textoTotal}
+        </div>
+    </div>
+`);
       });
-    }
 
+      if(barraFixa){
+
+          barraFixa.innerHTML =
+              '<div></div>' +
+              ordemBarra.join('');
+
+      }
+
+    }
     // ===== GERAR RESUMO TECNOLOGIA ===== (SEM DUPLICAÇÃO)
     function gerarResumoTecnologia(mapasPacotes) {
       const resumo = getElementoSeguro('resumoTecnologia');
