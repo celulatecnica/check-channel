@@ -88,8 +88,8 @@
 }
 
 .top-bar-pacotes-inner {
-  width: 950px;
-  max-width: calc(100% - 32px);
+  width:1210px;
+  max-width:1210px;
   margin: 0 auto;
   height: 100%;
   display: flex;
@@ -103,11 +103,10 @@
   height:100%;
 }
 
-#barraPacotesFixa .pacote-resumo-bloco {
-  width: 140px;
-  flex-shrink: 0;
+#barraPacotesFixa .pacote-resumo-bloco{
+  width:140px;
+  justify-self:center;
 }
-
     /* ===== SCROLL - ESTADO CLARO ===== */
     .top-bar-main.scrolled,
     .top-bar-sub.scrolled {
@@ -2251,9 +2250,17 @@ function atualizarBarraPacotes() {
   if (!barrasFixas.length) return;
   
   // Limpar ambas
-  barrasFixas.forEach(barra => {
-    if (barra) barra.innerHTML = '';
-  });
+barrasFixas.forEach(barra => {
+
+    if (!barra) return;
+
+    barra.innerHTML =
+        '<div></div>' +
+        '<div></div>' +
+        '<div></div>' +
+        '<div></div>';
+
+});
   
   let qtdPacotes = 0;
   [1,2,3].forEach(i => {
@@ -2310,7 +2317,6 @@ function atualizarBarraPacotes() {
     // Criar elemento
     const pacoteBloco = document.createElement('div');
     pacoteBloco.className = 'pacote-resumo-bloco';
-    pacoteBloco.style.flexShrink = '0';
     
     const pacoteResumo = document.createElement('div');
     pacoteResumo.className = 'pacote-resumo';
