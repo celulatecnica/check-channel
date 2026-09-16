@@ -987,6 +987,13 @@ select:focus {
   line-height: 1.5;
   color: #6E6E73;
 }
+
+    .icone-expandir{
+    width:12px;
+    height:12px;
+    object-fit:contain;
+    display:block;
+}
     
     /* ===== RESUMO POR TECNOLOGIA ===== */
 #resumoTecnologia {
@@ -2600,7 +2607,7 @@ descricao.className = 'descricao-tecnologia';
 descricao.innerHTML = `
     <span class="btn-expandir-tecnologia"
           data-tecnologia="${tecnologia}">
-        +
+        <img src="icon_plus.png" alt="OK">
     </span>
 
     ${ICONES_TECNOLOGIA[tecnologia]}
@@ -2775,14 +2782,16 @@ resumo.appendChild(
             detalhe.style.display =
                 'block';
 
-            botao.textContent = '-';
+            botao.innerHTML =
+'<img src="icon_minus.png" alt="OK">';
 
         } else {
 
             detalhe.style.display =
                 'none';
 
-            botao.textContent = '+';
+            botao.innerHTML =
+'<img src="icon_plus.png" alt="OK">';
 
         }
 
