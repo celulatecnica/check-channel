@@ -100,10 +100,10 @@
   height:100%;
 }
 
-    #barraPacotesFixa{
-  display:flex;
-  justify-content:flex-end;
+#barraPacotesFixa{
+  display:grid;
   align-items:center;
+  justify-content:start;
   height:100%;
 }
 
@@ -1823,6 +1823,21 @@ if(barraFixa){
     barraFixa.innerHTML = '';
 }
 
+      let qtdPacotes = 0;
+
+[1,2,3].forEach(i=>{
+    const pacote =
+        document.getElementById(`pacote${i}`)?.dataset.valor || '';
+
+    if(pacote){
+        qtdPacotes++;
+    }
+});
+
+barraFixa.style.gridTemplateColumns =
+    `790px repeat(${qtdPacotes}, 140px)`;
+
+barraFixa.innerHTML = '<div></div>';
       
       [1, 2, 3].forEach(i => {
         const cliente = document.getElementById(`cliente${i}`);
