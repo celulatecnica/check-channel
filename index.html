@@ -97,13 +97,10 @@
   justify-content: center;
 }
 
-#barraPacotesFixa {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 24px;
-  height: 100%;
-  width: 100%;
+#barraPacotesFixa{
+  display:grid;
+  align-items:center;
+  height:100%;
 }
 
 #barraPacotesFixa .pacote-resumo-bloco {
@@ -2266,13 +2263,9 @@ function atualizarBarraPacotes() {
   
   // Atualizar ambas barras
   barrasFixas.forEach(barraFixa => {
+    barraFixa.style.gridTemplateColumns =
+    `80px 430px 140px 140px repeat(${qtdPacotes}, 140px)`;
     if(!barraFixa) return;
-    barraFixa.style.display = 'flex';
-    barraFixa.style.alignItems = 'center';
-    barraFixa.style.justifyContent = 'center';
-    barraFixa.style.gap = '24px';
-    barraFixa.style.height = '100%';
-    barraFixa.style.width = '100%';
   });
   
   [1, 2, 3].forEach(i => {
