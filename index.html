@@ -163,20 +163,7 @@
       transition: background 0.3s ease;
     }
 
-    .icone-plus{
-    width:20px;
-    height:20px;
-    object-fit:contain;
-    display:block;
-}
-
-.icone-minus{
-    width:10px;
-    height:10px;
-    object-fit:contain;
-    display:block;
-}
-    
+   
     /* ===== PACOTES (Header) ===== */
     .pacote-resumo-bloco {
       height: 100%;
@@ -838,6 +825,53 @@ select:focus {
       z-index: -1;
     }
 
+    /* ===== ÍCONES PLUS E MINUS ===== */
+.icone-plus {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  display: block;
+  margin: auto;
+}
+
+.icone-minus {
+  width: 10px;
+  height: 10px;
+  object-fit: contain;
+  display: block;
+  margin: auto;
+}
+
+/* Botão de expansão da tecnologia */
+.btn-expandir-tecnologia {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #D9DDE5;
+  border-radius: 50%;
+  background: #FFFFFF;
+  color: #1D1D1F;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.btn-expandir-tecnologia:hover {
+  background: #F5F5F7;
+  border-color: #306BFF;
+}
+
+.btn-expandir-tecnologia img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+    
     /* ===== RESULTADO - ESTRUTURA ===== */
 .resultado-wrapper {
   width: 1912px;
@@ -1044,31 +1078,6 @@ border-bottom:none;
       font-weight: 400;
       color: #1D1D1F;
     }
-
-    .btn-expandir-tecnologia{
-
-    width:24px;
-    height:24px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    border:1px solid #D9DDE5;
-    border-radius:50%;
-
-    background:#FFFFFF;
-
-    color:#1D1D1F;
-
-    font-size:16px;
-    font-weight:700;
-
-    cursor:pointer;
-
-    flex-shrink:0;
-
-}
     
     .icone-tecnologia {
       width: 30px;
@@ -1112,6 +1121,16 @@ border-bottom:none;
 .cabecalho-tecnologia div:first-child {
   text-align: left;
   padding-left: 20px;
+}
+
+  /* ===== TRANSIÇÕES DOS ÍCONES ===== */
+.btn-expandir-tecnologia img {
+  transition: all 0.3s ease;
+}
+
+.detalhe-tecnologia {
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  overflow: hidden;
 }
     
     /* ===== LISTA DE CANAIS ===== */
@@ -2603,225 +2622,140 @@ const totalFixo =
     }
 
     // ===== GERAR RESUMO TECNOLOGIA =====
-    function gerarResumoTecnologia(mapasPacotes) {
-      const resumo = getElementoSeguro('resumoTecnologia');
-      if (!resumo) return;
-      
-        resumo.innerHTML = '';
+    function gerarResumoTecnologia(mapasPacotes) {function gerarResumoTecnologia(mapasPacotes) {
+  const resumo = getElementoSeguro('resumoTecnologia');
+  if (!resumo) return;
 
-const qtdPacotes = mapasPacotes.length;
-const larguraTabela = 790 + (140 * qtdPacotes);
+  resumo.innerHTML = '';
+  const qtdPacotes = mapasPacotes.length;
+  const larguraTabela = 790 + (140 * qtdPacotes);
+  resumo.style.width = `${larguraTabela}px`;
+  resumo.style.margin = '0 auto';
 
-resumo.style.width = `${larguraTabela}px`;
-resumo.style.margin = '0 auto';
+  TECNOLOGIAS.forEach(tecnologia => {
+    const linha = document.createElement('div');
+    linha.className = 'linha-tecnologia';
+    linha.style.gridTemplateColumns = `790px repeat(${qtdPacotes}, 140px)`;
 
-         
-        TECNOLOGIAS.forEach(tecnologia => {
-          
-        const linha = document.createElement('div');
-        linha.className = 'linha-tecnologia';
-linha.style.gridTemplateColumns =
-`790px repeat(${qtdPacotes},140px)`;
+    const descricao = document.createElement('div');
+    descricao.className = 'descricao-tecnologia';
 
-        const descricao = document.createElement('div');
-descricao.className = 'descricao-tecnologia';
+    // Criar botão de expansão
+    const btnExpandir = document.createElement('button');
+    btnExpandir.className = 'btn-expandir-tecnologia';
+    btnExpandir.dataset.tecnologia = tecnologia;
+    btnExpandir.type = 'button';
+    
+    const imgBotao = document.createElement('img');
+    imgBotao.src = 'icon_plus.png';
+    imgBotao.alt = 'Expandir';
+    imgBotao.className = 'icone-plus';
+    btnExpandir.appendChild(imgBotao);
 
-descricao.innerHTML = `
-    <span class="icone-plus"
-          data-tecnologia="${tecnologia}">
-        <img src="icon_plus.png" alt="OK">
-    </span>
+    // Icone da tecnologia
+    const spanIcone = document.createElement('span');
+    spanIcone.innerHTML = ICONES_TECNOLOGIA[tecnologia];
 
-    ${ICONES_TECNOLOGIA[tecnologia]}
+    // Texto da tecnologia
+    const spanTexto = document.createElement('span');
+    spanTexto.innerHTML = TITULOS_TECNOLOGIA[tecnologia];
 
-    <span>
-        ${TITULOS_TECNOLOGIA[tecnologia]}
-    </span>
-`;
+    descricao.appendChild(btnExpandir);
+    descricao.appendChild(spanIcone);
+    descricao.appendChild(spanTexto);
+    linha.appendChild(descricao);
 
-        linha.appendChild(descricao);
-
-        mapasPacotes.forEach(mapa => {
-          let total = 0;
-          mapa.forEach(item => {
-            if (String(item.tecnologia || '').toUpperCase().includes(tecnologia)) {
-              total++;
-            }
-          });
-
-          const valor = document.createElement('div');
-          valor.className = 'valor-tecnologia';
-          valor.textContent = total;
-          linha.appendChild(valor);
-        });
-
-        const blocoTecnologia =
-    document.createElement('div');
-
-blocoTecnologia.appendChild(
-    linha
-);
-const detalhes =
-    document.createElement('div');
-
-detalhes.id =
-    `detalhe-${tecnologia}`;
-
-detalhes.className =
-    'detalhe-tecnologia';
-  detalhes.style.background =
-    '#F4F6F8';
-
-detalhes.style.display =
-    'none';
-
-          const categorias = new Map();
-
-mapasPacotes.forEach(mapa => {
-
-    mapa.forEach(item => {
-
-        if (
-            normalizarChave(item.tecnologia)
-            !== normalizarChave(tecnologia)
-        ){
-            return;
+    // Adicionar valores dos pacotes
+    mapasPacotes.forEach(mapa => {
+      let total = 0;
+      mapa.forEach(item => {
+        if (String(item.tecnologia || '').toUpperCase().includes(tecnologia)) {
+          total++;
         }
-
-        const categoria =
-            item.categoria || 'Sin categoría';
-
-        categorias.set(
-            categoria,
-            (categorias.get(categoria) || 0) + 1
-        );
-
+      });
+      const valor = document.createElement('div');
+      valor.className = 'valor-tecnologia';
+      valor.textContent = total;
+      linha.appendChild(valor);
     });
 
-});
+    const blocoTecnologia = document.createElement('div');
+    blocoTecnologia.appendChild(linha);
 
-categorias.forEach(
-    (total, categoria) => {
+    const detalhes = document.createElement('div');
+    detalhes.id = `detalhe-${tecnologia}`;
+    detalhes.className = 'detalhe-tecnologia';
+    detalhes.style.background = '#F4F6F8';
+    detalhes.style.display = 'none';
 
-        const linhaCategoria =
-            document.createElement('div');
+    // Categorias
+    const categorias = new Map();
+    mapasPacotes.forEach(mapa => {
+      mapa.forEach(item => {
+        if (normalizarChave(item.tecnologia) !== normalizarChave(tecnologia)) {
+          return;
+        }
+        const categoria = item.categoria || 'Sin categoría';
+        categorias.set(categoria, (categorias.get(categoria) || 0) + 1);
+      });
+    });
 
-        linhaCategoria.style.display =
-    'grid';
+    categorias.forEach((total, categoria) => {
+      const linhaCategoria = document.createElement('div');
+      linhaCategoria.style.display = 'grid';
+      linhaCategoria.style.gridTemplateColumns = `790px repeat(${qtdPacotes}, 140px)`;
+      linhaCategoria.style.minHeight = '48px';
+      linhaCategoria.style.alignItems = 'center';
+      linhaCategoria.style.borderTop = '1px solid #E5E5E5';
+      linhaCategoria.style.color = '#6E6E73';
 
-linhaCategoria.style.gridTemplateColumns =
-    `790px repeat(${qtdPacotes},140px)`;
+      let htmlCategoria = `<div style="text-align:left; padding-left:25px;">${categoria}</div>`;
       
-linhaCategoria.style.minHeight =
-'48px';
-linhaCategoria.style.alignItems =
-    'center';
-
-        linhaCategoria.style.borderTop =
-            '1px solid #E5E5E5';
-      linhaCategoria.style.color =
-    '#6E6E73';
-
-let htmlCategoria = `
-    <div style="
-        text-align:left;
-        padding-left:25px;
-    ">
-        ${categoria}
-    </div>
-`;
-
       mapasPacotes.forEach(mapa => {
-
-    let totalCategoria = 0;
-
-    mapa.forEach(item => {
-
-        if (
-            normalizarChave(item.tecnologia)
-            === normalizarChave(tecnologia)
-            &&
-            normalizarChave(item.categoria)
-            === normalizarChave(categoria)
-        ){
+        let totalCategoria = 0;
+        mapa.forEach(item => {
+          if (
+            normalizarChave(item.tecnologia) === normalizarChave(tecnologia) &&
+            normalizarChave(item.categoria) === normalizarChave(categoria)
+          ) {
             totalCategoria++;
-        }
-
-    });
-
-    htmlCategoria += `
-    <div style="
-        display:flex;
-        align-items:center;
-        justify-content:center;
-    ">
-        ${totalCategoria}
-    </div>
-`;
-
-});
-
-      linhaCategoria.innerHTML =
-    htmlCategoria;
-      
-        detalhes.appendChild(
-            linhaCategoria
-        );
-
-    }
-);
-
-          blocoTecnologia.appendChild(
-    detalhes
-);
-
-resumo.appendChild(
-    blocoTecnologia
-);
-          
+          }
+        });
+        htmlCategoria += `<div style="display:flex; align-items:center; justify-content:center;">${totalCategoria}</div>`;
       });
 
-      resumo
-.querySelectorAll(
-    '.btn-expandir-tecnologia'
-)
-.forEach(botao => {
+      linhaCategoria.innerHTML = htmlCategoria;
+      detalhes.appendChild(linhaCategoria);
+    });
 
-    botao.onclick = () => {
+    blocoTecnologia.appendChild(detalhes);
+    resumo.appendChild(blocoTecnologia);
+  });
 
-        const tecnologia =
-            botao.dataset.tecnologia;
-
-        const detalhe =
-            document.getElementById(
-                `detalhe-${tecnologia}`
-            );
-
-        if (
-            detalhe.style.display === 'none'
-        ){
-
-            detalhe.style.display =
-                'block';
-
-            botao.innerHTML =
-'<img src="icon_minus.png" class="icone-minus" alt="OK">';
-
-        } else {
-
-            detalhe.style.display =
-                'none';
-
-            botao.innerHTML =
-'<img src="icon_plus.png" class="icone-plus" alt="OK">';
-
-        }
-
-    };
-
-});
+  // Event listeners para os botões
+  resumo.querySelectorAll('.btn-expandir-tecnologia').forEach(botao => {
+    botao.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       
-    }
+      const tecnologia = botao.dataset.tecnologia;
+      const detalhe = document.getElementById(`detalhe-${tecnologia}`);
+      const imgIcon = botao.querySelector('img');
+      
+      if (detalhe.style.display === 'none') {
+        detalhe.style.display = 'block';
+        imgIcon.src = 'icon_minus.png';
+        imgIcon.className = 'icone-minus';
+        botao.setAttribute('aria-expanded', 'true');
+      } else {
+        detalhe.style.display = 'none';
+        imgIcon.src = 'icon_plus.png';
+        imgIcon.className = 'icone-plus';
+        botao.setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+}
 
     
     // ===== GERAR RESULTADO =====
