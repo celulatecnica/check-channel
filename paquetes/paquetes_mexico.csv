@@ -1,2 +1,321 @@
-Pais;Cliente;Pacote;VC;Canal;Tecnología;Categoría
-MEXICO;SIN DATOS;SIN DATOS;0;SIN DATOS;SIN DATOS;SIN DATOS
+Pais;Cliente;Pacote;VC;Canal;Tecnología;Categoría;Disponibilidad
+Mexico;DGO;OTT;N/A;A&E;N/A;Variedades;Si
+Mexico;DGO;OTT;N/A;Atres Cine;N/A;Cine;Si
+Mexico;DGO;OTT;N/A;ADN 40;N/A;Nacional;Si
+Mexico;DGO;OTT;N/A;AMC;N/A;Variedades;Si
+Mexico;DGO;OTT;N/A;Animal Planet;N/A;Mundo;Si
+Mexico;DGO;OTT;N/A;Antena 3 HD;N/A;Mundo;Si
+Mexico;DGO;OTT;N/A;Atres Series HD;N/A;Cine;Si
+Mexico;DGO;OTT;N/A;AXN;N/A;Variedades;Si
+Mexico;DGO;OTT;N/A;AZ Clic;N/A;Nacional;Si
+Mexico;DGO;OTT;N/A;AZ Corazón;N/A;Nacional;Si
+Mexico;DGO;OTT;N/A;AZ Mundo;N/A;Nacional;Si
+Mexico;DGO;OTT;N/A;Azteca Cinema;N/A;Nacional;Si
+Mexico;DGO;OTT;N/A;BabyTV HD;N/A;Infantil;Si
+Mexico;DGO;OTT;N/A;Boomerang;N/A;Infantil;Si
+Mexico;DGO;OTT;N/A;Cartoon Network;N/A;Infantil;Si
+Mexico;DGO;OTT;N/A;Cartoonito;N/A;Infantil;No
+Mexico;DGO;OTT;N/A;Cinecanal México;N/A;Cine;Si
+Mexico;DGO;OTT;N/A;Cinelatino;N/A;Cine;Si
+Mexico;DGO;OTT;N/A;Cinemax HD;N/A;Cine;Si
+Mexico;DGO;OTT;N/A;CNN International;N/A;Mundo;Si
+Mexico;DGO;OTT;N/A;CNN en Español;N/A;Mundo;Si
+Mexico;DGO;OTT;N/A;Comedy Central;N/A;Variedades;Si
+Mexico;DGO;OTT;N/A;Discovery Channel;N/A;Mundo;Si
+Mexico;DGO;OTT;N/A;Discovery Home & Health;N/A;Variedades;Si
+Mexico;DGO;OTT;N/A;Investigation Discovery (ID);N/A;Variedades;Si
+Mexico;DGO;OTT;N/A;Discovery Kids;N/A;Infantil;Si
+Mexico;DGO;OTT;N/A;Discovery Theater;N/A;Mundo;Si
+Mexico;DGO;OTT;N/A;Discovery Turbo;N/A;Mundo;Si
+Mexico;DGO;OTT;N/A;Discovery World;N/A;Mundo;Si
+Mexico;DGO;OTT;N/A;Disney Channel México;N/A;Infantil;Si
+Mexico;DGO;OTT;N/A;Disney Junior México;N/A;Infantil;Si
+Mexico;DGO;OTT;N/A;DNews;N/A;Mundo;No
+Mexico;DGO;OTT;N/A;DSports Fight;N/A;Deportes;No
+Mexico;DGO;OTT;N/A;DSports Motor;N/A;Deportes;No
+Mexico;DGO;OTT;N/A;E! Entertainment;N/A;Variedades;Si
+Mexico;DGO;OTT;N/A;ESPN 2 Mexico;N/A;Deportes;Si
+Mexico;DGO;OTT;N/A;ESPN 4;N/A;Deportes;No
+Mexico;DGO;OTT;N/A;ESPN Extra;N/A;Deportes;Si
+Mexico;DGO;OTT;N/A;ESPN Mexico;N/A;Deportes;Si
+Mexico;DGO;OTT;N/A;ESPN 3;N/A;Deportes;Si
+Mexico;DGO;OTT;N/A;Food Network HD;N/A;Variedades;Si
+Mexico;DGO;OTT;N/A;Fox News;N/A;Mundo;Si
+Mexico;DGO;OTT;N/A;Fox Sports;N/A;Deportes;Si
+Mexico;DGO;OTT;N/A;Fox Sports 2;N/A;Deportes;Si
+Mexico;DGO;OTT;N/A;Fox Sports 3;N/A;Deportes;Si
+Mexico;DGO;OTT;N/A;FX;N/A;Variedades;Si
+Mexico;DGO;OTT;N/A;Glitz;N/A;Variedades;Si
+Mexico;DGO;OTT;N/A;HBO;N/A;Cine;Si
+Mexico;DGO;OTT;N/A;HBO 2;N/A;Cine;Si
+Mexico;DGO;OTT;N/A;HBO Family;N/A;Cine;Si
+Mexico;DGO;OTT;N/A;HBO Plus HD;N/A;Cine;Si
+Mexico;DGO;OTT;N/A;HBO Signature;N/A;Cine;Si
+Mexico;DGO;OTT;N/A;HGTV;N/A;Variedades;Si
+Mexico;DGO;OTT;N/A;History 2;N/A;Mundo;Si
+Mexico;DGO;OTT;N/A;History Channel;N/A;Mundo;Si
+Mexico;DGO;OTT;N/A;Hola TV HD;N/A;Variedades;Si
+Mexico;DGO;OTT;N/A;ISAT;N/A;Cine;Si
+Mexico;DGO;OTT;N/A;Lifetime;N/A;Variedades;Si
+Mexico;DGO;OTT;N/A;MTV;N/A;Variedades;Si
+Mexico;DGO;OTT;N/A;National Geographic;N/A;Mundo;Si
+Mexico;DGO;OTT;N/A;Nick Jr. HD;N/A;Infantil;Si
+Mexico;DGO;OTT;N/A;Nickelodeon;N/A;Infantil;Si
+Mexico;DGO;OTT;N/A;Paramount Channel HD;N/A;Cine;Si
+Mexico;DGO;OTT;N/A;Pasiones;N/A;Variedades;Si
+Mexico;DGO;OTT;N/A;Sony;N/A;Cine;Si
+Mexico;DGO;OTT;N/A;Sony Movies;N/A;Cine;No
+Mexico;DGO;OTT;N/A;Space;N/A;Cine;Si
+Mexico;DGO;OTT;N/A;Star Channel;N/A;Cine;Si
+Mexico;DGO;OTT;N/A;Studio Universal;N/A;Cine;Si
+Mexico;DGO;OTT;N/A;SyFy HD;N/A;Variedades;Si
+Mexico;DGO;OTT;N/A;TBS Very Funny;N/A;Variedades;Si
+Mexico;DGO;OTT;N/A;TCM;N/A;Cine;No
+Mexico;DGO;OTT;N/A;Discovery Travel & Living Channel (TLC);N/A;Variedades;Si
+Mexico;DGO;OTT;N/A;TNT;N/A;Cine;Si
+Mexico;DGO;OTT;N/A;TNT Novelas;N/A;Variedades;No
+Mexico;DGO;OTT;N/A;TNT Series;N/A;Cine;Si
+Mexico;DGO;OTT;N/A;TCM;N/A;Cine;Si
+Mexico;DGO;OTT;N/A;TV Universal Mexico;N/A;Cine;Si
+Mexico;DGO;OTT;N/A;TyC Sports;N/A;Deportes;No
+Mexico;DGO;OTT;N/A;Warner Channel;N/A;Variedades;Si
+Mexico;DGO;OTT Lite;N/A;A&E;N/A;Variedades;Si
+Mexico;DGO;OTT Lite;N/A;Atres Cine;N/A;Cine;No
+Mexico;DGO;OTT Lite;N/A;ADN 40;N/A;Nacional;No
+Mexico;DGO;OTT Lite;N/A;AMC;N/A;Variedades;Si
+Mexico;DGO;OTT Lite;N/A;Animal Planet;N/A;Mundo;Si
+Mexico;DGO;OTT Lite;N/A;Antena 3 HD;N/A;Mundo;No
+Mexico;DGO;OTT Lite;N/A;Atres Series HD;N/A;Cine;No
+Mexico;DGO;OTT Lite;N/A;AXN;N/A;Variedades;No
+Mexico;DGO;OTT Lite;N/A;AZ Clic;N/A;Nacional;No
+Mexico;DGO;OTT Lite;N/A;AZ Corazón;N/A;Nacional;No
+Mexico;DGO;OTT Lite;N/A;AZ Mundo;N/A;Nacional;No
+Mexico;DGO;OTT Lite;N/A;Azteca Cinema;N/A;Nacional;No
+Mexico;DGO;OTT Lite;N/A;BabyTV HD;N/A;Infantil;Si
+Mexico;DGO;OTT Lite;N/A;Boomerang;N/A;Infantil;Si
+Mexico;DGO;OTT Lite;N/A;Cartoon Network;N/A;Infantil;Si
+Mexico;DGO;OTT Lite;N/A;Cartoonito;N/A;Infantil;No
+Mexico;DGO;OTT Lite;N/A;Cinecanal México;N/A;Cine;Si
+Mexico;DGO;OTT Lite;N/A;Cinelatino;N/A;Cine;No
+Mexico;DGO;OTT Lite;N/A;Cinemax HD;N/A;Cine;Si
+Mexico;DGO;OTT Lite;N/A;CNN International;N/A;Mundo;Si
+Mexico;DGO;OTT Lite;N/A;CNN en Español;N/A;Mundo;Si
+Mexico;DGO;OTT Lite;N/A;Comedy Central;N/A;Variedades;Si
+Mexico;DGO;OTT Lite;N/A;Discovery Channel;N/A;Mundo;Si
+Mexico;DGO;OTT Lite;N/A;Discovery Home & Health;N/A;Variedades;Si
+Mexico;DGO;OTT Lite;N/A;Investigation Discovery (ID);N/A;Variedades;Si
+Mexico;DGO;OTT Lite;N/A;Discovery Kids;N/A;Infantil;Si
+Mexico;DGO;OTT Lite;N/A;Discovery Theater;N/A;Mundo;Si
+Mexico;DGO;OTT Lite;N/A;Discovery Turbo;N/A;Mundo;Si
+Mexico;DGO;OTT Lite;N/A;Discovery World;N/A;Mundo;Si
+Mexico;DGO;OTT Lite;N/A;Disney Channel México;N/A;Infantil;Si
+Mexico;DGO;OTT Lite;N/A;Disney Junior México;N/A;Infantil;Si
+Mexico;DGO;OTT Lite;N/A;DNews;N/A;Mundo;No
+Mexico;DGO;OTT Lite;N/A;DSports Fight;N/A;Deportes;No
+Mexico;DGO;OTT Lite;N/A;DSports Motor;N/A;Deportes;No
+Mexico;DGO;OTT Lite;N/A;E! Entertainment;N/A;Variedades;Si
+Mexico;DGO;OTT Lite;N/A;ESPN 2 Mexico;N/A;Deportes;Si
+Mexico;DGO;OTT Lite;N/A;ESPN 4;N/A;Deportes;No
+Mexico;DGO;OTT Lite;N/A;ESPN Extra;N/A;Deportes;Si
+Mexico;DGO;OTT Lite;N/A;ESPN Mexico;N/A;Deportes;Si
+Mexico;DGO;OTT Lite;N/A;ESPN 3;N/A;Deportes;Si
+Mexico;DGO;OTT Lite;N/A;Food Network HD;N/A;Variedades;Si
+Mexico;DGO;OTT Lite;N/A;Fox News;N/A;Mundo;Si
+Mexico;DGO;OTT Lite;N/A;Fox Sports;N/A;Deportes;Si
+Mexico;DGO;OTT Lite;N/A;Fox Sports 2;N/A;Deportes;Si
+Mexico;DGO;OTT Lite;N/A;Fox Sports 3;N/A;Deportes;Si
+Mexico;DGO;OTT Lite;N/A;FX;N/A;Variedades;Si
+Mexico;DGO;OTT Lite;N/A;Glitz;N/A;Variedades;Si
+Mexico;DGO;OTT Lite;N/A;HBO;N/A;Cine;No
+Mexico;DGO;OTT Lite;N/A;HBO 2;N/A;Cine;No
+Mexico;DGO;OTT Lite;N/A;HBO Family;N/A;Cine;No
+Mexico;DGO;OTT Lite;N/A;HBO Plus HD;N/A;Cine;No
+Mexico;DGO;OTT Lite;N/A;HBO Signature;N/A;Cine;No
+Mexico;DGO;OTT Lite;N/A;HGTV;N/A;Variedades;Si
+Mexico;DGO;OTT Lite;N/A;History 2;N/A;Mundo;Si
+Mexico;DGO;OTT Lite;N/A;History Channel;N/A;Mundo;Si
+Mexico;DGO;OTT Lite;N/A;Hola TV HD;N/A;Variedades;No
+Mexico;DGO;OTT Lite;N/A;ISAT;N/A;Cine;Si
+Mexico;DGO;OTT Lite;N/A;Lifetime;N/A;Variedades;No
+Mexico;DGO;OTT Lite;N/A;MTV;N/A;Variedades;Si
+Mexico;DGO;OTT Lite;N/A;National Geographic;N/A;Mundo;Si
+Mexico;DGO;OTT Lite;N/A;Nick Jr. HD;N/A;Infantil;Si
+Mexico;DGO;OTT Lite;N/A;Nickelodeon;N/A;Infantil;Si
+Mexico;DGO;OTT Lite;N/A;Paramount Channel HD;N/A;Cine;Si
+Mexico;DGO;OTT Lite;N/A;Pasiones;N/A;Variedades;No
+Mexico;DGO;OTT Lite;N/A;Sony;N/A;Cine;Si
+Mexico;DGO;OTT Lite;N/A;Sony Movies;N/A;Cine;No
+Mexico;DGO;OTT Lite;N/A;Space;N/A;Cine;Si
+Mexico;DGO;OTT Lite;N/A;Star Channel;N/A;Cine;Si
+Mexico;DGO;OTT Lite;N/A;Studio Universal;N/A;Cine;Si
+Mexico;DGO;OTT Lite;N/A;SyFy HD;N/A;Variedades;Si
+Mexico;DGO;OTT Lite;N/A;TBS Very Funny;N/A;Variedades;Si
+Mexico;DGO;OTT Lite;N/A;TCM;N/A;Cine;No
+Mexico;DGO;OTT Lite;N/A;Discovery Travel & Living Channel (TLC);N/A;Variedades;Si
+Mexico;DGO;OTT Lite;N/A;TNT;N/A;Cine;Si
+Mexico;DGO;OTT Lite;N/A;TNT Novelas;N/A;Variedades;No
+Mexico;DGO;OTT Lite;N/A;TNT Series;N/A;Cine;Si
+Mexico;DGO;OTT Lite;N/A;TCM;N/A;Cine;Si
+Mexico;DGO;OTT Lite;N/A;TV Universal Mexico;N/A;Cine;Si
+Mexico;DGO;OTT Lite;N/A;TyC Sports;N/A;Deportes;No
+Mexico;DGO;OTT Lite;N/A;Warner Channel;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;A&E;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Atres Cine;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;ADN 40;N/A;Nacional;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;AMC;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Animal Planet;N/A;Mundo;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Antena 3 HD;N/A;Mundo;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Atres Series HD;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;AXN;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;AZ Clic;N/A;Nacional;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;AZ Corazón;N/A;Nacional;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;AZ Mundo;N/A;Nacional;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Azteca Cinema;N/A;Nacional;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;BabyTV HD;N/A;Infantil;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Boomerang;N/A;Infantil;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Cartoon Network;N/A;Infantil;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Cartoonito;N/A;Infantil;No
+Mexico;DGO;DTVGO Mexico 001;N/A;Cinecanal México;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Cinelatino;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Cinemax HD;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;CNN International;N/A;Mundo;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;CNN en Español;N/A;Mundo;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Comedy Central;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Discovery Channel;N/A;Mundo;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Discovery Home & Health;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Investigation Discovery (ID);N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Discovery Kids;N/A;Infantil;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Discovery Theater;N/A;Mundo;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Discovery Turbo;N/A;Mundo;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Discovery World;N/A;Mundo;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Disney Channel México;N/A;Infantil;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Disney Junior México;N/A;Infantil;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;DNews;N/A;Mundo;No
+Mexico;DGO;DTVGO Mexico 001;N/A;DSports Fight;N/A;Deportes;No
+Mexico;DGO;DTVGO Mexico 001;N/A;DSports Motor;N/A;Deportes;No
+Mexico;DGO;DTVGO Mexico 001;N/A;E! Entertainment;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;ESPN 2 Mexico;N/A;Deportes;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;ESPN 4;N/A;Deportes;No
+Mexico;DGO;DTVGO Mexico 001;N/A;ESPN Extra;N/A;Deportes;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;ESPN Mexico;N/A;Deportes;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;ESPN 3;N/A;Deportes;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Food Network HD;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Fox News;N/A;Mundo;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Fox Sports;N/A;Deportes;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Fox Sports 2;N/A;Deportes;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Fox Sports 3;N/A;Deportes;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;FX;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Glitz;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;HBO;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;HBO 2;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;HBO Family;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;HBO Plus HD;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;HBO Signature;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;HGTV;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;History 2;N/A;Mundo;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;History Channel;N/A;Mundo;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Hola TV HD;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;ISAT;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Lifetime;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;MTV;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;National Geographic;N/A;Mundo;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Nick Jr. HD;N/A;Infantil;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Nickelodeon;N/A;Infantil;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Paramount Channel HD;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Pasiones;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Sony;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Sony Movies;N/A;Cine;No
+Mexico;DGO;DTVGO Mexico 001;N/A;Space;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Star Channel;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;Studio Universal;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;SyFy HD;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;TBS Very Funny;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;TCM;N/A;Cine;No
+Mexico;DGO;DTVGO Mexico 001;N/A;Discovery Travel & Living Channel (TLC);N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;TNT;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;TNT Novelas;N/A;Variedades;No
+Mexico;DGO;DTVGO Mexico 001;N/A;TNT Series;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;TCM;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;TV Universal Mexico;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 001;N/A;TyC Sports;N/A;Deportes;No
+Mexico;DGO;DTVGO Mexico 001;N/A;Warner Channel;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;A&E;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Atres Cine;N/A;Cine;No
+Mexico;DGO;DTVGO Mexico 201;N/A;ADN 40;N/A;Nacional;No
+Mexico;DGO;DTVGO Mexico 201;N/A;AMC;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Animal Planet;N/A;Mundo;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Antena 3 HD;N/A;Mundo;No
+Mexico;DGO;DTVGO Mexico 201;N/A;Atres Series HD;N/A;Cine;No
+Mexico;DGO;DTVGO Mexico 201;N/A;AXN;N/A;Variedades;No
+Mexico;DGO;DTVGO Mexico 201;N/A;AZ Clic;N/A;Nacional;No
+Mexico;DGO;DTVGO Mexico 201;N/A;AZ Corazón;N/A;Nacional;No
+Mexico;DGO;DTVGO Mexico 201;N/A;AZ Mundo;N/A;Nacional;No
+Mexico;DGO;DTVGO Mexico 201;N/A;Azteca Cinema;N/A;Nacional;No
+Mexico;DGO;DTVGO Mexico 201;N/A;BabyTV HD;N/A;Infantil;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Boomerang;N/A;Infantil;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Cartoon Network;N/A;Infantil;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Cartoonito;N/A;Infantil;No
+Mexico;DGO;DTVGO Mexico 201;N/A;Cinecanal México;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Cinelatino;N/A;Cine;No
+Mexico;DGO;DTVGO Mexico 201;N/A;Cinemax HD;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;CNN International;N/A;Mundo;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;CNN en Español;N/A;Mundo;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Comedy Central;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Discovery Channel;N/A;Mundo;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Discovery Home & Health;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Investigation Discovery (ID);N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Discovery Kids;N/A;Infantil;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Discovery Theater;N/A;Mundo;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Discovery Turbo;N/A;Mundo;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Discovery World;N/A;Mundo;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Disney Channel México;N/A;Infantil;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Disney Junior México;N/A;Infantil;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;DNews;N/A;Mundo;No
+Mexico;DGO;DTVGO Mexico 201;N/A;DSports Fight;N/A;Deportes;No
+Mexico;DGO;DTVGO Mexico 201;N/A;DSports Motor;N/A;Deportes;No
+Mexico;DGO;DTVGO Mexico 201;N/A;E! Entertainment;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;ESPN 2 Mexico;N/A;Deportes;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;ESPN 4;N/A;Deportes;No
+Mexico;DGO;DTVGO Mexico 201;N/A;ESPN Extra;N/A;Deportes;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;ESPN Mexico;N/A;Deportes;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;ESPN 3;N/A;Deportes;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Food Network HD;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Fox News;N/A;Mundo;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Fox Sports;N/A;Deportes;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Fox Sports 2;N/A;Deportes;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Fox Sports 3;N/A;Deportes;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;FX;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Glitz;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;HBO;N/A;Cine;No
+Mexico;DGO;DTVGO Mexico 201;N/A;HBO 2;N/A;Cine;No
+Mexico;DGO;DTVGO Mexico 201;N/A;HBO Family;N/A;Cine;No
+Mexico;DGO;DTVGO Mexico 201;N/A;HBO Plus HD;N/A;Cine;No
+Mexico;DGO;DTVGO Mexico 201;N/A;HBO Signature;N/A;Cine;No
+Mexico;DGO;DTVGO Mexico 201;N/A;HGTV;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;History 2;N/A;Mundo;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;History Channel;N/A;Mundo;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Hola TV HD;N/A;Variedades;No
+Mexico;DGO;DTVGO Mexico 201;N/A;ISAT;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Lifetime;N/A;Variedades;No
+Mexico;DGO;DTVGO Mexico 201;N/A;MTV;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;National Geographic;N/A;Mundo;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Nick Jr. HD;N/A;Infantil;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Nickelodeon;N/A;Infantil;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Paramount Channel HD;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Pasiones;N/A;Variedades;No
+Mexico;DGO;DTVGO Mexico 201;N/A;Sony;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Sony Movies;N/A;Cine;No
+Mexico;DGO;DTVGO Mexico 201;N/A;Space;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Star Channel;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;Studio Universal;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;SyFy HD;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;TBS Very Funny;N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;TCM;N/A;Cine;No
+Mexico;DGO;DTVGO Mexico 201;N/A;Discovery Travel & Living Channel (TLC);N/A;Variedades;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;TNT;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;TNT Novelas;N/A;Variedades;No
+Mexico;DGO;DTVGO Mexico 201;N/A;TNT Series;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;TCM;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;TV Universal Mexico;N/A;Cine;Si
+Mexico;DGO;DTVGO Mexico 201;N/A;TyC Sports;N/A;Deportes;No
+Mexico;DGO;DTVGO Mexico 201;N/A;Warner Channel;N/A;Variedades;Si
