@@ -244,16 +244,10 @@ body {
 
 /* ===== TITULO DE SEÇÃO ===== */
 .titulo-secao {
-  width: 950px;
-  max-width: calc(100% - 32px);
-  margin: auto;
-
-  margin-top: 47px;
-  margin-bottom: 23px;
-
-  font-size: 24px;
+  width: 100%;
+  margin: 47px auto 35px;
+  font-size: 18px;
   font-weight: 600;
-
   text-align: center;
 }
 
@@ -268,21 +262,7 @@ body {
   justify-content: center;
   flex-wrap: wrap;
   gap: 12px;
-
-  overflow: hidden;
-
-  max-height: 140px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  opacity: 1;
-
-  transform: translateY(0);
-
-  transition:
-    max-height 0.28s ease,
-    opacity 0.20s ease,
-    transform 0.28s ease,
-    margin 0.28s ease;
+  margin-bottom: 47px;
 }
 
 
@@ -314,6 +294,26 @@ body {
     box-shadow .25s ease,
     border-color .25s ease;
 }
+
+.bandeira:hover {
+  transform: translateY(-2px);
+
+  border-color: rgba(84,168,255,.6);
+
+  box-shadow:
+    0 0 18px rgba(84,168,255,.20);
+}
+
+.bandeira[data-pais="OTHER ISLANDS"] {
+  justify-content: center;
+}
+
+.bandeira[data-pais="OTHER ISLANDS"] .nome-pais {
+  margin-top: 0;
+  width: 70px;
+  line-height: 1.2;
+}
+
 
 /* ===== TOOLTIP PAÍS ===== */
   
@@ -916,24 +916,40 @@ html, body {
   cursor:pointer;
 }
 
-.seletor-regiao-esquerda{
-  display:flex;
-  align-items:center;
-  gap:18px;
+.seletor-regiao-esquerda {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
-.seletor-regiao-texto{
-  font-size:16px;
-  color:#E4E7EB;
-  font-weight:500;
+.seletor-regiao-texto {
+  display: block;
+  min-width: 0;
+  flex: 1;
+
+  font-size: 16px;
+  color: #E4E7EB;
+  font-weight: 500;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  text-align: left;
 }
 
 .seletor-regiao-seta{
   width:24px;
   height:24px;
+
   display:flex;
   align-items:center;
   justify-content:center;
+
+  flex-shrink:0;
 }
 
 .seletor-regiao-seta::before{
@@ -993,13 +1009,25 @@ html, body {
   border-bottom:1px solid rgba(82,89,97,.50);
 }
 
-.nome-pais{
-  margin-top:10px;
-  font-size:11px;
-  font-weight:600;
-  letter-spacing:.4px;
-  text-transform:uppercase;
-  color:#FFFFFF;
+.nome-pais {
+  position: static;
+
+  width: auto;
+
+  margin-top: 10px;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  letter-spacing: .4px;
+
+  text-transform: uppercase;
+
+  color: #FFFFFF;
+
+  transform: none;
+
+  pointer-events: none;
 }
 
 .bandeira img{
@@ -1329,7 +1357,7 @@ document
 
 atualizarMenuRegioes();
 
-renderizarPaises('América Latina');
+renderizarPaises(regiaoAtual);
 
 }
 
