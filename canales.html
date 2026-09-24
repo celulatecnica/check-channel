@@ -1415,7 +1415,9 @@ function consultarCanal() {
   const termoNormalizado = normalizarComparacao(termoBusca);
 
   const encontrados = dados.filter(d => {
-    if (d.pais !== pais) return false;
+if (
+  normalizarChave(d.pais) !== normalizarChave(pais)
+) return false;
 
     const vc = normalizarTexto(d.vc);
     const nomeCanal = normalizarComparacao(d.canal);
