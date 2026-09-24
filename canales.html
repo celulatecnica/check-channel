@@ -167,36 +167,29 @@ body {
 .fake-content {
   height: 280px;
   background: #0F0F0F;
-  width: 100vw;
+  width: 100%;
 
   display: flex;
   justify-content: center;
   align-items: flex-end;
-
-  margin-left: calc(50% - 50vw);
 }
 
-.footer-faixa {
-  width: 950px !important;
-  max-width: 950px !important;
-  margin: 0 auto;
-}
 
-.footer-inner {
-  width: 950px;
-  max-width: 950px;
-  margin: 0 auto;
-}
 
   .footer-nowrap{
   white-space: nowrap;
 }
-
-    .footer-inner {
-      width: 100%;
-      padding: 0 16px 18px;
-      text-align: center;
-    }
+  
+.footer-inner {
+  width: 100%;
+  padding: 0 16px 18px;
+  text-align: center;
+}
+    
+.footer-faixa {
+  width: 950px;
+  max-width: calc(100% - 32px);
+}
 
     .footer-text {
       margin: 0 0 14px;
