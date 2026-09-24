@@ -1614,7 +1614,7 @@ async function carregarTodosOsCsv() {
 
   for (const nomeArquivo of arquivosUnicos) {
     const url = 'paquetes/' + nomeArquivo + '?v=' + Date.now();
-
+    console.log(url);
     try {
       const response = await fetch(url);
 
@@ -1666,8 +1666,9 @@ const REGIOES = {
 
 // ===== INICIALIZAÇÃO =====
 carregarBandeiras();
-function atualizarMenuRegioes() {
+carregarTodosOsCsv();
 
+function atualizarMenuRegioes() {
 const menu =
 document.getElementById('menuRegioes');
 
@@ -1751,6 +1752,21 @@ function renderizarPaises(regiao) {
   });
 
 }
+window.addEventListener('load', atualizarEstadoInicial);
+
+window.addEventListener('resize', atualizarEstadoInicial);
+
+document.getElementById('buscaCanal')?.addEventListener('keydown', function (e) {
+
+  if (e.key === 'Enter') {
+
+    e.preventDefault();
+
+    consultarCanal();
+
+  }
+
+});
 </script>
   
 </body>
