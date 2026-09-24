@@ -1684,45 +1684,33 @@ menu.appendChild(opcao);
 
 }
 
-function renderizarPaises(regiao){
-
-const lista =
-document.getElementById('listaPaises');
-
-lista.innerHTML='';
-
-REGIOES[regiao].forEach(pais=>{
-
-const div =
-document.createElement('div');
-
-div.className='bandeira';
-
-div.dataset.pais=pais;
-
-if(pais !== 'OTHER ISLANDS'){
-
-div.innerHTML += `
-.png"
-alt="${pais}">
-`;
-
-}
-
-div.innerHTML += `
-<div class="nome-pais">
-${pais}
-</div>
-`;
-
-div.onclick =
-()=> selecionarPais(pais,div);
-
-lista.appendChild(div);
-
-});
-
-}
+    function renderizarPaises(regiao) {
+      const lista = document.getElementById('listaPaises');
+      lista.innerHTML = '';
+      REGIOES[regiao].forEach(pais => {
+        const existe = dados.some(
+          d => normalizarChave(d.pais) === normalizarChave(pais)
+        );
+        if (!existe) return;
+        const bandeira = document.createElement('div');
+        bandeira.className = 'bandeira';
+        bandeira.dataset.pais = pais;
+        if (pais !== 'OTHER ISLANDS') {
+          const img = document.createElement('img');
+          img.src = `flags/${normalizarArquivo(pais)}.png`;
+          img.alt = pais;
+          bandeira.appendChild(img);
+        }
+        const nome = document.createElement('div');
+        nome.className = 'nome-pais';
+        nome.textContent = pais;
+        bandeira.appendChild(nome);
+        bandeira.addEventListener('click', () =>
+          selecionarPais(pais, bandeira)
+        );
+        lista.appendChild(bandeira);
+      });
+    }
 
 carregarTodosOsCsv();
 
