@@ -1089,15 +1089,9 @@ html, body {
 
 <div class="container" id="topo">
 
-  <h1 class="titulo-principal">
-    Consulta un canal de la programación
-  </h1>
-
-  <div class="linha"></div>
-
-
+  
 <div class="titulo-secao">
-  Seleccione el país
+  Seleccione una región
 </div>
 
 <div id="bandeiras"></div>
@@ -1714,48 +1708,49 @@ menu.appendChild(opcao);
 
 }
 
-    function renderizarPaises(regiao) {
-      const lista = document.getElementById('listaPaises');
-      lista.innerHTML = '';
-      REGIOES[regiao].forEach(pais => {
-        REGIOES[regiao].forEach(pais => {
+function renderizarPaises(regiao) {
 
-  const bandeira = document.createElement('div');
+  const lista = document.getElementById('listaPaises');
 
-  bandeira.className = 'bandeira';
+  lista.innerHTML = '';
 
-  bandeira.dataset.pais = pais;
-        const bandeira = document.createElement('div');
-        bandeira.className = 'bandeira';
-        bandeira.dataset.pais = pais;
-        if (pais !== 'OTHER ISLANDS') {
-          const img = document.createElement('img');
-          img.src = `flags/${normalizarArquivo(pais)}.png`;
-          img.alt = pais;
-          bandeira.appendChild(img);
-        }
-        const nome = document.createElement('div');
-        nome.className = 'nome-pais';
-        nome.textContent = pais;
-        bandeira.appendChild(nome);
-        bandeira.addEventListener('click', () =>
-          selecionarPais(pais, bandeira)
-        );
-        lista.appendChild(bandeira);
-      });
+  REGIOES[regiao].forEach(pais => {
+
+    const bandeira = document.createElement('div');
+
+    bandeira.className = 'bandeira';
+
+    bandeira.dataset.pais = pais;
+
+    if (pais !== 'OTHER ISLANDS') {
+
+      const img = document.createElement('img');
+
+      img.src = `flags/${normalizarArquivo(pais)}.png`;
+
+      img.alt = pais;
+
+      bandeira.appendChild(img);
+
     }
 
-carregarTodosOsCsv();
+    const nome = document.createElement('div');
 
-window.addEventListener('load', atualizarEstadoInicial);
-window.addEventListener('resize', atualizarEstadoInicial);
+    nome.className = 'nome-pais';
 
-document.getElementById('buscaCanal')?.addEventListener('keydown', function (e) {
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    consultarCanal();
-  }
-});
+    nome.textContent = pais;
+
+    bandeira.appendChild(nome);
+
+    bandeira.addEventListener('click', () => {
+      selecionarPais(pais, bandeira);
+    });
+
+    lista.appendChild(bandeira);
+
+  });
+
+}
 </script>
   
 </body>
