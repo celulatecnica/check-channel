@@ -1638,7 +1638,9 @@ async function carregarTodosOsCsv() {
     }
   }
 
-  atualizarEstadoInicial();
+renderizarPaises(regiaoAtual);
+
+atualizarEstadoInicial();
 }
 
 let regiaoAtual = 'América Latina';
@@ -1716,10 +1718,13 @@ menu.appendChild(opcao);
       const lista = document.getElementById('listaPaises');
       lista.innerHTML = '';
       REGIOES[regiao].forEach(pais => {
-        const existe = dados.some(
-          d => normalizarChave(d.pais) === normalizarChave(pais)
-        );
-        if (!existe) return;
+        REGIOES[regiao].forEach(pais => {
+
+  const bandeira = document.createElement('div');
+
+  bandeira.className = 'bandeira';
+
+  bandeira.dataset.pais = pais;
         const bandeira = document.createElement('div');
         bandeira.className = 'bandeira';
         bandeira.dataset.pais = pais;
