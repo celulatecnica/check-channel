@@ -1631,7 +1631,7 @@ async function carregarTodosOsCsv() {
       console.error('Falha ao buscar CSV:', url, e);
     }
   }
-
+console.log('CSV carregado:', dados.length);
 renderizarPaises(regiaoAtual);
 
 atualizarEstadoInicial();
