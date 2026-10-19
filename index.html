@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Check Channel DIRECTV</title>
-  <link rel="icon" type="image/png" href="logo-checkchannel.png">
+  <link rel="icon" type="image/png" href="imagenes/logo-checkchannel.png">
   <style>
     /* ===== RESET ===== */
     * {
@@ -1402,7 +1402,7 @@ border-bottom:none;
   <div class="top-bar top-bar-main" id="topbarMain">
     <div class="blur-layer"></div>
     <div class="top-bar-inner">
-      <img src="icon_gpt_branco.png" class="logo" alt="Check Channel">
+      <img src="imagenes/icon_gpt_branco.png" class="logo" alt="Check Channel">
     </div>
   </div>
 
@@ -1470,7 +1470,7 @@ border-bottom:none;
     <div class="grupo-selects">
       <div class="seletor-custom" id="cliente1">
     <div class="seletor-regiao-esquerda">
-        <img src="icon_tipo.png" class="seletor-regiao-icone">
+        <img src="imagenes/icon_tipo.png" class="seletor-regiao-icone">
 
         <span class="seletor-regiao-texto">
             Tipo de cliente
@@ -1484,7 +1484,7 @@ border-bottom:none;
 
 <div class="seletor-custom" id="pacote1">
     <div class="seletor-regiao-esquerda">
-        <img src="icon_pacote.png" class="seletor-regiao-icone">
+        <img src="imagenes/icon_pacote.png" class="seletor-regiao-icone">
 
 <span class="seletor-regiao-texto">
     Paquete
@@ -1517,7 +1517,7 @@ border-bottom:none;
 <div class="grupo-selects">
 <div class="seletor-custom" id="cliente2">
     <div class="seletor-regiao-esquerda">
-        <img src="icon_tipo.png" class="seletor-regiao-icone">
+        <img src="imagenes/icon_tipo.png" class="seletor-regiao-icone">
 
         <span class="seletor-regiao-texto">
             Tipo de cliente
@@ -1531,7 +1531,7 @@ border-bottom:none;
 
 <div class="seletor-custom" id="pacote2">
     <div class="seletor-regiao-esquerda">
-        <img src="icon_pacote.png" class="seletor-regiao-icone">
+        <img src="imagenes/icon_pacote.png" class="seletor-regiao-icone">
 
 <span class="seletor-regiao-texto">
     Paquete
@@ -1566,7 +1566,7 @@ border-bottom:none;
 
 <div class="seletor-custom" id="cliente3">
     <div class="seletor-regiao-esquerda">
-        <img src="icon_tipo.png" class="seletor-regiao-icone">
+        <img src="imagenes/icon_tipo.png" class="seletor-regiao-icone">
 
         <span class="seletor-regiao-texto">
             Tipo de cliente
@@ -1580,7 +1580,7 @@ border-bottom:none;
 
 <div class="seletor-custom" id="pacote3">
     <div class="seletor-regiao-esquerda">
-        <img src="icon_pacote.png" class="seletor-regiao-icone">
+        <img src="imagenes/icon_pacote.png" class="seletor-regiao-icone">
 
         <span class="seletor-regiao-texto">
             Paquete
@@ -1680,11 +1680,11 @@ border-bottom:none;
     };
     const TECNOLOGIAS = ['SD', 'HD', '4K', 'AUDIO', 'RADIO'];
     const ICONES_TECNOLOGIA = {
-      SD: '<img class="icone-tecnologia" src="icon_sd.png" alt="SD">',
-      HD: '<img class="icone-tecnologia" src="icon_hd.png" alt="HD">',
-      '4K': '<img class="icone-tecnologia" src="icon_4k.png" alt="4K">',
-      AUDIO: '<img class="icone-tecnologia" src="icon_audio.png" alt="Audio">',
-      RADIO: '<img class="icone-tecnologia" src="icon_radio.png" alt="Radio">'
+      SD: '<img class="icone-tecnologia" src="imagenes/icon_sd.png" alt="SD">',
+      HD: '<img class="icone-tecnologia" src="imagenes/icon_hd.png" alt="HD">',
+      '4K': '<img class="icone-tecnologia" src="imagenes/icon_4k.png" alt="4K">',
+      AUDIO: '<img class="icone-tecnologia" src="imagenes/icon_audio.png" alt="Audio">',
+      RADIO: '<img class="icone-tecnologia" src="imagenes/icon_radio.png" alt="Radio">'
     };
     const TITULOS_TECNOLOGIA = {
       SD: '<strong>Canales SD</strong> (Standard Definition)</span>',
@@ -1748,8 +1748,8 @@ border-bottom:none;
       const status = document.createElement('div');
       status.className = 'status-pacote';
       status.innerHTML = existe
-        ? '<img src="icon_ok.png" alt="OK">'
-        : '<img src="icon_nok.png" alt="NOK">';
+        ? '<img src="imagenes/icon_ok.png" alt="OK">'
+        : '<img src="imagenes/icon_nok.png" alt="NOK">';
       return status;
     }
 
@@ -1893,7 +1893,7 @@ border-bottom:none;
       container.innerHTML = `
         <div class="seletor-regiao" id="seletorRegiao">
           <div class="seletor-regiao-esquerda">
-            <img src="icon_globe.webp" class="seletor-regiao-icone">
+            <img src="imagenes/icon_globe.webp" class="seletor-regiao-icone">
             <span class="seletor-regiao-texto" id="textoRegiao">
               América Latina
             </span>
@@ -2485,13 +2485,13 @@ if(bloco){
     function criarImagemTecnologia(tecnologia) {
       const tecnologiaNormalizada = normalizarChave(tecnologia);
       if (tecnologiaNormalizada === 'SD') {
-        return '<img class="icone-tecnologia" src="icon_sd.png" alt="SD">';
+        return '<img class="icone-tecnologia" src="imagenes/icon_sd.png" alt="SD">';
       }
       if (tecnologiaNormalizada === 'HD') {
-        return '<img class="icone-tecnologia" src="icon_hd.png" alt="HD">';
+        return '<img class="icone-tecnologia" src="imagenes/icon_hd.png" alt="HD">';
       }
       if (tecnologiaNormalizada === '4K') {
-        return '<img class="icone-tecnologia" src="icon_4k.png" alt="4K">';
+        return '<img class="icone-tecnologia" src="imagenes/icon_4k.png" alt="4K">';
       }
       return tecnologia;
     }
@@ -2643,8 +2643,8 @@ if(bloco){
               <div class="cabecalho-lista-direita">
                 <input type="text" id="buscaCanal" autocomplete="off" placeholder="Buscar canal por nombre o número...">
                 ${qtdPacotes === 1 ? `
-                  <button id="btnFiltroSim"><img src="icon_ok.png" alt="OK"></button>
-                  <button id="btnFiltroNao"><img src="icon_nok.png" alt="OK"></button>
+                  <button id="btnFiltroSim"><img src="imagenes/icon_ok.png" alt="OK"></button>
+                  <button id="btnFiltroNao"><img src="imagenes/icon_nok.png" alt="OK"></button>
                 ` : ''}
               </div>
             </div>
